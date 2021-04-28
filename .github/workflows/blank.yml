@@ -42,4 +42,11 @@ jobs:
         run: |
           echo running publish
           ./gradlew :public:common:asserts:publishToMavenLocal
+          
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-aar-assets
+          path: |
+             ~/.m2/repository/ru/sberdevices/sdk/asserts
         
