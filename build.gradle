@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "com.example.abc.test"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+// subprojects {
+//     afterEvaluate {project ->
+//         if (project.hasProperty("android")) {
+//             android {
+//                 compileSdkVersion 28
+//                 buildToolsVersion "28.0.3"
+//             }
+//         }
+//     }
+// }
+
+android {
+    buildTypes {
+        debug {
+            minifyEnabled false
+            useProguard false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+buildscript {
+    ext.kotlin_version = "1.4.10"
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+        maven { url "https://jitpack.io" }
+        jcenter()
+    }
+}
+
+ext {
+    pomVersion = '0.1'
+    pomGroupID = "ru.sberdevices.sdk"
+}

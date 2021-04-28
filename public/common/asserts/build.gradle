@@ -1,0 +1,80 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion  "29.0.2"
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            useProguard false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.3.2'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.debug
+
+                groupId rootProject.ext.pomGroupID
+                artifactId project.name
+                version rootProject.ext.pomVersion
+
+                pom {
+                    name = 'asserts'
+                    description = 'asserts is utility library containing some userful asserts'
+                    url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                    licenses {
+                        license {
+                            name = 'Sber Public License at-nc-sa v.2'
+                            url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = 'Igor Perminov'
+                            email = 'Perminov.I.Yurye@sberbank.ru'
+                        }
+                        developer {
+                            name = 'Nikolay Pahomov'
+                            email = 'NMPakhomov@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
+                        developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
+                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                    }
+                }
+
+                versionMapping {
+                    allVariants {
+                        fromResolutionResult()
+                    }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    signing {
+        sign publishing.publications.mavenJava
+    }
+}

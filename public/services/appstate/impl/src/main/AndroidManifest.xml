@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.sberdevices.services.appstate.impl">
+
+    <uses-permission android:name="ru.sberdevices.permission.BIND_APPSTATE_SERVICE" />
+
+</manifest>

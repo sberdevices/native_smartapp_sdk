@@ -1,0 +1,33 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+dependencies {
+    api project(':public:services:messaging:api')
+    implementation project(':public:services:messaging:aidl')
+
+    implementation project(':public:common:binderhelper')
+    implementation project(':public:common:logger')
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion  "29.0.2"
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            useProguard false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+}

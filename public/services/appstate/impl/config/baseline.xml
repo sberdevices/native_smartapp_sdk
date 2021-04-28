@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>MaxLineLength:AppStateManagerImpl.kt$AppStateManagerImpl$logger.warn { "The object we are calling has died, because its hosting process no longer exists. Retrying..." }</ID>
+    <ID>NestedBlockDepth:AppStateDescriberImpl.kt$AppStateDescriberImpl$override fun describe(): String</ID>
+    <ID>NoUnusedImports:ru.sberdevices.services.appstate.AppStateHolderImpl.kt:5</ID>
+    <ID>NoUnusedImports:ru.sberdevices.services.appstate.AppStateHolderImpl.kt:6</ID>
+    <ID>NoUnusedImports:ru.sberdevices.services.appstate.AppStateManagerFactory.kt:5</ID>
+    <ID>NoUnusedImports:ru.sberdevices.services.appstate.AppStateManagerFactory.kt:6</ID>
+    <ID>NoUnusedImports:ru.sberdevices.services.appstate.AppStateManagerImpl.kt:17</ID>
+    <ID>NoUnusedImports:ru.sberdevices.services.appstate.AppStateManagerImpl.kt:18</ID>
+    <ID>SpacingAroundColon:ru.sberdevices.services.appstate.description.entity.AppStateBuilder.kt:8</ID>
+    <ID>SpacingAroundColon:ru.sberdevices.services.appstate.description.entity.DeepLinkAction.kt:5</ID>
+    <ID>TooGenericExceptionThrown:AppStateManagerImpl.kt$AppStateManagerImpl$throw RuntimeException("Thread interrupted, execution can not be continued", exception)</ID>
+  </CurrentIssues>
+</SmellBaseline>
