@@ -41,5 +41,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo running publish
-          ./gradlew publish
+          ./gradlew -PossrhUsername=${{ secrets.OSSRH_USERNAME }} -PossrhPassword=${{ secrets.OSSRH_TOKEN }} publish
   
