@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'maven-publish'
 }
 
 android {
@@ -10,7 +11,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            useProguard false
         }
     }
     compileOptions {
@@ -25,4 +25,68 @@ android {
 
 dependencies {
     implementation "androidx.annotation:annotation:1.2.0"
+}
+
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                name = "OSSRH"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+
+            publications {
+                mavenBinderHelperApi(MavenPublication) {
+                    from components.debug
+
+                    groupId rootProject.ext.pomGroupID
+                    artifactId project.name
+                    version rootProject.ext.pomVersion
+
+                    pom {
+                        name = project.name
+                        description = 'asserts is utility library containing some userful asserts'
+                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        licenses {
+                            license {
+                                name = 'Sber Public License at-nc-sa v.2'
+                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                            }
+                        }
+                        developers {
+                            developer {
+                                name = 'Igor Perminov'
+                                email = 'Perminov.I.Yurye@sberbank.ru'
+                            }
+                            developer {
+                                name = 'Nikolay Pahomov'
+                                email = 'NMPakhomov@sberbank.ru'
+                            }
+                        }
+                        scm {
+                            connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
+                            developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
+                            url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        }
+                    }
+
+                    versionMapping {
+                        allVariants {
+                            fromResolutionResult()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    signing {
+        sign publishing.publications.mavenBinderHelperApi
+    }
 }

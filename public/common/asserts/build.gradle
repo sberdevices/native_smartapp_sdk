@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
-//apply plugin: 'signing'
 
 android {
     compileSdkVersion 29
@@ -10,7 +9,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            useProguard false
         }
     }
     compileOptions {
@@ -28,44 +26,63 @@ dependencies {
 
 afterEvaluate {
     publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.debug
+        repositories {
+//            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: System.getenv("MAVEN_USERNAME"), password: System.getenv("MAVEN_PASSWORD"))
+//            }
+//
+//            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: System.getenv("MAVEN_USERNAME"), password: System.getenv("MAVEN_PASSWORD"))
+//            }
 
-                groupId rootProject.ext.pomGroupID
-                artifactId project.name
-                version rootProject.ext.pomVersion
-
-                pom {
-                    name = 'asserts'
-                    description = 'asserts is utility library containing some userful asserts'
-                    url = 'https://github.com/sberdevices/native_smartapp_sdk'
-                    licenses {
-                        license {
-                            name = 'Sber Public License at-nc-sa v.2'
-                            url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
-                        }
-                    }
-                    developers {
-                        developer {
-                            name = 'Igor Perminov'
-                            email = 'Perminov.I.Yurye@sberbank.ru'
-                        }
-                        developer {
-                            name = 'Nikolay Pahomov'
-                            email = 'NMPakhomov@sberbank.ru'
-                        }
-                    }
-                    scm {
-                        connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
-                        developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
-                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
-                    }
+            maven {
+                name = "OSSRH"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
                 }
+            }
 
-                versionMapping {
-                    allVariants {
-                        fromResolutionResult()
+            publications {
+                mavenJavaAsserts(MavenPublication) {
+                    from components.debug
+
+                    groupId rootProject.ext.pomGroupID
+                    artifactId project.name
+                    version rootProject.ext.pomVersion
+
+                    pom {
+                        name = 'asserts'
+                        description = 'asserts is utility library containing some userful asserts'
+                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        licenses {
+                            license {
+                                name = 'Sber Public License at-nc-sa v.2'
+                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                            }
+                        }
+                        developers {
+                            developer {
+                                name = 'Igor Perminov'
+                                email = 'Perminov.I.Yurye@sberbank.ru'
+                            }
+                            developer {
+                                name = 'Nikolay Pahomov'
+                                email = 'NMPakhomov@sberbank.ru'
+                            }
+                        }
+                        scm {
+                            connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
+                            developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
+                            url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        }
+                    }
+
+                    versionMapping {
+                        allVariants {
+                            fromResolutionResult()
+                        }
                     }
                 }
             }
@@ -75,6 +92,6 @@ afterEvaluate {
 
 afterEvaluate {
     signing {
-        sign publishing.publications.mavenJava
+        sign publishing.publications.mavenJavaAsserts
     }
 }

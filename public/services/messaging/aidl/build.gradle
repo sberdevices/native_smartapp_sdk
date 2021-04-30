@@ -7,7 +7,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            useProguard false
         }
     }
     compileOptions {

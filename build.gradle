@@ -30,7 +30,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            useProguard false
         }
     }
     compileOptions {
@@ -63,5 +62,5 @@ allprojects {
 
 ext {
     pomVersion = '0.1'
-    pomGroupID = "ru.sberdevices.sdk"
+    pomGroupID = "ru.sberdevices.smartapp.sdk"
 }

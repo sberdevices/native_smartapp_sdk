@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 29
@@ -8,7 +9,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            useProguard false
         }
     }
     compileOptions {
@@ -23,4 +23,76 @@ android {
 dependencies {
     implementation project(':public:common:asserts')
     implementation 'androidx.core:core:1.3.2'
+}
+
+afterEvaluate {
+    publishing {
+        repositories {
+//            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: System.getenv("MAVEN_USERNAME"), password: System.getenv("MAVEN_PASSWORD"))
+//            }
+//
+//            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: System.getenv("MAVEN_USERNAME"), password: System.getenv("MAVEN_PASSWORD"))
+//            }
+
+            maven {
+                name = "OSSRH"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+
+            publications {
+                MavenPublicationLogger(MavenPublication) {
+                    from components.debug
+
+                    groupId rootProject.ext.pomGroupID
+                    artifactId project.name
+                    version rootProject.ext.pomVersion
+
+                    pom {
+                        name = project.name
+                        description = 'asserts is utility library containing some userful asserts'
+                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        licenses {
+                            license {
+                                name = 'Sber Public License at-nc-sa v.2'
+                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                            }
+                        }
+                        developers {
+                            developer {
+                                name = 'Igor Perminov'
+                                email = 'Perminov.I.Yurye@sberbank.ru'
+                            }
+                            developer {
+                                name = 'Nikolay Pahomov'
+                                email = 'NMPakhomov@sberbank.ru'
+                            }
+                        }
+                        scm {
+                            connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
+                            developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
+                            url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        }
+                    }
+
+                    versionMapping {
+                        allVariants {
+                            fromResolutionResult()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    signing {
+        sign publishing.publications.MavenPublicationLogger
+    }
 }
