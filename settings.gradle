@@ -7,9 +7,11 @@ include ':public:common:asserts',
         ':public:services:appstate:aidl',
         ':public:services:appstate:api',
         ':public:services:appstate:impl',
-        ':public:services:messaging:aidl',
-        ':public:services:messaging:api',
-        ':public:services:messaging:impl',
+// TODO uncomment
+
+//        ':public:services:messaging:aidl',
+//        ':public:services:messaging:api',
+//        ':public:services:messaging:impl',
         ':public:services:mic_camera_state:aidl',
         ':public:services:mic_camera_state:api',
         ':public:services:mic_camera_state:impl'

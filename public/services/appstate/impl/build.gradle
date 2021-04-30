@@ -35,6 +35,27 @@ android {
 
 }
 
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    android.libraryVariants.all { variant ->
+//        if (variant.name == 'release') {
+//            owner.classpath += variant.javaCompileProvider.get().classpath
+//        }
+//    }
+    exclude '**/R.html', '**/R.*.html', '**/index.html'
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    archiveClassifier.set('javadoc')
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
 afterEvaluate {
     publishing {
         repositories {
@@ -50,6 +71,9 @@ afterEvaluate {
             publications {
                 mavenAppstateImpl(MavenPublication) {
                     from components.debug
+
+                    artifact androidJavadocsJar
+                    artifact androidSourcesJar
 
                     groupId rootProject.ext.pomGroupID+'.appstate'
                     artifactId "impl"

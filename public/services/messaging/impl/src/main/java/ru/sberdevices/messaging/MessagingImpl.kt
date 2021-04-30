@@ -12,7 +12,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.sberdevices.common.binderhelper.BinderHelper2Factory
-import ru.sberdevices.common.extensions.requireWorkerThread
+// import ru.sberdevices.common.extensions.requireWorkerThread TODO uncomment
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.services.messaging.IMessagingListener
 import ru.sberdevices.services.messaging.IMessagingService
@@ -70,7 +70,7 @@ internal class MessagingImpl @AnyThread constructor(
 
     override fun sendAction(messageName: MessageName, payload: Payload): MessageId {
         logger.debug { "sendAction() with messageName" }
-        requireWorkerThread()
+        // requireWorkerThread()
         val id: String = runBlocking {
             helper.execute { service ->
                 service.sendAction(
