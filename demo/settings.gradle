@@ -1,0 +1,10 @@
+rootProject.name = "sberdevices-piblic-demo"
+include ':app',
+        ':libs:api:appstate',
+        ':libs:api:messaging',
+        ':libs:sdk:appstate',
+        ':libs:sdk:messaging',
+        ':libs:common:asserts',
+        ':libs:common:extensions',
+        ':libs:common:logger'
+

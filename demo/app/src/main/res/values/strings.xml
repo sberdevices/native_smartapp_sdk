@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">StarSDK External Developer Demo</string>
+
+    <!-- Settings -->
+    <string name="settings_asserts_enabled">Asserts enabled</string>
+
+    <!-- Analytics -->
+    <string name="analytics_event_name">event name</string>
+    <string name="analytics_event_value">event value</string>
+    <string name="analytics_event_send">Send</string>
+
+    <!-- Messaging -->
+    <string name="messaging_send">Send message</string>
+    <string name="messaging_action">action</string>
+    <string name="messaging_message_to_send">message to send</string>
+
+    <!-- Biometry -->
+    <string name="biometry_register">Register face</string>
+    <string name="biometry_cancel">Cancel</string>
+
+    <!-- AppState -->
+    <string name="app_state_set">Set</string>
+    <string name="app_state_hint">Put app state here</string>
+
+    <!-- Shade -->
+    <string name="shade_hide">Hide shade</string>
+    <string name="shade_show">Show shade</string>
+
+    <!-- Notifications -->
+    <string name="show_alarm_notification">Show alarm</string>
+    <string name="show_call_notification">Show call</string>
+    <string name="show_alarm_common_viewing">Show common viewing</string>
+    <string name="hide">Hide</string>
+
+</resources>
