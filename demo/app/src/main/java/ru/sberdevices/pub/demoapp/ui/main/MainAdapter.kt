@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import ru.sberdevices.services.sdk.demoapp.R
+import ru.sberdevices.services.pub.demoapp.R
 
 class MainAdapter(private val listener: (MainMenuItem) -> Unit) : RecyclerView.Adapter<ItemHolder>() {
 
@@ -38,7 +38,7 @@ class ItemHolder(view: View, private val listener: (MainMenuItem) -> Unit) : Rec
 
     fun bind(item: MainMenuItem) {
         textView.text = item.text
-        textView.setOnClickListener { listener(item) }
+        cardView.setOnClickListener { listener(item) }
         cardView.animate().alpha(1.0f).setDuration(500).start()
     }
 }

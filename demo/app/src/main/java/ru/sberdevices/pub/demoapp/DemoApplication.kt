@@ -1,6 +1,7 @@
 package ru.sberdevices.pub.demoapp
 
 import android.app.Application
+import android.os.Build
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -14,7 +15,7 @@ import ru.sberdevices.pub.demoapp.ui.assistant.AssistantViewModel
 import ru.sberdevices.pub.demoapp.ui.main.MainViewModel
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppViewModel
 import ru.sberdevices.services.appstate.AppStateManagerFactory
-import ru.sberdevices.services.sdk.demoapp.BuildConfig
+import ru.sberdevices.services.pub.demoapp.BuildConfig
 
 class DemoApplication : Application() {
 
@@ -42,6 +43,9 @@ class DemoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         logger.debug { "onCreate" }
+
+        // Example of getting device's info
+        logger.info { "Running on device: ${Build.BRAND} ${Build.MODEL}" }
 
         if (isMainProcess()) {
             initApp()

@@ -9,7 +9,7 @@ android {
     buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "ru.sberdevices.sdk.demoapp.DemoApplication"
+        applicationId "ru.sberdevices.pub.demoapp.DemoApplication"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1

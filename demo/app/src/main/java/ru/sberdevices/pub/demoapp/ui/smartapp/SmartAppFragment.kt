@@ -11,7 +11,7 @@ import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BEANIE
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BOOTS
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.GLOVES
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.JACKET
-import ru.sberdevices.services.sdk.demoapp.R
+import ru.sberdevices.services.pub.demoapp.R
 
 class SmartAppFragment : Fragment(R.layout.fragment_smartapp) {
 

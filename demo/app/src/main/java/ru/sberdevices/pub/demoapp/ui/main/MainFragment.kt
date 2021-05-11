@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.sberdevices.services.sdk.demoapp.R
+import ru.sberdevices.services.pub.demoapp.R
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 

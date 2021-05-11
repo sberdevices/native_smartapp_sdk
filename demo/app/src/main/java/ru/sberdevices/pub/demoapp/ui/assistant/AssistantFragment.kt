@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.fragment_assistant.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.extensions.enterImmersiveMode
 import ru.sberdevices.common.extensions.exitImmersiveMode
-import ru.sberdevices.services.sdk.demoapp.R
+import ru.sberdevices.services.pub.demoapp.R
 
 class AssistantFragment : Fragment(R.layout.fragment_assistant) {
 
