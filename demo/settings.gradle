@@ -1,4 +1,4 @@
-rootProject.name = "sberdevices-piblic-demo"
+rootProject.name = "sberdevices-services-demo"
 include ':app',
         ':libs:api:appstate',
         ':libs:api:messaging',

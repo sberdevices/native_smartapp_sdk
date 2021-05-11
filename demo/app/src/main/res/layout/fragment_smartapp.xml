@@ -71,7 +71,7 @@
         android:translationX="25dp"
         android:translationY="-15dp"
         android:visibility="invisible"
-        android:tint="@android:color/holo_red_dark"
+        app:tint="@android:color/holo_red_dark"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         app:layout_constraintLeft_toLeftOf="@+id/androidImageView"
         app:layout_constraintRight_toLeftOf="@+id/rightBootImageView" />
@@ -84,7 +84,7 @@
         android:translationX="-25dp"
         android:translationY="-15dp"
         android:visibility="invisible"
-        android:tint="@android:color/holo_red_dark"
+        app:tint="@android:color/holo_red_dark"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         app:layout_constraintLeft_toRightOf="@+id/leftBootImageView"
         app:layout_constraintRight_toRightOf="@+id/androidImageView" />
