@@ -1,11 +1,11 @@
 ext.versions = [:]
 
 versions.minSdk = 28
-versions.targetSdk = 28
-versions.compileSdk = 28
-versions.buildTools = "28.0.3"
+versions.targetSdk = 30
+versions.compileSdk = 30
+versions.buildTools = "30.0.2"
 
-versions.androidGradlePlugin = "3.6.3"
+versions.androidGradlePlugin = "4.0.0"
 
 // Kotlin
 versions.kotlin = "1.4.32"
