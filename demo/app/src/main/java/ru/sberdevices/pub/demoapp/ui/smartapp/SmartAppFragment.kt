@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BEANIE
@@ -31,10 +33,19 @@ class SmartAppFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.clothes.observe(viewLifecycleOwner) { processClothes(it) }
+        // viewModel.clothes.observe(viewLifecycleOwner) { processClothes(it) }
+
         viewModel.buyItems.observe(viewLifecycleOwner) { processPurchase(it) }
 
         view.findViewById<ImageView>(R.id.androidImageView).setOnClickListener { viewModel.sendServerAction() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.sharedFlow.collect { processClothes(it) }
+        }
     }
 
     private fun processPurchase(item: BuyItems) {

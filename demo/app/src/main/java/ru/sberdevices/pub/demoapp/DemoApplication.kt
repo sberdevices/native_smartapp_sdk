@@ -30,7 +30,7 @@ class DemoApplication : Application() {
     }
 
     private val viewModelModule = module {
-        viewModel { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
+        single { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
         viewModel { AssistantViewModel() }
     }
 

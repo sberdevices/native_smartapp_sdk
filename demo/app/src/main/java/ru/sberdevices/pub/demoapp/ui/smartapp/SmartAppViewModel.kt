@@ -1,12 +1,12 @@
 package ru.sberdevices.pub.demoapp.ui.smartapp
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -34,13 +34,17 @@ class SmartAppViewModel(
         ignoreUnknownKeys = true
     }
     private val logger by Logger.lazy("SmartAppViewModel")
-    private val currentClothes: MutableSet<String> = HashSet()
+    private val currentClothes: MutableSet<Clothes> = HashSet()
 
     private val _clothes = MutableLiveData<Clothes>()
     private val _buyItems = MutableLiveData<BuyItems>()
 
     val clothes: LiveData<Clothes> = _clothes
     val buyItems: LiveData<BuyItems> = _buyItems
+
+    val sharedFlow = MutableSharedFlow<Clothes>(
+        replay = Clothes.values().size
+    )
 
     private val listener = object : Messaging.Listener {
         override fun onMessage(messageId: MessageId, payload: Payload) {
@@ -51,8 +55,9 @@ class SmartAppViewModel(
             when (model) {
                 is WearThisCommand -> {
                     model.clothes?.let {
-                        currentClothes.add(it.clothes)
-                        _clothes.postValue(model.clothes)
+                        currentClothes.add(it)
+                        // _clothes.postValue(model.clothes)
+                        sharedFlow.tryEmit(model.clothes)
                     }
                 }
                 is BuySuccessCommand -> {
@@ -90,13 +95,6 @@ class SmartAppViewModel(
             )
         }
     }
-
-    @VisibleForTesting
-    public override fun onCleared() {
-        messaging.removeListener(listener)
-        appStateHolder.setState(null)
-    }
-
 }
 
 

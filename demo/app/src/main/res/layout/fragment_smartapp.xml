@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/asistant_description"
+        android:textAppearance="@style/TextAppearance.SberDevices.Body1"
+        android:textColor="@color/sbdv_white_64"
+        app:flow_horizontalBias="0.5"
+        app:flow_verticalBias="0.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/androidImageView"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="500dp"
         android:layout_height="500dp"
