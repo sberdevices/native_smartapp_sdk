@@ -1,10 +1,11 @@
 package ru.sberdevices.pub.demoapp.ui.smartapp
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_smartapp.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BEANIE
@@ -12,12 +13,20 @@ import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BOOTS
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.GLOVES
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.JACKET
 import ru.sberdevices.services.pub.demoapp.R
+import ru.sberdevices.services.pub.demoapp.databinding.FragmentSmartappBinding
 
-class SmartAppFragment : Fragment(R.layout.fragment_smartapp) {
+class SmartAppFragment : Fragment() {
 
     private val logger by Logger.lazy("SmartAppFragment")
 
     private val viewModel: SmartAppViewModel by viewModel()
+
+    private lateinit var binding: FragmentSmartappBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentSmartappBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,13 +34,13 @@ class SmartAppFragment : Fragment(R.layout.fragment_smartapp) {
         viewModel.clothes.observe(viewLifecycleOwner) { processClothes(it) }
         viewModel.buyItems.observe(viewLifecycleOwner) { processPurchase(it) }
 
-        androidImageView.setOnClickListener { viewModel.sendServerAction() }
+        view.findViewById<ImageView>(R.id.androidImageView).setOnClickListener { viewModel.sendServerAction() }
     }
 
     private fun processPurchase(item: BuyItems) {
         when (item) {
             BuyItems.ELEPHANT -> {
-                elephantImageView.isVisible = true
+                binding.elephantImageView.isVisible = true
             }
         }
     }
@@ -41,23 +50,36 @@ class SmartAppFragment : Fragment(R.layout.fragment_smartapp) {
 
         when (clothes) {
             BEANIE -> {
-                androidBeanieImageView.isVisible = true
+                binding.androidBeanieImageView.isVisible = true
             }
 
             GLOVES -> {
-                rigthMittenImageView.isVisible = true
-                leftMittenImageView.isVisible = true
+                binding.rigthMittenImageView.isVisible = true
+                binding.leftMittenImageView.isVisible = true
             }
 
             BOOTS -> {
-                leftBootImageView.isVisible = true
-                rightBootImageView.isVisible = true
+                binding.leftBootImageView.isVisible = true
+                binding.rightBootImageView.isVisible = true
             }
 
             JACKET -> {
-                jacketImageView.isVisible = true
+                binding.jacketImageView.isVisible = true
             }
         }
     }
 
+    companion object {
+        fun newInstance() = SmartAppFragment()
+
+        private var View.isVisible: Boolean
+            get() = TODO()
+            set(isVisible: Boolean) {
+                if (isVisible) {
+                    this.visibility = View.VISIBLE
+                } else {
+                    this.visibility = View.GONE
+                }
+            }
+    }
 }

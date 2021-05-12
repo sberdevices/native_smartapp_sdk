@@ -12,7 +12,6 @@ import ru.sberdevices.common.logger.AndroidLoggerDelegate
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.messaging.MessagingFactory
 import ru.sberdevices.pub.demoapp.ui.assistant.AssistantViewModel
-import ru.sberdevices.pub.demoapp.ui.main.MainViewModel
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppViewModel
 import ru.sberdevices.services.appstate.AppStateManagerFactory
 import ru.sberdevices.services.pub.demoapp.BuildConfig
@@ -31,7 +30,6 @@ class DemoApplication : Application() {
     }
 
     private val viewModelModule = module {
-        viewModel { MainViewModel() }
         viewModel { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
         viewModel { AssistantViewModel() }
     }

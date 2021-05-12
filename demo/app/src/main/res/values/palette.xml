@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sbdv_white">#ffffff</color>
+    <color name="sbdv_white_8">#08FFFFFF</color>
+    <color name="sbdv_white_10">#1FFFFFFF</color>
+    <color name="sbdv_white_56">#8FFFFFFF</color>
+    <color name="sbdv_white_64">#A3FFFFFF</color>
+
+    <color name="sbdv_solid_black">#000000</color>
+    <color name="sbdv_solid_white">#FFFFFF</color>
+    <color name="sbdv_solid_transparent">#00000000</color>
+    <color name="sbdv_solid_disabled">#C2C2C2</color>
+    <color name="sbdv_solid_gray">#C4C4C4</color>
+    <color name="sbdv_solid_brand">#08A652</color>
+    <color name="sbdv_solid_warning">#F6650A</color>
+    <color name="sbdv_solid_critical">#E12D39</color>
+    <color name="sbdv_solid_action">#008BCD</color>
+</resources>
