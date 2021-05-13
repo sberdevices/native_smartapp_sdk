@@ -74,7 +74,14 @@ class TabsFragment : Fragment() {
         fun newInstance() = TabsFragment()
 
         enum class TabUi {
+            /**
+             * Tab for services demo
+             */
             SERVICES,
+
+            /**
+             * Tab for Computer Vision demo
+             */
             CV
         }
     }

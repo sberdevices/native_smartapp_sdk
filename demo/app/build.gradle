@@ -1,6 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlinx-serialization'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
 
 android {
     compileSdkVersion versions.compileSdk
@@ -56,36 +58,33 @@ dependencies {
     implementation project(path: ':libs:sdk:messaging')
     implementation project(path: ':libs:common:asserts')
     implementation project(path: ':libs:common:extensions')
-    implementation project(path: ':libs:common:logger')
+
+    // SberDevices TODO раскоментить после выкладки
+//    implementation "ru.sberdevices.smartapp.sdk:asserts:0.1"
+//    implementation "ru.sberdevices.smartapp.sdk:logger:0.1"
+////    implementation "ru.sberdevices.smartapp.sdk.appstate:api:0.1" TODO надо ли
+//    implementation "ru.sberdevices.smartapp.sdk.appstate:impl:0.1"
 
     // Android
     implementation "androidx.appcompat:appcompat:$versions.androidx.appcompat"
-    implementation "androidx.core:core-ktx:$versions.androidx.core_ktx"
-    implementation "androidx.cardview:cardview:$versions.androidx.cardview"
+    implementation "androidx.core:core-ktx:$versions.androidx.core"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidx.lifecycle"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.androidx.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.androidx.lifecycle"
     implementation "androidx.constraintlayout:constraintlayout:$versions.androidx.constraintlayout"
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.androidx.navigation"
-    implementation "androidx.navigation:navigation-ui-ktx:$versions.androidx.navigation"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlinxCoroutinesAndroid"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
 
-    implementation "com.airbnb.android:lottie:3.7.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.kotlinxSerializations"
 
-    def lifecycle_version = "2.3.1"
-
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "com.airbnb.android:lottie:$versions.lottie"
 
     // Third parties
     implementation "org.koin:koin-android:$versions.koin"
     implementation "org.koin:koin-androidx-viewmodel:$versions.koin"
 
-    testImplementation 'junit:junit:4.13.1'
-    testImplementation "io.mockk:mockk:1.10.6"
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "io.mockk:mockk:$versions.mockk"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-
 }

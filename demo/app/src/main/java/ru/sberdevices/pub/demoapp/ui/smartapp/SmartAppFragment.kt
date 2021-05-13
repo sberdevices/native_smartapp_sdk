@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
@@ -33,18 +34,17 @@ class SmartAppFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // viewModel.clothes.observe(viewLifecycleOwner) { processClothes(it) }
-
-        viewModel.buyItems.observe(viewLifecycleOwner) { processPurchase(it) }
-
         view.findViewById<ImageView>(R.id.androidImageView).setOnClickListener { viewModel.sendServerAction() }
     }
 
     override fun onResume() {
         super.onResume()
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.sharedFlow.collect { processClothes(it) }
+        lifecycleScope.launchWhenResumed {
+            viewModel.buyItems.collect { processPurchase(it) }
+        }
+        lifecycleScope.launchWhenResumed {
+            viewModel.clothesFlow.collect { processClothes(it) }
         }
     }
 
@@ -82,15 +82,5 @@ class SmartAppFragment : Fragment() {
 
     companion object {
         fun newInstance() = SmartAppFragment()
-
-        private var View.isVisible: Boolean
-            get() = TODO()
-            set(isVisible: Boolean) {
-                if (isVisible) {
-                    this.visibility = View.VISIBLE
-                } else {
-                    this.visibility = View.GONE
-                }
-            }
     }
 }

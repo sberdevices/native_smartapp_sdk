@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:text="@string/asistant_description"
         android:textAppearance="@style/TextAppearance.SberDevices.Body1"
+        android:textSize="16dp"
         android:textColor="@color/sbdv_white_64"
         app:flow_horizontalBias="0.5"
         app:flow_verticalBias="0.5"

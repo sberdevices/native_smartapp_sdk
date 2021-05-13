@@ -53,9 +53,7 @@ class DemoApplication : Application() {
     private fun initApp() {
         startKoin {
             androidContext(this@DemoApplication)
-            modules(utilsModule)
-            modules(viewModelModule)
-            modules(sdkModule)
+            modules(listOf(utilsModule, viewModelModule, sdkModule))
         }
     }
 }

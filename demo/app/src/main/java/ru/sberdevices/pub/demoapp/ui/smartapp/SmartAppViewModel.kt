@@ -1,12 +1,12 @@
 package ru.sberdevices.pub.demoapp.ui.smartapp
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -20,7 +20,7 @@ import ru.sberdevices.services.appstate.AppStateHolder
 
 /**
  * In this example view model gets messages from smartapp backend by [Messaging].
- * Also it shares it's state with smartapp backend via [AppStateHolder].
+ * Also it shares its state with smartapp backend via [AppStateHolder].
  */
 class SmartAppViewModel(
     private val messaging: Messaging,
@@ -36,15 +36,15 @@ class SmartAppViewModel(
     private val logger by Logger.lazy("SmartAppViewModel")
     private val currentClothes: MutableSet<Clothes> = HashSet()
 
-    private val _clothes = MutableLiveData<Clothes>()
-    private val _buyItems = MutableLiveData<BuyItems>()
-
-    val clothes: LiveData<Clothes> = _clothes
-    val buyItems: LiveData<BuyItems> = _buyItems
-
-    val sharedFlow = MutableSharedFlow<Clothes>(
+    val _clothesFlow = MutableSharedFlow<Clothes>(
         replay = Clothes.values().size
     )
+    private val _buyItems = MutableSharedFlow<BuyItems>(
+        replay = 1
+    )
+
+    val buyItems: SharedFlow<BuyItems> = _buyItems.asSharedFlow()
+    val clothesFlow = _clothesFlow.asSharedFlow()
 
     private val listener = object : Messaging.Listener {
         override fun onMessage(messageId: MessageId, payload: Payload) {
@@ -56,13 +56,12 @@ class SmartAppViewModel(
                 is WearThisCommand -> {
                     model.clothes?.let {
                         currentClothes.add(it)
-                        // _clothes.postValue(model.clothes)
-                        sharedFlow.tryEmit(model.clothes)
+                        _clothesFlow.tryEmit(model.clothes)
                     }
                 }
                 is BuySuccessCommand -> {
                     if (true == model.buyItems?.contains(BuyItems.ELEPHANT)) {
-                        _buyItems.postValue(model.buyItems.last())
+                        _buyItems.tryEmit(model.buyItems.last())
                     }
                 }
             }
@@ -84,14 +83,16 @@ class SmartAppViewModel(
         scope.launch {
             messaging.sendAction(
                 MessageName.SERVER_ACTION,
-                Payload(Json.encodeToString(
-                    ServerAction(
-                        actionId = "ACTION_FROM_NATIVE_APP",
-                        parameters = mapOf(
-                            "myParameter" to "Андроид"
+                Payload(
+                    Json.encodeToString(
+                        ServerAction(
+                            actionId = "ACTION_FROM_NATIVE_APP",
+                            parameters = mapOf(
+                                "myParameter" to "Андроид"
+                            )
                         )
                     )
-                ))
+                )
             )
         }
     }
