@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.google.protobuf'
     id 'kotlin-android'
     id 'maven-publish'
 }
@@ -8,11 +9,14 @@ android {
     compileSdkVersion 29
     buildToolsVersion  "29.0.2"
 
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+
+        buildConfigField 'String', 'CV_API_VERSION', "\"3.0.0\""
+        versionName "3.0.0"
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -21,10 +25,40 @@ android {
         jvmTarget = '1.8'
     }
 
+    sourceSets {
+        main {
+            proto {
+                srcDir 'src/main/proto'
+            }
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.0.0"
+    }
+    plugins {
+        javalite {
+            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
 }
 
 dependencies {
     implementation "androidx.annotation:annotation:1.2.0"
+    api "com.google.protobuf:protobuf-lite:3.0.1"
 }
 
 afterEvaluate {
@@ -40,16 +74,16 @@ afterEvaluate {
             }
 
             publications {
-                mavenBinderHelperApi(MavenPublication) {
+                mavenCvProto(MavenPublication) {
                     from components.release
 
-                    groupId rootProject.ext.pomGroupID
-                    artifactId project.name
-                    version rootProject.ext.pomVersion
+                    groupId = rootProject.ext.pomGroupID+'.cv'
+                    artifactId = "proto"
+                    version = android.defaultConfig.versionName
 
                     pom {
-                        name = project.name
-                        description = 'asserts is utility library containing some userful asserts'
+                        name = "cv:proto"
+                        description = 'protos used for parcelling of entities'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
@@ -59,12 +93,12 @@ afterEvaluate {
                         }
                         developers {
                             developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
+                                name = 'Dmitry Levshunov'
+                                email = 'Levshunov.D.A@sberbank.ru'
                             }
                             developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
+                                name = 'Irina Karpenko'
+                                email = 'IViKarpenko@sberbank.ru'
                             }
                         }
                         scm {
@@ -87,6 +121,6 @@ afterEvaluate {
 
 afterEvaluate {
     signing {
-        sign publishing.publications.mavenBinderHelperApi
+        sign publishing.publications.mavenCvProto
     }
 }

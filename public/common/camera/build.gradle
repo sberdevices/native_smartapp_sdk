@@ -1,16 +1,23 @@
-plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'maven-publish'
-}
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 29
     buildToolsVersion  "29.0.2"
+    testOptions.unitTests.includeAndroidResources = true
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
 
     buildTypes {
         release {
             minifyEnabled false
+            consumerProguardFiles "${project.rootDir}/../../common-proguard-rules.pro"
         }
     }
     compileOptions {
@@ -20,11 +27,29 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
 }
 
 dependencies {
+    implementation project(':public:common:logger')
+
     implementation "androidx.annotation:annotation:1.2.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+
+    testImplementation "androidx.test:core:1.3.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    testImplementation "junit:junit:4.13"
+    testImplementation "io.mockk:mockk:1.10.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
+    testImplementation "org.json:json:20180813"
+
+    androidTestImplementation "androidx.appcompat:appcompat:1.2.0"
+    androidTestImplementation "androidx.test:core:1.0.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.2"
+    androidTestImplementation "androidx.test:rules:1.1.0"
+    androidTestImplementation "androidx.test:runner:1.1.0"
+    androidTestImplementation "junit:junit:4.13"
+
 }
 
 afterEvaluate {
@@ -40,7 +65,7 @@ afterEvaluate {
             }
 
             publications {
-                mavenBinderHelperApi(MavenPublication) {
+                mavenCommonCamera(MavenPublication) {
                     from components.release
 
                     groupId rootProject.ext.pomGroupID
@@ -48,8 +73,8 @@ afterEvaluate {
                     version rootProject.ext.pomVersion
 
                     pom {
-                        name = project.name
-                        description = 'asserts is utility library containing some userful asserts'
+                        name = "common:camera"
+                        description = 'utility for camera usage'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
@@ -59,12 +84,12 @@ afterEvaluate {
                         }
                         developers {
                             developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
+                                name = 'Dmitry Levshunov'
+                                email = 'Levshunov.D.A@sberbank.ru'
                             }
                             developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
+                                name = 'Irina Karpenko'
+                                email = 'IViKarpenko@sberbank.ru'
                             }
                         }
                         scm {
@@ -87,6 +112,6 @@ afterEvaluate {
 
 afterEvaluate {
     signing {
-        sign publishing.publications.mavenBinderHelperApi
+        sign publishing.publications.mavenCommonCamera
     }
 }

@@ -1,9 +1,16 @@
 rootProject.name = 'native_smartapp_sdk'
 
 include ':public:common:asserts',
-        ':public:common:logger',
         ':public:common:binderhelper',
         ':public:common:binderhelper_api',
+        ':public:common:camera',
+        ':public:common:logger',
+        ':public:cv:aidl',
+        ':public:cv:api',
+        ':public:cv:entity',
+        ':public:cv:impl',
+        ':public:cv:proto',
+        ':public:cv:util',
         ':public:services:appstate:aidl',
         ':public:services:appstate:api',
         ':public:services:appstate:impl',

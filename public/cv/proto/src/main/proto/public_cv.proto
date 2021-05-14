@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package ru.sberdevices.cv.proto;
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME;
+
+import "google/protobuf/wrappers.proto";
+
+message BoundingBox {
+  float relative_left = 1;
+  float relative_top = 2;
+  float relative_right = 3;
+  float relative_bottom = 4;
+}
+message Point {
+  float relative_x = 1;
+  float relative_y = 2;
+  google.protobuf.FloatValue confidence = 3;
+}
+// Atomic
+message PointGroup {
+  repeated Point point = 1;
+  google.protobuf.Int32Value track_id = 2;
+}
+message BodyMask {
+  bytes data = 1;
+  int32 row_count = 2;
+  int32 column_count = 3;
+}
+
+// Wrappers
+message Landmarks {
+  repeated PointGroup point_groups = 1;
+  int64 frame_timestamp_ms = 2;
+}
+
+message BoundingBoxes {
+  repeated BoundingBox bounding_box = 1;
+  int64 frame_timestamp_ms = 2;
+}
+
+message BodyMasks {
+  repeated BodyMask masks = 1;
+  int64 frame_timestamp_ms = 2;
+}
+
+// Main detection submessages
+message Humans {
+  BoundingBoxes body_bounding_boxes = 1;
+  BoundingBoxes face_bounding_boxes = 2;
+  repeated int64 body_track_ids = 3;
+  Landmarks body_landmarks = 4;
+  Landmarks face_landmarks = 5;
+  repeated int64 face_track_ids = 6;
+  BodyMasks body_masks = 7;
+}
+message Gesture {
+  reserved 2;
+  enum Type {
+
+    NONE = 0;
+    PALM = 5;
+    THUMB_UP = 7;
+    THUMB_DOWN = 8;
+    FINGER_TO_LIPS = 9;
+    OK = 10;
+  };
+  Type type = 1;
+  string metadata = 3;
+  int64 frame_timestamp_ms = 4;
+}
+
+message MirrorState {
+  bool installed = 1;
+}
+
+// Main detection message
+message DetectionEntity {
+  reserved 1, 3, 5, 6, 7, 8, 10; // Old detection entities
+  oneof kind {
+    Humans humans = 2;
+    Gesture gesture = 4;
+    MirrorState mirror_state = 9;
+  }
+}
+
+message ServiceInfo {
+  string cv_api_version = 1;
+  string object_tracking_version = 2;
+  string vision_labs_version = 3;
+  string vision_labs_version_hash = 4;
+  string object_tracking_metadata = 5;
+}
