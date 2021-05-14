@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import ru.sberdevices.common.extensions.enterImmersiveMode
 import ru.sberdevices.common.extensions.exitImmersiveMode
 import ru.sberdevices.common.logger.Logger
-import ru.sberdevices.pub.demoapp.ui.`computer-vision`.CvFragment
+import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionFragment
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppFragment
 import ru.sberdevices.services.pub.demoapp.R
 import ru.sberdevices.services.pub.demoapp.databinding.FragmentTabsBinding
@@ -56,7 +56,7 @@ class TabsFragment : Fragment() {
     private fun renderTabFragment(tab: TabUi) {
         val fragment = when (tab) {
             TabUi.SERVICES -> SmartAppFragment.newInstance()
-            TabUi.CV -> CvFragment.newInstance()
+            TabUi.CV -> ComputerVisionFragment.newInstance()
         }
         showChildFragment(fragment, R.id.fragmentContainerView)
     }

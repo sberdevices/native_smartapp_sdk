@@ -21,13 +21,11 @@ versions.androidx.core = "1.3.2"
 versions.androidx.lifecycle = '2.3.1'
 versions.androidx.navigation = "2.3.5"
 
-versions.koin = "2.0.1"
-
-versions.lottie = "3.7.0"
-
+versions.androidx_core_testing = "2.1.0"
 versions.arch = '1.1.1'
-
+versions.gson = "2.8.6"
 versions.junit = "4.13.1"
-
+versions.koin = "2.0.1"
+versions.lottie = "3.7.0"
 versions.mockk = "1.10.6"
-
+versions.protobuf_lite = "3.0.1"

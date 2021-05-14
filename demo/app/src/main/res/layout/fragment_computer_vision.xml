@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ru.sberdevices.pub.demoapp.ui.cv.view.DetectionView
+        android:id="@+id/detection_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:id="@+id/controls_panel"
+        android:padding="4dp"
+        android:background="@color/white_50"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Switch
+            android:id="@+id/switch_mirror"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_mirror"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_face_bounding_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_face_bounding_box"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_face_landmarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_face_landmarks"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_body_bounding_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_body_bounding_box"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_body_landmarks_sberdevices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_body_landmarks_homa_net"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_body_landmarks_visionlabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_body_landmarks_sental_net"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_segmentation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_body_segmentation"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switch_gestures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_gestures"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

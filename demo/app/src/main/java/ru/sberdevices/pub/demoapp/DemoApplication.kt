@@ -2,6 +2,7 @@ package ru.sberdevices.pub.demoapp
 
 import android.app.Application
 import android.os.Build
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -10,8 +11,11 @@ import ru.sberdevices.common.assert.Asserts
 import ru.sberdevices.common.extensions.isMainProcess
 import ru.sberdevices.common.logger.AndroidLoggerDelegate
 import ru.sberdevices.common.logger.Logger
+import ru.sberdevices.cv.detection.CvApiFactory
+import ru.sberdevices.cv.detection.CvApiFactoryImpl
 import ru.sberdevices.messaging.MessagingFactory
 import ru.sberdevices.pub.demoapp.ui.assistant.AssistantViewModel
+import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionViewModel
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppViewModel
 import ru.sberdevices.services.appstate.AppStateManagerFactory
 import ru.sberdevices.services.pub.demoapp.BuildConfig
@@ -32,9 +36,11 @@ class DemoApplication : Application() {
     private val viewModelModule = module {
         single { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
         viewModel { AssistantViewModel() }
+        viewModel { ComputerVisionViewModel(cvApiFactory = get(), ioCoroutineDispatcher = Dispatchers.IO) }
     }
 
     private val sdkModule = module {
+        factory<CvApiFactory> { CvApiFactoryImpl(this@DemoApplication) }
         factory { MessagingFactory.create(appContext = get()) }
     }
 
