@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
     id 'maven-publish'
 }
 
@@ -8,11 +9,14 @@ android {
     compileSdkVersion 29
     buildToolsVersion  "29.0.2"
 
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+
+        buildConfigField 'String', 'CV_API_VERSION', "\"3.0.0\""
+        versionName "3.0.0"
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -20,11 +24,20 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
 }
 
 dependencies {
+    implementation project(':public:common:binderhelper')
+    implementation project(':public:common:logger')
+    implementation project(':public:cv:aidl')
+    api project(':public:cv:api')
+    api project(':public:cv:entity')
+    implementation project(':public:cv:proto')
+    api project(':public:cv:util')
+
     implementation "androidx.annotation:annotation:1.2.0"
+    implementation "com.google.protobuf:protobuf-lite:3.0.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
 }
 
 afterEvaluate {
@@ -40,16 +53,16 @@ afterEvaluate {
             }
 
             publications {
-                mavenBinderHelperApi(MavenPublication) {
+                mavenCvImpl(MavenPublication) {
                     from components.release
 
-                    groupId rootProject.ext.pomGroupID
-                    artifactId project.name
-                    version rootProject.ext.pomVersion
+                    groupId = rootProject.ext.pomGroupID+'.cv'
+                    artifactId = "impl"
+                    version = android.defaultConfig.versionName
 
                     pom {
-                        name = project.name
-                        description = 'asserts is utility library containing some userful asserts'
+                        name = "cv:impl"
+                        description = 'cv api binding implementation, which connects to service by aidl'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
@@ -59,12 +72,12 @@ afterEvaluate {
                         }
                         developers {
                             developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
+                                name = 'Dmitry Levshunov'
+                                email = 'Levshunov.D.A@sberbank.ru'
                             }
                             developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
+                                name = 'Irina Karpenko'
+                                email = 'IViKarpenko@sberbank.ru'
                             }
                         }
                         scm {
@@ -87,6 +100,6 @@ afterEvaluate {
 
 afterEvaluate {
     signing {
-        sign publishing.publications.mavenBinderHelperApi
+        sign publishing.publications.mavenCvImpl
     }
 }

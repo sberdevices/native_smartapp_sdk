@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="ru.sberdevices.cv.impl"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="ru.sberdevices.permission.COMPUTER_VISION_SENSITIVE" />
+</manifest>
