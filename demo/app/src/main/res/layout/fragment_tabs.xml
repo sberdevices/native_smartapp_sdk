@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sbdv_background">
+
+    <TextView
+        android:id="@+id/servicesTabButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edge_item_margin"
+        android:layout_marginTop="64dp"
+        android:focusedByDefault="true"
+        android:foreground="@drawable/tab_label_background"
+        android:gravity="top"
+        android:lineSpacingExtra="1sp"
+        android:paddingBottom="@dimen/dp8"
+        android:paddingEnd="@dimen/dp16"
+        android:paddingStart="@dimen/dp16"
+        android:paddingTop="@dimen/dp8"
+        android:text="@string/asistant_tab"
+        android:textAppearance="@style/TextAppearance.SberDevices.Headline"
+        android:textColor="@color/tab_color_selector"
+        android:translationY="-0.28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/cvTabButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp32"
+        android:foreground="@drawable/tab_label_background"
+        android:gravity="top"
+        android:lineSpacingExtra="1sp"
+        android:paddingBottom="@dimen/dp8"
+        android:paddingEnd="@dimen/dp16"
+        android:paddingStart="@dimen/dp16"
+        android:paddingTop="@dimen/dp8"
+        android:text="@string/cv_tab"
+        android:textAppearance="@style/TextAppearance.SberDevices.Headline"
+        android:textColor="@color/tab_color_selector"
+        android:translationY="-0.28sp"
+        app:layout_constraintStart_toEndOf="@id/servicesTabButton"
+        app:layout_constraintTop_toTopOf="@id/servicesTabButton" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/servicesTabButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

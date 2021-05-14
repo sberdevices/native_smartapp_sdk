@@ -1,0 +1,33 @@
+ext.versions = [:]
+
+versions.minSdk = 28
+versions.targetSdk = 30
+versions.compileSdk = 30
+versions.buildTools = "30.0.2"
+
+versions.androidGradlePlugin = "4.0.0"
+
+// Kotlin
+versions.kotlin = "1.4.32"
+versions.kotlinxCoroutines = "1.4.3"
+versions.kotlinxCoroutinesAndroid = "1.4.3"
+versions.kotlinxSerializations = "1.1.0"
+
+// AndroidX
+versions.androidx = [:]
+versions.androidx.appcompat = "1.1.0"
+versions.androidx.constraintlayout = "2.0.4"
+versions.androidx.core = "1.3.2"
+versions.androidx.lifecycle = '2.3.1'
+versions.androidx.navigation = "2.3.5"
+
+versions.koin = "2.0.1"
+
+versions.lottie = "3.7.0"
+
+versions.arch = '1.1.1'
+
+versions.junit = "4.13.1"
+
+versions.mockk = "1.10.6"
+

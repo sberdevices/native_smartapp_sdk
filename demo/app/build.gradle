@@ -1,0 +1,90 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId "ru.sberdevices.pub.demoapp"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "0.1"
+
+        testFunctionalTest true
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
+    }
+}
+
+dependencies {
+    // Modules
+    implementation project(path: ':libs:api:appstate')
+    implementation project(path: ':libs:api:messaging')
+    implementation project(path: ':libs:sdk:appstate')
+    implementation project(path: ':libs:sdk:messaging')
+    implementation project(path: ':libs:common:asserts')
+    implementation project(path: ':libs:common:extensions')
+
+    // SberDevices TODO раскоментить после выкладки
+//    implementation "ru.sberdevices.smartapp.sdk:asserts:0.1"
+//    implementation "ru.sberdevices.smartapp.sdk:logger:0.1"
+////    implementation "ru.sberdevices.smartapp.sdk.appstate:api:0.1" TODO надо ли
+//    implementation "ru.sberdevices.smartapp.sdk.appstate:impl:0.1"
+
+    // Android
+    implementation "androidx.appcompat:appcompat:$versions.androidx.appcompat"
+    implementation "androidx.core:core-ktx:$versions.androidx.core"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidx.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.androidx.lifecycle"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.androidx.constraintlayout"
+    implementation "androidx.navigation:navigation-fragment-ktx:$versions.androidx.navigation"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlinxCoroutinesAndroid"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.kotlinxSerializations"
+
+    implementation "com.airbnb.android:lottie:$versions.lottie"
+
+    // Third parties
+    implementation "org.koin:koin-android:$versions.koin"
+    implementation "org.koin:koin-androidx-viewmodel:$versions.koin"
+
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "io.mockk:mockk:$versions.mockk"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+}

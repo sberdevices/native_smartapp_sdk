@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_inset">192dp</dimen>
+    <dimen name="item_margin">32dp</dimen>
+    <dimen name="edge_item_margin">112dp</dimen>
+    <dimen name="dp8">8dp</dimen>
+    <dimen name="dp16">16dp</dimen>
+    <dimen name="dp32">32dp</dimen>
+</resources>
