@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">StarSDK External Developer Demo</string>
 
-    <string name="asistant_tab">ASISTANT</string>
+    <string name="asistant_tab">ASSISTANT</string>
     <string name="cv_tab">COMPUTER VISION</string>
     <string name="asistant_description">
 Это демо смартапп, который умеет взаимодействовать\n
@@ -20,5 +20,15 @@
 совершения тестового платежа.\n
 При успешном завершении с карты спишется \n
 один рубль, который потом вернется обратно.</string>
+
+    <!-- Computer Vision -->
+    <string name="track_mirror">Track mirror</string>
+    <string name="track_face_bounding_box">Track face bounding box </string>
+    <string name="track_face_landmarks">Track face landmarks </string>
+    <string name="track_body_bounding_box">Track body bounding box </string>
+    <string name="track_body_landmarks_homa_net">Track body landmarks HomaNet </string>
+    <string name="track_body_landmarks_sental_net">Track body landmarks SentalNet </string>
+    <string name="track_body_segmentation">Track body segmentation </string>
+    <string name="track_gestures">Track gestures </string>
 
 </resources>

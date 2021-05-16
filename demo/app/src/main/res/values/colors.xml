@@ -8,4 +8,6 @@
     <color name="colorBackground">#131313</color>
     <color name="textColor">#F6F6F6</color>
 
+    <color name="white_50">#80FFFFFF</color>
+    <color name="white_40">#64FFFFFF</color>
 </resources>
