@@ -1,5 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
 
 dependencies {
     api project(':public:services:mic_camera_state:api')
@@ -10,13 +13,13 @@ dependencies {
     implementation project(':public:common:binderhelper_api')
     implementation project(':public:common:logger')
 
-    implementation 'androidx.core:core:1.3.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
+    implementation "androidx.core:core-ktx:$versions.androidx.core"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion  "29.0.2"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     buildTypes {
         debug {
@@ -27,8 +30,59 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+}
 
+afterEvaluate {
+    publishing {
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
+
+        publications {
+            mavenMicCameraStateImpl(MavenPublication) {
+                from components.release
+
+                groupId rootProject.ext.pomGroupID+'.mic_camera_state'
+                artifactId "impl"
+                version rootProject.ext.pomVersion
+
+                pom {
+                    name = 'mic-camera-state'
+                    description = 'mic-camera-state is utility library for getting microphone and camera state'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = 'Igor Perminov'
+                            email = 'Perminov.I.Yurye@sberbank.ru'
+                        }
+                        developer {
+                            name = 'Nikolay Pahomov'
+                            email = 'NMPakhomov@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.developerConnection
+                        url = publication.githubUrl
+                    }
+                }
+
+                versionMapping {
+                    allVariants {
+                        fromResolutionResult()
+                    }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    signing {
+        sign publishing.publications.mavenMicCameraStateImpl
+    }
 }

@@ -1,10 +1,12 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion  "29.0.2"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     buildTypes {
         debug {
@@ -15,74 +17,54 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.3.2'
+    implementation "androidx.core:core-ktx:$versions.androidx.core"
 }
 
 afterEvaluate {
     publishing {
-        repositories {
-//            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-//                authentication(userName: System.getenv("MAVEN_USERNAME"), password: System.getenv("MAVEN_PASSWORD"))
-//            }
-//
-//            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-//                authentication(userName: System.getenv("MAVEN_USERNAME"), password: System.getenv("MAVEN_PASSWORD"))
-//            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            maven {
-                name = "OSSRH"
-                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        publications {
+            mavenJavaAsserts(MavenPublication) {
+                from components.release
 
-            publications {
-                mavenJavaAsserts(MavenPublication) {
-                    from components.release
+                groupId rootProject.ext.pomGroupID
+                artifactId project.name
+                version rootProject.ext.pomVersion
 
-                    groupId rootProject.ext.pomGroupID
-                    artifactId project.name
-                    version rootProject.ext.pomVersion
-
-                    pom {
-                        name = 'asserts'
-                        description = 'asserts is utility library containing some userful asserts'
-                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
-                        licenses {
-                            license {
-                                name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
-                            developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
-                            url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                pom {
+                    name = 'asserts'
+                    description = 'asserts is utility library containing some userful asserts'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Igor Perminov'
+                            email = 'Perminov.I.Yurye@sberbank.ru'
                         }
+                        developer {
+                            name = 'Nikolay Pahomov'
+                            email = 'NMPakhomov@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.developerConnection
+                        url = publication.githubUrl
+                    }
+                }
+
+                versionMapping {
+                    allVariants {
+                        fromResolutionResult()
                     }
                 }
             }

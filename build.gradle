@@ -8,6 +8,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
+apply from: 'versions.gradle'
+apply from: 'publication.gradle'
+
 android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
@@ -57,16 +60,30 @@ buildscript {
     }
 }
 
+
 allprojects {
     repositories {
         mavenCentral()
         google()
-        maven { url "https://jitpack.io" }
-        jcenter()
+
+        maven {
+            name = "OSSRH"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
     }
 }
 
 ext {
     pomVersion = '1.0-rc1'
     pomGroupID = "ru.sberdevices.smartapp.sdk"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }

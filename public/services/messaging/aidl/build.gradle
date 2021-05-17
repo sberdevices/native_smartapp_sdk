@@ -1,9 +1,11 @@
-apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion  "29.0.2"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     buildTypes {
         debug {
@@ -21,7 +23,7 @@ afterEvaluate {
         repositories {
             maven {
                 name = "OSSRH"
-                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                url = publication.deployUrl
                 credentials {
                     username = ossrhUsername
                     password = ossrhPassword
@@ -32,9 +34,6 @@ afterEvaluate {
                 mavenMesagingAidl(MavenPublication) {
                     from components.release
 
-//                    artifact androidJavadocsJar TODO fix
-//                    artifact androidSourcesJar
-
                     groupId rootProject.ext.pomGroupID+'.messaging'
                     artifactId "aidl"
                     version rootProject.ext.pomVersion
@@ -42,11 +41,11 @@ afterEvaluate {
                     pom {
                         name = "messaging:aidl"
                         description = 'messaging libray serves to connect native apk with smartapp backend'
-                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        url = publication.githubUrl
                         licenses {
                             license {
-                                name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
+                                name = publication.licenseName
+                                url = publication.licenseUrl
                             }
                         }
                         developers {
@@ -60,9 +59,9 @@ afterEvaluate {
                             }
                         }
                         scm {
-                            connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
-                            developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
-                            url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                            connection = publication.connectionUrl
+                            developerConnection = publication.connectionUrl
+                            url = publication.githubUrl
                         }
                     }
 

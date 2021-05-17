@@ -1,0 +1,15 @@
+ext.publication = [:]
+
+publication.license = {
+            license {
+                name = publication.licenseName
+                url = publication.licenseUrl
+            }
+        }
+
+publication.connectionUrl = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
+publication.developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
+publication.githubUrl = 'https://github.com/sberdevices/native_smartapp_sdk'
+publication.licenseName = 'Sber Public License at-nc-sa v.2'
+publication.licenseUrl = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
+publication.deployUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
