@@ -2,13 +2,13 @@ package ru.sberdevices.pub.demoapp
 
 import android.app.Application
 import android.os.Build
+import android.os.Looper
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import ru.sberdevices.common.assert.Asserts
-import ru.sberdevices.common.extensions.isMainProcess
 import ru.sberdevices.common.logger.AndroidLoggerDelegate
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.detection.CvApiFactory
@@ -51,7 +51,7 @@ class DemoApplication : Application() {
         // Example of getting device's info
         logger.info { "Running on device: ${Build.BRAND} ${Build.MODEL}" }
 
-        if (isMainProcess()) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
             initApp()
         }
     }
