@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import ru.sberdevices.common.extensions.enterImmersiveMode
-import ru.sberdevices.common.extensions.exitImmersiveMode
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionFragment
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppFragment
@@ -62,13 +60,13 @@ class TabsFragment : Fragment() {
     }
 
     // TODO можно использовать когда открывается фрагмент CV, чтобы пользователя не отвлекал лавашар
-    private fun enterImmersiveMode() {
-        requireActivity().window.enterImmersiveMode()
-    }
-
-    private fun exitImmersiveMode() {
-        requireActivity().window.exitImmersiveMode()
-    }
+    // private fun enterImmersiveMode() {
+    //     requireActivity().window.enterImmersiveMode()
+    // }
+    //
+    // private fun exitImmersiveMode() {
+    //     requireActivity().window.exitImmersiveMode()
+    // }
 
     companion object {
         fun newInstance() = TabsFragment()
