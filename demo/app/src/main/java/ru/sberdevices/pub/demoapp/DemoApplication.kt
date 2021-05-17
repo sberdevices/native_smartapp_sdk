@@ -14,7 +14,6 @@ import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.detection.CvApiFactory
 import ru.sberdevices.cv.detection.CvApiFactoryImpl
 import ru.sberdevices.messaging.MessagingFactory
-import ru.sberdevices.pub.demoapp.ui.assistant.AssistantViewModel
 import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionViewModel
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppViewModel
 import ru.sberdevices.services.appstate.AppStateManagerFactory
@@ -35,7 +34,6 @@ class DemoApplication : Application() {
 
     private val viewModelModule = module {
         single { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
-        viewModel { AssistantViewModel() }
         viewModel { ComputerVisionViewModel(cvApiFactory = get(), ioCoroutineDispatcher = Dispatchers.IO) }
     }
 
