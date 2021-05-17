@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,34 +45,37 @@
 
     <ImageView
         android:id="@+id/androidBeanieImageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/androidImageView"
-        android:translationY="19dp"
+        android:src="@drawable/cap_illustration"
         android:visibility="invisible"
-        android:src="@drawable/ic_beanie" />
+        android:translationY="-19dp"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/jacketImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="215dp"
+        android:layout_height="300dp"
         app:layout_constraintLeft_toLeftOf="@+id/androidImageView"
         app:layout_constraintRight_toRightOf="@+id/androidImageView"
         app:layout_constraintTop_toTopOf="@+id/androidImageView"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         android:visibility="invisible"
-        android:src="@drawable/jacket_illustration" />
+        android:src="@drawable/kurtka_illustration"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/leftMittenImageView"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/mitten_illustration"
-        android:translationX="60dp"
+        android:src="@drawable/percha_ill"
+        android:translationX="30dp"
         android:translationY="55dp"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintTop_toTopOf="@id/androidImageView"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         app:layout_constraintLeft_toLeftOf="@+id/androidImageView" />
@@ -81,10 +85,11 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:scaleX="-1"
-        android:src="@drawable/mitten_illustration"
-        android:translationX="-60dp"
+        android:src="@drawable/percha_ill"
+        android:translationX="-30dp"
         android:translationY="55dp"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintTop_toTopOf="@id/androidImageView"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         app:layout_constraintRight_toRightOf="@id/androidImageView" />
@@ -94,11 +99,11 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:scaleX="-1"
-        android:src="@drawable/boots"
-        android:translationX="25dp"
-        android:translationY="-15dp"
+        android:src="@drawable/boots_illustration"
+        android:translationX="30dp"
+        android:translationY="15dp"
         android:visibility="invisible"
-        app:tint="@android:color/holo_red_dark"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         app:layout_constraintLeft_toLeftOf="@+id/androidImageView"
         app:layout_constraintRight_toLeftOf="@+id/rightBootImageView" />
@@ -107,11 +112,11 @@
         android:id="@+id/rightBootImageView"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/boots"
-        android:translationX="-25dp"
-        android:translationY="-15dp"
+        android:src="@drawable/boots_illustration"
+        android:translationX="-30dp"
+        android:translationY="15dp"
         android:visibility="invisible"
-        app:tint="@android:color/holo_red_dark"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/androidImageView"
         app:layout_constraintLeft_toRightOf="@+id/leftBootImageView"
         app:layout_constraintRight_toRightOf="@+id/androidImageView" />
