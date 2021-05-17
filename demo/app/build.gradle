@@ -78,8 +78,8 @@ dependencies {
     // Third parties
     implementation "com.google.code.gson:gson:$versions.gson"
     implementation "com.google.protobuf:protobuf-lite:$versions.protobuf_lite"
-    implementation "org.koin:koin-android:$versions.koin"
-    implementation "org.koin:koin-androidx-viewmodel:$versions.koin"
+    implementation "io.insert-koin:koin-android:$versions.koin"
+    implementation "io.insert-koin:koin-androidx-viewmodel:$versions.koin"
 
 
     testImplementation "androidx.arch.core:core-testing:$versions.androidx_core_testing"
