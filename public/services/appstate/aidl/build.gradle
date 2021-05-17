@@ -30,7 +30,7 @@ afterEvaluate {
 
             publications {
                 mavenAppstate(MavenPublication) {
-                    from components.debug
+                    from components.release
 
                     groupId rootProject.ext.pomGroupID+'.appstate'
                     artifactId "aidl"
@@ -38,12 +38,12 @@ afterEvaluate {
 
                     pom {
                         name = "appstate:aidl"
-                        description = 'asserts is utility library containing some userful asserts'
+                        description = 'appstate is a library used to transmit native app state to smartapp backend'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
                                 name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
                             }
                         }
                         developers {

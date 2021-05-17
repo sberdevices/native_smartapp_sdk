@@ -46,7 +46,7 @@ afterEvaluate {
 
             publications {
                 mavenJavaAsserts(MavenPublication) {
-                    from components.debug
+                    from components.release
 
                     groupId rootProject.ext.pomGroupID
                     artifactId project.name
@@ -59,7 +59,7 @@ afterEvaluate {
                         licenses {
                             license {
                                 name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
                             }
                         }
                         developers {

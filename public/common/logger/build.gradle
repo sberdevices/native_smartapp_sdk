@@ -47,7 +47,7 @@ afterEvaluate {
 
             publications {
                 MavenPublicationLogger(MavenPublication) {
-                    from components.debug
+                    from components.release
 
                     groupId rootProject.ext.pomGroupID
                     artifactId project.name
@@ -55,12 +55,12 @@ afterEvaluate {
 
                     pom {
                         name = project.name
-                        description = 'asserts is utility library containing some userful asserts'
+                        description = 'logger is logging library'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
                                 name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
                             }
                         }
                         developers {

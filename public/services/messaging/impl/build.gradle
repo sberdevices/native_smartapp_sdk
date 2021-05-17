@@ -36,6 +36,16 @@ android {
 
 }
 
+//task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+//    archiveClassifier.set('javadoc')
+//    from androidJavadocs.destinationDir
+//}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
 afterEvaluate {
     publishing {
         repositories {
@@ -49,21 +59,24 @@ afterEvaluate {
             }
 
             publications {
-                mavenMessaging(MavenPublication) {
-                    from components.debug
+                mavenMessagingImpl(MavenPublication) {
+                    from components.release
 
-                    groupId rootProject.ext.pomGroupID
-                    artifactId "messaging"
+//                    artifact androidJavadocsJar TODO fix
+                    artifact androidSourcesJar
+
+                    groupId rootProject.ext.pomGroupID+'.messaging'
+                    artifactId "impl"
                     version rootProject.ext.pomVersion
 
                     pom {
-                        name = "messaging"
-                        description = 'asserts is utility library containing some userful asserts'
+                        name = "messaging:impl"
+                        description = 'messaging libray serves to connect native apk with smartapp backend'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
                                 name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
                             }
                         }
                         developers {
@@ -96,6 +109,6 @@ afterEvaluate {
 
 afterEvaluate {
     signing {
-        sign publishing.publications.mavenMessaging
+        sign publishing.publications.mavenMessagingImpl
     }
 }

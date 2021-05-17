@@ -10,6 +10,7 @@ dependencies {
     implementation project(':public:common:logger')
 
     implementation 'androidx.core:core:1.3.2'
+    implementation "androidx.annotation:annotation:1.3.0-alpha01"
 }
 
 android {
@@ -70,7 +71,7 @@ afterEvaluate {
 
             publications {
                 mavenAppstateImpl(MavenPublication) {
-                    from components.debug
+                    from components.release
 
                     artifact androidJavadocsJar
                     artifact androidSourcesJar
@@ -81,12 +82,12 @@ afterEvaluate {
 
                     pom {
                         name = "appstate"
-                        description = 'asserts is utility library containing some userful asserts'
+                        description = 'appstate is a library used to transmit native app state to smartapp backend'
                         url = 'https://github.com/sberdevices/native_smartapp_sdk'
                         licenses {
                             license {
                                 name = 'Sber Public License at-nc-sa v.2'
-                                url = 'https://github.com/sberdevices/salutejs/blob/master/LICENSE.txt'
+                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
                             }
                         }
                         developers {

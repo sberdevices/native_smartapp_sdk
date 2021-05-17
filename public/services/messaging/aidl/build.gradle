@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 29
@@ -12,5 +13,72 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                name = "OSSRH"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+
+            publications {
+                mavenMesagingAidl(MavenPublication) {
+                    from components.release
+
+//                    artifact androidJavadocsJar TODO fix
+//                    artifact androidSourcesJar
+
+                    groupId rootProject.ext.pomGroupID+'.messaging'
+                    artifactId "aidl"
+                    version rootProject.ext.pomVersion
+
+                    pom {
+                        name = "messaging:aidl"
+                        description = 'messaging libray serves to connect native apk with smartapp backend'
+                        url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        licenses {
+                            license {
+                                name = 'Sber Public License at-nc-sa v.2'
+                                url = 'https://github.com/sberdevices/native_smartapp_sdk/blob/master/LICENSE.txt'
+                            }
+                        }
+                        developers {
+                            developer {
+                                name = 'Igor Perminov'
+                                email = 'Perminov.I.Yurye@sberbank.ru'
+                            }
+                            developer {
+                                name = 'Nikolay Pahomov'
+                                email = 'NMPakhomov@sberbank.ru'
+                            }
+                        }
+                        scm {
+                            connection = 'scm:git:git://github.com/sberdevices/native_smartapp_sdk.git'
+                            developerConnection = 'scm:git:ssh://github.com:sberdevices/native_smartapp_sdk.git'
+                            url = 'https://github.com/sberdevices/native_smartapp_sdk'
+                        }
+                    }
+
+                    versionMapping {
+                        allVariants {
+                            fromResolutionResult()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    signing {
+        sign publishing.publications.mavenMesagingAidl
     }
 }

@@ -67,6 +67,6 @@ allprojects {
 }
 
 ext {
-    pomVersion = '0.1'
+    pomVersion = '1.0-rc1'
     pomGroupID = "ru.sberdevices.smartapp.sdk"
 }
