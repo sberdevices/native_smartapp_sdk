@@ -1,20 +1,5 @@
 rootProject.name = "sberdevices-services-demo"
-include ':app',
-        ':libs:api:appstate',
-        ':libs:api:binderhelper',
-        ':libs:api:messaging',
-        ':libs:sdk:appstate',
-        ':libs:sdk:binderhelper',
-        ':libs:sdk:messaging',
-        ':libs:common:asserts',
-        ':libs:common:camera',
-        ':libs:common:extensions',
-        ':libs:common:logger',
-        ':libs:cv:aidl',
-        ':libs:cv:api',
-        ':libs:cv:entity',
-        ':libs:cv:impl',
-        ':libs:cv:proto',
-        ':libs:cv:util'
+include ':app'
+
 
 

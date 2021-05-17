@@ -51,39 +51,15 @@ android {
 }
 
 dependencies {
-    // Modules
-    implementation project(':libs:api:appstate')
-    implementation project(':libs:api:binderhelper')
-    implementation project(':libs:api:messaging')
-    implementation project(':libs:sdk:appstate')
-    implementation project(':libs:sdk:binderhelper')
-    implementation project(':libs:sdk:messaging')
-    implementation project(':libs:common:asserts')
-    implementation project(':libs:common:camera')
-    implementation project(':libs:common:extensions')
-    implementation project(':libs:common:logger')
-    implementation project(':libs:cv:aidl')
-    implementation project(':libs:cv:api')
-    implementation project(':libs:cv:entity')
-    implementation project(':libs:cv:impl')
-    implementation project(':libs:cv:proto')
-    implementation project(':libs:cv:util')
+    // SberDevices
+    implementation "ru.sberdevices.smartapp.sdk:asserts:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk:logger:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk.appstate:impl:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk.messaging:impl:1.0-rc1"
 
-    // SberDevices TODO раскоментить после выкладки
-//    implementation "ru.sberdevices.smartapp.sdk:asserts:0.1"
-//    implementation "ru.sberdevices.smartapp.sdk:logger:0.1"
-////    implementation "ru.sberdevices.smartapp.sdk.appstate:api:0.1" TODO надо ли
-//    implementation "ru.sberdevices.smartapp.sdk.appstate:impl:0.1"
-
-//    implementation "ru.sberdevices.smartapp.sdk:binderhelper:0.1"
-//    implementation "ru.sberdevices.smartapp.sdk:binderhelper_api:0.1"
-//    implementation "ru.sberdevices.smartapp.sdk:camera:0.1"
-//    implementation "ru.sberdevices.smartapp.sdk.cv:aidl:3.0.0"
-//    implementation "ru.sberdevices.smartapp.sdk.cv:api:3.0.0"
-//    implementation "ru.sberdevices.smartapp.sdk.cv:entity:3.0.0"
-//    implementation "ru.sberdevices.smartapp.sdk.cv:impl:3.0.0"
-//    implementation "ru.sberdevices.smartapp.sdk.cv:proto:3.0.0"
-//    implementation "ru.sberdevices.smartapp.sdk.cv:util:3.0.0"
+    implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk.cv:impl:3.0.0"
+    implementation "ru.sberdevices.smartapp.sdk.cv:util:3.0.0"
 
     // Android
     implementation "androidx.appcompat:appcompat:$versions.androidx.appcompat"
