@@ -1,15 +1,12 @@
+# SberDevices Star Platform Services Demo app
 StarSdkDemoApp is application to test and show for developers how use SDKs of Star platform.
 
-# Как связать Навык в облаке с нативным приложением
-1. Создать СмартАпп в смартапп студии
-2. Написать администраторам, чтобы они поменяли следующие свойства аппа:
-    * Нужен апп, у которого тип фронта — апк.
-    * В конфиге параметр frontendEndpoint содержит нужный package_name, webhook содержит вебхук на бэк.
-3. На устройстве апп должен быть прописан либо на беке, либо в star.json.
-    **Обязательно должно быть корректно заполнено app_info **
-    > Как найти project_id, app_id, app_version_id:
-    > Открываем devtools браузера, переходим во вкладку Network и включаем фильтр XHR. Открываем наш смартапп.
-    > Во вкладке network отображается запрос с именем = application_id. В захваченном JSON можно найти нужные id    
+This demo app has already deployed backend. For your convenience you can use it with voice request "запусти Новый зеленый".
+But if you want to do it yourself or get familiar with the code you can use file *smartapp_script.zip* in root dir.
 
-Пример смартаппа, который умеет отсылать команды к нативному приложению, хранится в файле smartapp_script.zip. 
-Его можно загрузить в Smartapp-Studio.
+This app has two screens.
+* First one shows usage of libraries **appstate** and **messaging**,
+* Second one shows how to use the CV library.
+
+# ScreenShots
+TODO
