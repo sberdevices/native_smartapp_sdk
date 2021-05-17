@@ -3,6 +3,7 @@ package ru.sberdevices.pub.demoapp.ui.smartapp
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -36,7 +37,7 @@ class SmartAppViewModel(
     private val logger by Logger.lazy("SmartAppViewModel")
     private val currentClothes: MutableSet<Clothes> = HashSet()
 
-    val _clothesFlow = MutableSharedFlow<Clothes>(
+    private val _clothes = MutableSharedFlow<Clothes?>(
         replay = Clothes.values().size
     )
     private val _buyItems = MutableSharedFlow<BuyItems>(
@@ -44,8 +45,9 @@ class SmartAppViewModel(
     )
 
     val buyItems: SharedFlow<BuyItems> = _buyItems.asSharedFlow()
-    val clothesFlow = _clothesFlow.asSharedFlow()
+    val clothes = _clothes.asSharedFlow()
 
+    @ExperimentalCoroutinesApi
     private val listener = object : Messaging.Listener {
         override fun onMessage(messageId: MessageId, payload: Payload) {
             logger.debug { "Message ${messageId.value} received: ${payload.data}" }
@@ -56,8 +58,13 @@ class SmartAppViewModel(
                 is WearThisCommand -> {
                     model.clothes?.let {
                         currentClothes.add(it)
-                        _clothesFlow.tryEmit(model.clothes)
+                        _clothes.tryEmit(model.clothes)
                     }
+                }
+                is ClearClothesCommand -> {
+                    currentClothes.clear()
+                    _clothes.resetReplayCache()
+                    _clothes.tryEmit(null)
                 }
                 is BuySuccessCommand -> {
                     if (true == model.buyItems?.contains(BuyItems.ELEPHANT)) {
@@ -67,7 +74,11 @@ class SmartAppViewModel(
             }
 
             // send current state to smartapp backend
-            appStateHolder.setState(Json.encodeToString(MyAppState("На андроиде ${currentClothes.joinToString()}")))
+            appStateHolder.setState(
+                Json.encodeToString(
+                    MyAppState("На андроиде ${currentClothes.joinToString(transform = { it.clothes })}")
+                )
+            )
         }
 
         override fun onError(messageId: MessageId, throwable: Throwable) {

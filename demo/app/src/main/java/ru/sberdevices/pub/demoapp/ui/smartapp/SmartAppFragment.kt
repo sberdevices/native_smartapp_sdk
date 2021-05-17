@@ -44,7 +44,7 @@ class SmartAppFragment : Fragment() {
             viewModel.buyItems.collect { processPurchase(it) }
         }
         lifecycleScope.launchWhenResumed {
-            viewModel.clothesFlow.collect { processClothes(it) }
+            viewModel.clothes.collect { processClothes(it) }
         }
     }
 
@@ -56,7 +56,7 @@ class SmartAppFragment : Fragment() {
         }
     }
 
-    private fun processClothes(clothes: Clothes) {
+    private fun processClothes(clothes: Clothes?) {
         logger.debug { "processClothes $clothes" }
 
         when (clothes) {
@@ -76,6 +76,14 @@ class SmartAppFragment : Fragment() {
 
             JACKET -> {
                 binding.jacketImageView.isVisible = true
+            }
+            null -> {
+                binding.androidBeanieImageView.isVisible = false
+                binding.rigthMittenImageView.isVisible = false
+                binding.leftMittenImageView.isVisible = false
+                binding.leftBootImageView.isVisible = false
+                binding.rightBootImageView.isVisible = false
+                binding.jacketImageView.isVisible = false
             }
         }
     }

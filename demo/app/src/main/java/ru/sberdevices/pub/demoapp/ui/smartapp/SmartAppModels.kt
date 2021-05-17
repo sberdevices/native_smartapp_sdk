@@ -37,6 +37,13 @@ internal class WearThisCommand(
 ): BaseCommand()
 
 /**
+ * Command for undressing the Android
+ */
+@Serializable
+@SerialName("dont_wear_anything")
+internal class ClearClothesCommand(): BaseCommand()
+
+/**
  * Command for successful purchase
  */
 @Serializable
