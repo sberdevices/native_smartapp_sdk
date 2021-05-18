@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collect
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionFragment
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppFragment
@@ -16,9 +19,10 @@ class TabsFragment : Fragment() {
 
     private val logger = Logger.get("TabsFragment")
 
+    private val viewModel: TabsViewModel by viewModel()
     private lateinit var binding: FragmentTabsBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTabsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -28,6 +32,12 @@ class TabsFragment : Fragment() {
         setClickListeners()
 
         renderTabSelection(TabUi.SERVICES)
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.isCameraAvailable.collect { hasCamera ->
+                binding.cvTabButton.isEnabled = hasCamera
+            }
+        }
     }
 
     private fun setClickListeners() {

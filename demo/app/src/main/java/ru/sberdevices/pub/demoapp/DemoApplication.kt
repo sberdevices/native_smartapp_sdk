@@ -16,6 +16,7 @@ import ru.sberdevices.cv.detection.CvApiFactoryImpl
 import ru.sberdevices.messaging.MessagingFactory
 import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionViewModel
 import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppViewModel
+import ru.sberdevices.pub.demoapp.ui.tabscreen.TabsViewModel
 import ru.sberdevices.services.appstate.AppStateManagerFactory
 import ru.sberdevices.services.pub.demoapp.BuildConfig
 
@@ -35,6 +36,7 @@ class DemoApplication : Application() {
     private val viewModelModule = module {
         single { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
         viewModel { ComputerVisionViewModel(cvApiFactory = get(), ioCoroutineDispatcher = Dispatchers.IO) }
+        viewModel { TabsViewModel() }
     }
 
     private val sdkModule = module {
