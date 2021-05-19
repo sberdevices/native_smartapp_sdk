@@ -41,9 +41,9 @@ afterEvaluate {
                 artifact androidJavadocsJar
                 artifact androidSourcesJar
 
-                groupId rootProject.ext.pomGroupID
+                groupId publication.pomGroupID
                 artifactId "messaging"
-                version rootProject.ext.pomVersion
+                version publication.pomMessagingVersion
 
                 pom {
                     name = "messaging:impl"

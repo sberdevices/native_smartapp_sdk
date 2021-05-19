@@ -32,9 +32,9 @@ afterEvaluate {
                 artifact sourceJar
                 artifact packageJavadoc
 
-                groupId rootProject.ext.pomGroupID + '.messaging'
+                groupId publication.pomGroupID + '.messaging'
                 artifactId "api"
-                version rootProject.ext.pomVersion
+                version publication.pomMessagingVersion
 
                 pom {
                     name = "messaging:api"

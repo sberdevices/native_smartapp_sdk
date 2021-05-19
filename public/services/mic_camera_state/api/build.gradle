@@ -30,9 +30,9 @@ afterEvaluate {
                 artifact sourceJar
                 artifact javadocJar
 
-                groupId rootProject.ext.pomGroupID+'.mic_camera_state'
+                groupId publication.pomGroupID+'.mic_camera_state'
                 artifactId "api"
-                version rootProject.ext.pomVersion
+                version publication.pomMicCameraStateVersion
 
                 pom {
                     name = 'mic_camera_state'

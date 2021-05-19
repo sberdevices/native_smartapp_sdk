@@ -11,9 +11,9 @@ afterEvaluate {
             mavenMesagingAidl(MavenPublication) {
                 from components.release
 
-                groupId rootProject.ext.pomGroupID + '.messaging'
+                groupId publication.pomGroupID + '.messaging'
                 artifactId "aidl"
-                version rootProject.ext.pomVersion
+                version publication.pomMessagingVersion
 
                 pom {
                     name = "messaging:aidl"

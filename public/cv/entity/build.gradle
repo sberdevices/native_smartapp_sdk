@@ -13,7 +13,6 @@ android {
         targetSdkVersion 29
 
         buildConfigField 'String', 'CV_API_VERSION', "\"3.0.0\""
-        versionName "3.0.0"
     }
 
     compileOptions {
@@ -37,9 +36,9 @@ afterEvaluate {
             mavenCvEntity(MavenPublication) {
                 from components.release
 
-                groupId = rootProject.ext.pomGroupID + '.cvapi'
+                groupId = publication.pomGroupID + '.cvapi'
                 artifactId = "entity"
-                version = android.defaultConfig.versionName
+                version = publication.pomCvLibVersion
 
                 pom {
                     name = "cv:entity"

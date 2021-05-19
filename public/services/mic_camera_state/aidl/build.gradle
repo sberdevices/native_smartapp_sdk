@@ -12,9 +12,9 @@ afterEvaluate {
             mavenMicCameraStateAidl(MavenPublication) {
                 from components.release
 
-                groupId rootProject.ext.pomGroupID+'.mic_camera_state'
+                groupId publication.pomGroupID+'.mic_camera_state'
                 artifactId "aidl"
-                version rootProject.ext.pomVersion
+                version publication.pomMicCameraStateVersion
 
                 pom {
                     name = 'mic_camera_state'

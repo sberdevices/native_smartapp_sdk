@@ -23,13 +23,13 @@ afterEvaluate {
 
                 artifact sourceJar
 
-                groupId rootProject.ext.pomGroupID + '.appstate'
+                groupId publication.pomGroupID + '.appstate'
                 artifactId "api"
-                version rootProject.ext.pomVersion
+                version publication.pomAppStateVersion
 
                 pom {
                     name = "appstate:api"
-                    description = 'asserts is utility library containing some userful asserts'
+                    description = 'appstate is a library used to transmit native app state to smartapp backend'
                     url = publication.githubUrl
                     licenses {
                         license {

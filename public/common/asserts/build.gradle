@@ -24,9 +24,9 @@ afterEvaluate {
 
                 artifact androidSourcesJar
 
-                groupId rootProject.ext.pomGroupID
+                groupId publication.pomGroupID
                 artifactId project.name
-                version rootProject.ext.pomVersion
+                version publication.pomCommonLibsVersion
 
                 pom {
                     name = 'asserts'
