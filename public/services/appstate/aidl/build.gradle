@@ -3,80 +3,48 @@ plugins {
     id 'maven-publish'
 }
 
-android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenAppstate(MavenPublication) {
-                    from components.release
+        publications {
+            mavenAppstate(MavenPublication) {
+                from components.release
 
-                    groupId rootProject.ext.pomGroupID+'.appstate'
-                    artifactId "aidl"
-                    version rootProject.ext.pomVersion
+                groupId rootProject.ext.pomGroupID + '.appstate'
+                artifactId "aidl"
+                version rootProject.ext.pomVersion
 
-                    pom {
-                        name = "appstate:aidl"
-                        description = 'appstate is a library used to transmit native app state to smartapp backend'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                pom {
+                    name = "appstate:aidl"
+                    description = 'appstate is a library used to transmit native app state to smartapp backend'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Igor Perminov'
+                            email = 'Perminov.I.Yurye@sberbank.ru'
                         }
+                        developer {
+                            name = 'Nikolay Pahomov'
+                            email = 'NMPakhomov@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenAppstate
     }

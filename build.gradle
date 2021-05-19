@@ -1,49 +1,28 @@
-buildscript {
-    dependencies {
-        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.10"
-    }
-}
-
-apply plugin: 'com.android.application'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 apply from: 'versions.gradle'
 apply from: 'publication.gradle'
 
-android {
-    compileSdkVersion 28
-    buildToolsVersion "29.0.2"
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion versions.compileSdk
+                buildToolsVersion versions.buildTools
 
-    defaultConfig {
-        applicationId "com.example.abc.test"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-    }
-}
+                buildTypes { // TODO чекнуть надо ли
+                    debug {
+                        minifyEnabled false
+                    }
+                }
 
-// subprojects {
-//     afterEvaluate {project ->
-//         if (project.hasProperty("android")) {
-//             android {
-//                 compileSdkVersion 28
-//                 buildToolsVersion "28.0.3"
-//             }
-//         }
-//     }
-// }
-
-android {
-    buildTypes {
-        debug {
-            minifyEnabled false
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                    targetCompatibility JavaVersion.VERSION_1_8
+                }
+            }
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -57,9 +36,15 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.10"
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 
 allprojects {
     repositories {
@@ -77,13 +62,3 @@ allprojects {
     }
 }
 
-ext {
-    pomVersion = '1.0-rc1'
-    pomGroupID = "ru.sberdevices.smartapp.sdk"
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}

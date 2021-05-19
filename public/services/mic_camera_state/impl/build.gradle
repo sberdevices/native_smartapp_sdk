@@ -17,19 +17,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
-android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.kotlin.srcDirs
 }
 
 afterEvaluate {
@@ -40,12 +31,14 @@ afterEvaluate {
             mavenMicCameraStateImpl(MavenPublication) {
                 from components.release
 
-                groupId rootProject.ext.pomGroupID+'.mic_camera_state'
-                artifactId "impl"
+                artifact androidSourcesJar
+
+                groupId rootProject.ext.pomGroupID
+                artifactId "mic_camera_state"
                 version rootProject.ext.pomVersion
 
                 pom {
-                    name = 'mic-camera-state'
+                    name = 'mic_camera_state'
                     description = 'mic-camera-state is utility library for getting microphone and camera state'
                     url = publication.githubUrl
                     licenses {
@@ -70,18 +63,10 @@ afterEvaluate {
                         url = publication.githubUrl
                     }
                 }
-
-                versionMapping {
-                    allVariants {
-                        fromResolutionResult()
-                    }
-                }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenMicCameraStateImpl
     }

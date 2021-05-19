@@ -10,11 +10,11 @@ dependencies {
 }
 
 task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
 }
 
-task packageJavadoc(type: Jar) {
+task javadocJar(type: Jar) {
     from javadoc
     classifier = 'javadoc'
 }
@@ -28,14 +28,14 @@ afterEvaluate {
                 from components.java
 
                 artifact sourceJar
-                artifact packageJavadoc
+                artifact javadocJar
 
                 groupId rootProject.ext.pomGroupID+'.mic_camera_state'
                 artifactId "api"
                 version rootProject.ext.pomVersion
 
                 pom {
-                    name = 'mic-camera-state'
+                    name = 'mic_camera_state'
                     description = 'mic-camera-state is utility library for getting microphone and camera state'
                     url = publication.githubUrl
                     licenses {
@@ -60,18 +60,10 @@ afterEvaluate {
                         url = publication.githubUrl
                     }
                 }
-
-                versionMapping {
-                    allVariants {
-                        fromResolutionResult()
-                    }
-                }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenMicCameraStateApi
     }

@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'kotlin'
     id 'maven-publish'
+    id "org.jetbrains.dokka" version "1.4.32"
 }
 
 dependencies {
@@ -10,77 +11,61 @@ dependencies {
 }
 
 task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
 }
 
 task packageJavadoc(type: Jar) {
-    from javadoc
-    classifier = 'javadoc'
+    dependsOn(dokkaHtml)
+    archiveClassifier.set('javadoc')
+    from(dokkaHtml.outputDirectory)
 }
 
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenMesagingApi(MavenPublication) {
-                    from components.java
+        publications {
+            mavenMesagingApi(MavenPublication) {
+                from components.java
 
-                    artifact sourceJar
-                    artifact packageJavadoc
+                artifact sourceJar
+                artifact packageJavadoc
 
-                    groupId rootProject.ext.pomGroupID+'.messaging'
-                    artifactId "api"
-                    version rootProject.ext.pomVersion
+                groupId rootProject.ext.pomGroupID + '.messaging'
+                artifactId "api"
+                version rootProject.ext.pomVersion
 
-                    pom {
-                        name = "messaging:api"
-                        description = 'messaging libray serves to connect native apk with smartapp backend'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                pom {
+                    name = "messaging:api"
+                    description = 'messaging libray serves to connect native apk with smartapp backend'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Igor Perminov'
+                            email = 'Perminov.I.Yurye@sberbank.ru'
                         }
+                        developer {
+                            name = 'Nikolay Pahomov'
+                            email = 'NMPakhomov@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenMesagingApi
     }

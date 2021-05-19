@@ -28,69 +28,52 @@ dependencies {
     implementation project(':public:common:logger')
 
     implementation "androidx.annotation:annotation:$versions.annotation"
-    implementation "com.google.protobuf:protobuf-lite:3.0.1"
+    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf_lite"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenCvUtil(MavenPublication) {
-                    from components.release
+        publications {
+            mavenCvUtil(MavenPublication) {
+                from components.release
 
-                    groupId = rootProject.ext.pomGroupID+'.cv'
-                    artifactId = "util"
-                    version = android.defaultConfig.versionName
+                groupId = rootProject.ext.pomGroupID + '.cvapi'
+                artifactId = "util"
+                version = android.defaultConfig.versionName
 
-                    pom {
-                        name = "cv:util"
-                        description = 'utils used for computer vision api binding'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Dmitry Levshunov'
-                                email = 'Levshunov.D.A@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Irina Karpenko'
-                                email = 'IViKarpenko@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                pom {
+                    name = "cv:util"
+                    description = 'utils used for computer vision api binding'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Dmitry Levshunov'
+                            email = 'Levshunov.D.A@sberbank.ru'
                         }
+                        developer {
+                            name = 'Irina Karpenko'
+                            email = 'IViKarpenko@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenCvUtil
     }

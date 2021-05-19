@@ -4,21 +4,6 @@ plugins {
     id 'maven-publish'
 }
 
-android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
 afterEvaluate {
     publishing {
         repositories.add(rootProject.repositories.getByName('OSSRH'))
@@ -32,7 +17,7 @@ afterEvaluate {
                 version rootProject.ext.pomVersion
 
                 pom {
-                    name = 'mic-camera-state'
+                    name = 'mic_camera_state'
                     description = 'mic-camera-state is utility library for getting microphone and camera state'
                     url = publication.githubUrl
                     licenses {
@@ -57,18 +42,10 @@ afterEvaluate {
                         url = publication.githubUrl
                     }
                 }
-
-                versionMapping {
-                    allVariants {
-                        fromResolutionResult()
-                    }
-                }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenMicCameraStateAidl
     }

@@ -29,63 +29,46 @@ dependencies {
 
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenCvAidl(MavenPublication) {
-                    from components.release
+        publications {
+            mavenCvAidl(MavenPublication) {
+                from components.release
 
-                    groupId = rootProject.ext.pomGroupID+'.cv'
-                    artifactId = "aidl"
-                    version = android.defaultConfig.versionName
+                groupId = rootProject.ext.pomGroupID + '.cvapi'
+                artifactId = "aidl"
+                version = android.defaultConfig.versionName
 
-                    pom {
-                        name = "cv:aidl"
-                        description = 'aidl interface for communication with service'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Dmitry Levshunov'
-                                email = 'Levshunov.D.A@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Irina Karpenko'
-                                email = 'IViKarpenko@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                pom {
+                    name = "cv:aidl"
+                    description = 'aidl interface for communication with service'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Dmitry Levshunov'
+                            email = 'Levshunov.D.A@sberbank.ru'
                         }
+                        developer {
+                            name = 'Irina Karpenko'
+                            email = 'IViKarpenko@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenCvAidl
     }

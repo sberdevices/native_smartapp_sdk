@@ -1,4 +1,4 @@
-@file:Suppress("ForbidDefaultCoroutineDispatchers") // TODO техдолг STAROS-7877
+@file:Suppress("ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.cv.detection
 
 import kotlinx.coroutines.CoroutineExceptionHandler

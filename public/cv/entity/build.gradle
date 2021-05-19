@@ -31,63 +31,46 @@ dependencies {
 
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenCvEntity(MavenPublication) {
-                    from components.release
+        publications {
+            mavenCvEntity(MavenPublication) {
+                from components.release
 
-                    groupId = rootProject.ext.pomGroupID+'.cv'
-                    artifactId = "entity"
-                    version = android.defaultConfig.versionName
+                groupId = rootProject.ext.pomGroupID + '.cvapi'
+                artifactId = "entity"
+                version = android.defaultConfig.versionName
 
-                    pom {
-                        name = "cv:entity"
-                        description = 'entities used in computer vision api'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Dmitry Levshunov'
-                                email = 'Levshunov.D.A@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Irina Karpenko'
-                                email = 'IViKarpenko@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                pom {
+                    name = "cv:entity"
+                    description = 'entities used in computer vision api'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Dmitry Levshunov'
+                            email = 'Levshunov.D.A@sberbank.ru'
                         }
+                        developer {
+                            name = 'Irina Karpenko'
+                            email = 'IViKarpenko@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenCvEntity
     }

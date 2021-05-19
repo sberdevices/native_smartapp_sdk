@@ -4,21 +4,6 @@ plugins {
     id 'maven-publish'
 }
 
-android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
 dependencies {
     api project(':public:common:binderhelper_api')
 
@@ -30,65 +15,56 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.kotlin.srcDirs
+}
+
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenBinderHelper(MavenPublication) {
-                    from components.release
+        publications {
+            mavenBinderHelper(MavenPublication) {
+                from components.release
 
-                    groupId rootProject.ext.pomGroupID
-                    artifactId project.name
-                    version rootProject.ext.pomVersion
+                artifact androidSourcesJar
 
-                    pom {
-                        name = project.name
-                        description = 'binderhelper is utility library used to connect to servce'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Igor Perminov'
-                                email = 'Perminov.I.Yurye@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Nikolay Pahomov'
-                                email = 'NMPakhomov@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                groupId rootProject.ext.pomGroupID
+                artifactId project.name
+                version rootProject.ext.pomVersion
+
+                pom {
+                    name = project.name
+                    description = 'binderhelper is utility library used to connect to servce'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Igor Perminov'
+                            email = 'Perminov.I.Yurye@sberbank.ru'
                         }
+                        developer {
+                            name = 'Nikolay Pahomov'
+                            email = 'NMPakhomov@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenBinderHelper
     }

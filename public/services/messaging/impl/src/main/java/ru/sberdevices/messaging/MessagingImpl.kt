@@ -70,7 +70,6 @@ internal class MessagingImpl @AnyThread constructor(
 
     override fun sendAction(messageName: MessageName, payload: Payload): MessageId {
         logger.debug { "sendAction() with messageName" }
-        // requireWorkerThread()
         val id: String = runBlocking {
             helper.execute { service ->
                 service.sendAction(

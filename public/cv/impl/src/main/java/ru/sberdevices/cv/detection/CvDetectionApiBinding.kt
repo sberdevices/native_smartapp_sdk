@@ -1,4 +1,4 @@
-@file:Suppress("unused", "WeakerAccess", "ForbidDefaultCoroutineDispatchers") // TODO техдолг STAROS-7877
+@file:Suppress("unused", "WeakerAccess", "ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.cv.detection
 
 import android.content.Context

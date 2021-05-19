@@ -37,7 +37,7 @@ dependencies {
     testImplementation "androidx.test:core:1.3.0"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "junit:junit:$versions.junit"
-    testImplementation "io.mockk:mockk:1.10.2"
+    testImplementation "io.mockk:mockk:$versions.mockk"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.kotlinxCoroutines"
     testImplementation "org.json:json:20180813"
 
@@ -51,65 +51,56 @@ dependencies {
 
 }
 
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.kotlin.srcDirs
+}
+
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenCommonCamera(MavenPublication) {
-                    from components.release
+        publications {
+            mavenCommonCamera(MavenPublication) {
+                from components.release
 
-                    groupId rootProject.ext.pomGroupID
-                    artifactId project.name
-                    version rootProject.ext.pomVersion
+                artifact androidSourcesJar
 
-                    pom {
-                        name = "common:camera"
-                        description = 'utility for camera usage'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Dmitry Levshunov'
-                                email = 'Levshunov.D.A@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Irina Karpenko'
-                                email = 'IViKarpenko@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                groupId rootProject.ext.pomGroupID
+                artifactId project.name
+                version rootProject.ext.pomVersion
+
+                pom {
+                    name = "common:camera"
+                    description = 'utility for camera usage'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Dmitry Levshunov'
+                            email = 'Levshunov.D.A@sberbank.ru'
                         }
+                        developer {
+                            name = 'Irina Karpenko'
+                            email = 'IViKarpenko@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenCommonCamera
     }

@@ -1,5 +1,10 @@
 ext.versions = [:]
 
+ext {
+    pomVersion = '1.0-rc1'
+    pomGroupID = "ru.sberdevices.smartapp.sdk"
+}
+
 versions.minSdk = 28
 versions.targetSdk = 30
 versions.compileSdk = 29
@@ -15,4 +20,5 @@ versions.annotation = "1.2.0"
 versions.androidx.core = "1.3.2"
 
 versions.junit = "4.13.1"
+versions.mockk = "1.10.6"
 versions.protobuf_lite = "3.0.1"

@@ -31,65 +31,56 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.kotlin.srcDirs
+}
+
 afterEvaluate {
     publishing {
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = publication.deployUrl
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+        repositories.add(rootProject.repositories.getByName('OSSRH'))
 
-            publications {
-                mavenCvApi(MavenPublication) {
-                    from components.release
+        publications {
+            mavenCvApi(MavenPublication) {
+                from components.release
 
-                    groupId = rootProject.ext.pomGroupID+'.cv'
-                    artifactId = "api"
-                    version = android.defaultConfig.versionName
+                artifact androidSourcesJar
 
-                    pom {
-                        name = "cv:api"
-                        description = 'api for using computer vision'
-                        url = publication.githubUrl
-                        licenses {
-                            license {
-                                name = publication.licenseName
-                                url = publication.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                name = 'Dmitry Levshunov'
-                                email = 'Levshunov.D.A@sberbank.ru'
-                            }
-                            developer {
-                                name = 'Irina Karpenko'
-                                email = 'IViKarpenko@sberbank.ru'
-                            }
-                        }
-                        scm {
-                            connection = publication.connectionUrl
-                            developerConnection = publication.connectionUrl
-                            url = publication.githubUrl
+                groupId = rootProject.ext.pomGroupID + '.cvapi'
+                artifactId = "api"
+                version = android.defaultConfig.versionName
+
+                pom {
+                    name = "cv:api"
+                    description = 'api for using computer vision'
+                    url = publication.githubUrl
+                    licenses {
+                        license {
+                            name = publication.licenseName
+                            url = publication.licenseUrl
                         }
                     }
-
-                    versionMapping {
-                        allVariants {
-                            fromResolutionResult()
+                    developers {
+                        developer {
+                            name = 'Dmitry Levshunov'
+                            email = 'Levshunov.D.A@sberbank.ru'
                         }
+                        developer {
+                            name = 'Irina Karpenko'
+                            email = 'IViKarpenko@sberbank.ru'
+                        }
+                    }
+                    scm {
+                        connection = publication.connectionUrl
+                        developerConnection = publication.connectionUrl
+                        url = publication.githubUrl
                     }
                 }
             }
         }
     }
-}
 
-afterEvaluate {
     signing {
         sign publishing.publications.mavenCvApi
     }
