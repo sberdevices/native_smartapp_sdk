@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/edge_item_margin"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="0dp"
         android:focusedByDefault="true"
         android:foreground="@drawable/tab_label_background"
         android:gravity="top"

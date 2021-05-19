@@ -76,7 +76,6 @@ dependencies {
     implementation "com.airbnb.android:lottie:$versions.lottie"
 
     // Third parties
-    implementation "com.google.code.gson:gson:$versions.gson"
     implementation "com.google.protobuf:protobuf-lite:$versions.protobuf_lite"
     implementation "io.insert-koin:koin-android:$versions.koin"
     implementation "io.insert-koin:koin-androidx-viewmodel:$versions.koin"

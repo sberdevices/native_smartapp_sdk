@@ -22,6 +22,7 @@ out/
 release/
 # Gradle files
 **/.gradle/
+build/
 
 # Local configuration file (sdk path, etc)
 **/local.properties
@@ -51,4 +52,4 @@ release/
 **/.idea/modules.xml
 # Comment next line if keeping position of elements in Navigation Editor is relevant for you
 **/.idea/navEditor.xml
-.idea/*
+**/.idea/*
