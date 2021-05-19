@@ -6,14 +6,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/descriptionTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/asistant_description"
         android:textAppearance="@style/TextAppearance.SberDevices.Body1"
         android:textSize="16dp"
         android:textColor="@color/sbdv_white_64"
-        app:flow_horizontalBias="0.5"
-        app:flow_verticalBias="0.5"
+        android:paddingLeft="@dimen/dp16"
+        android:paddingRight="@dimen/dp16"
+        app:layout_constraintVertical_bias="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/androidImageView"
