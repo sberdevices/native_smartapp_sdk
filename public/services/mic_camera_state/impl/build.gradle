@@ -9,8 +9,7 @@ dependencies {
 
     implementation project(':public:services:mic_camera_state:aidl')
 
-    implementation project(':public:common:binderhelper')
-    implementation project(':public:common:binderhelper_api')
+    implementation project(':public:common:binderhelper:impl')
     implementation project(':public:common:logger')
 
     implementation "androidx.core:core-ktx:$versions.androidx.core"

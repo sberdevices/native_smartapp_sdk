@@ -4,16 +4,14 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.DeadObjectException
+import android.os.IInterface
 import androidx.annotation.BinderThread
 
 /**
- * Интерфейс для подключения к aidl сервисам. Имплементацию нужно получать в BinderHelper2Factory.
- * На корутинах, без блокирования потоков и лишних переключений контекста. Заменяет deprecated BinderHelper.
- * Для примера использования - см. UserSettingsManagerImpl.
- *
- * @author Ирина Карпенко on 24.03.2021
+ * Интерфейс для подключения к aidl сервисам. Имплементацию нужно получать в [BinderHelperFactory].
+ * На корутинах, без блокирования потоков и лишних переключений контекста.
  */
-interface BinderHelper2<BinderInterface : Any> {
+interface BinderHelper<BinderInterface : IInterface> {
 
     /**
      * Асинхронно подключаемся к сервису. Если сразу подключиться не удалось, но сервис есть на

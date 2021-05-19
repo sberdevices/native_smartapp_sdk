@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.DeadObjectException
 import android.os.IBinder
+import android.os.IInterface
 import androidx.annotation.BinderThread
 import androidx.annotation.MainThread
 import kotlinx.coroutines.CancellationException
@@ -17,27 +18,21 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import ru.sberdevices.common.logger.Logger
 
-private const val RECONNECTION_TIMEOUT_MS = 1000L
-
 /**
- * Новый хелпер для подключения к сервисам, полностью на корутинах,
+ * Хелпер для подключения к сервисам, полностью на корутинах,
  * без блокирования потоков и лишних переключений контекста.
- * Заменяет собой [BinderHelper], который deprecated.
- * Для примера использования - см. UserSettingsManagerImpl.
  *
  * Принимаемые на вход колбеки срабатывают, если активен скоуп, в котором подключаемся к сервису.
- *
- * @author Илья Богданович on 12.02.2021
  */
-internal class BinderHelper2Impl<BinderInterface : Any>(
+internal class BinderHelperImpl<BinderInterface : IInterface>(
     private val context: Context,
     private val intent: Intent,
     private val onDisconnect: () -> Unit = {},
     private val onBindingDied: () -> Unit = {},
     private val onNullBinding: () -> Unit = {},
     private val getBinding: (IBinder) -> BinderInterface,
-) : BinderHelper2<BinderInterface> {
-    private val logger by Logger.lazy(tag = "BinderHelper2")
+) : BinderHelper<BinderInterface> {
+    private val logger by Logger.lazy(tag = "BinderHelperImpl")
     private val binderState = MutableStateFlow<BinderInterface?>(null)
     private val connectionState = MutableStateFlow<ServiceConnection?>(null)
 
@@ -95,7 +90,7 @@ internal class BinderHelper2Impl<BinderInterface : Any>(
         if (success) {
             logger.debug { "connected intent=${intent.component?.className}" }
         } else {
-            logger.warn { "Failed to connect to ${intent.component?.className}, delay for $RECONNECTION_TIMEOUT_MS" }
+            logger.warn { "Failed to connect to ${intent.component?.className}" }
         }
 
         return success

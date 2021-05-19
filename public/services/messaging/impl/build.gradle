@@ -10,7 +10,7 @@ dependencies {
     api project(':public:services:messaging:api')
     implementation project(':public:services:messaging:aidl')
 
-    implementation project(':public:common:binderhelper')
+    implementation project(':public:common:binderhelper:impl')
     implementation project(':public:common:logger')
 
     implementation "androidx.annotation:annotation:$versions.annotation"

@@ -1,4 +1,3 @@
-@file:Suppress("ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.cv.detection
 
 import kotlinx.coroutines.CoroutineExceptionHandler

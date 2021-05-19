@@ -7,11 +7,13 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
+import android.os.IInterface
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.Assert.assertEquals
@@ -21,11 +23,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Тест для [BinderHelper2]
- *
- * @author Илья Богданович on 12.02.2021
+ * Тест для [BinderHelper].
  */
-class BinderHelper2Test {
+class BinderHelperTest {
     private val intent = mockk<Intent>()
     private val appContext = mockk<Context>()
     private val pm = mockk<PackageManager> {
@@ -36,18 +36,18 @@ class BinderHelper2Test {
         every { applicationContext } returns appContext
         every { packageManager } returns pm
     }
-    private val binding = mockk<Any>()
+    private val binding = mockk<IInterface>()
     private val onDisconnect = mockk<() -> Unit>(relaxed = true)
     private val onBindingDied = mockk<() -> Unit>(relaxed = true)
     private val onNullBinding = mockk<() -> Unit>(relaxed = true)
-    private val helper = BinderHelper2Factory.getBinderHelper2(
+    private val helper = BinderHelperFactory(
         context = context,
         intent = intent,
         onDisconnect = onDisconnect,
         onBindingDied = onBindingDied,
         onNullBinding = onNullBinding,
         getBinding = { binding },
-    )
+    ).create()
     private val scope = TestCoroutineScope()
 
     @Test
