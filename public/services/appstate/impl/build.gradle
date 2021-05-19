@@ -31,8 +31,8 @@ afterEvaluate {
 
                 artifact androidSourcesJar
 
-                groupId publication.pomGroupID + '.appstate'
-                artifactId "impl"
+                groupId publication.pomGroupID
+                artifactId "appstate"
                 version publication.pomAppStateVersion
 
                 pom {
