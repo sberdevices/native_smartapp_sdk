@@ -26,31 +26,27 @@ subprojects {
     }
 }
 
-buildscript {
-    ext.kotlin_version = "1.4.10"
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.10"
-    }
-}
-
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
 
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32"
+        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.10"
+    }
+}
+
 allprojects {
     repositories {
-        mavenCentral()
-        google()
-
         maven {
             name = "OSSRH"
             url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
@@ -59,6 +55,9 @@ allprojects {
                 password = ossrhPassword
             }
         }
+
+        mavenCentral()
+        google()
     }
 }
 

@@ -24,8 +24,8 @@ afterEvaluate {
 
                 artifact androidSourcesJar
 
-                groupId rootProject.ext.pomGroupID
-                artifactId project.name
+                groupId rootProject.ext.pomGroupID+".binderhelper"
+                artifactId "api"
                 version rootProject.ext.pomVersion
 
                 pom {
