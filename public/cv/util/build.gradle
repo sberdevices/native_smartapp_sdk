@@ -39,7 +39,7 @@ afterEvaluate {
             mavenCvUtil(MavenPublication) {
                 from components.release
 
-                groupId = publication.pomGroupID + '.cvapi'
+                groupId = publication.pomGroupID + '.cv'
                 artifactId = "util"
                 version = publication.pomCvLibVersion
 

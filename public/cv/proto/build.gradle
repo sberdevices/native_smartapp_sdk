@@ -65,7 +65,7 @@ afterEvaluate {
             mavenCvProto(MavenPublication) {
                 from components.release
 
-                groupId = publication.pomGroupID + '.cvapi'
+                groupId = publication.pomGroupID + '.cv'
                 artifactId = "proto"
                 version = publication.pomCvLibVersion
 

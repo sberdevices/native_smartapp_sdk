@@ -7,6 +7,3 @@ But if you want to do it yourself or get familiar with the code you can use file
 This app has two screens.
 * First one shows usage of libraries **appstate** and **messaging**,
 * Second one shows how to use the CV library.
-
-# ScreenShots
-TODO

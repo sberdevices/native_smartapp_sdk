@@ -36,7 +36,7 @@ afterEvaluate {
                 artifact androidSourcesJar
 
                 groupId publication.pomGroupID
-                artifactId project.name
+                artifactId "binderhelper"
                 version publication.pomBinderHelperVersion
 
                 pom {

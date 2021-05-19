@@ -11,7 +11,7 @@ subprojects {
                 compileSdkVersion versions.compileSdk
                 buildToolsVersion versions.buildTools
 
-                buildTypes { // TODO чекнуть надо ли
+                buildTypes {
                     debug {
                         minifyEnabled false
                     }

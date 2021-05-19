@@ -12,7 +12,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.sberdevices.common.binderhelper.BinderHelperFactory
-// import ru.sberdevices.common.extensions.requireWorkerThread TODO uncomment
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.services.messaging.IMessagingListener
 import ru.sberdevices.services.messaging.IMessagingService

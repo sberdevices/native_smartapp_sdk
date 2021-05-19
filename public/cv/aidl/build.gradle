@@ -34,7 +34,7 @@ afterEvaluate {
             mavenCvAidl(MavenPublication) {
                 from components.release
 
-                groupId = publication.pomGroupID + '.cvapi'
+                groupId = publication.pomGroupID + '.cv'
                 artifactId = "aidl"
                 version = publication.pomCvLibVersion
 

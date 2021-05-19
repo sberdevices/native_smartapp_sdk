@@ -46,7 +46,7 @@ afterEvaluate {
 
                 artifact androidSourcesJar
 
-                groupId = publication.pomGroupID + '.cvapi'
+                groupId = publication.pomGroupID + '.cv'
                 artifactId = "api"
                 version = publication.pomCvLibVersion
 
