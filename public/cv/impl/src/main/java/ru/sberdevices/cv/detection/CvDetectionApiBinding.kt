@@ -1,4 +1,4 @@
-@file:Suppress("unused", "WeakerAccess", "ForbidDefaultCoroutineDispatchers")
+@file:Suppress("unused", "WeakerAccess")
 package ru.sberdevices.cv.detection
 
 import android.content.Context
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
-import ru.sberdevices.common.binderhelper.BinderHelper2
+import ru.sberdevices.common.binderhelper.BinderHelper
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.ICvDetectionService
 import ru.sberdevices.cv.IDeathListener
@@ -37,7 +37,7 @@ import ru.sberdevices.cv.detection.entity.humans.HumansDetectionAspect
 import ru.sberdevices.cv.detection.util.toGesture
 import ru.sberdevices.cv.detection.util.toHumans
 import ru.sberdevices.cv.util.BindingIdStorage
-import ru.sberdevices.cv.util.binderhelperlifecycle.BinderHelper2LifecycleEventsAdapter
+import ru.sberdevices.cv.util.binderhelperlifecycle.BinderHelperLifecycleEventsAdapter
 import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.BINDING_DIED
 import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.CONNECTED
 import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.DISCONNECTED
@@ -47,7 +47,7 @@ private const val SERVICE_COMPONENT_PACKAGE = "ru.sberdevices.cv"
 private const val SERVICE_COMPONENT_CLASS = "CvDetectionService"
 private const val BINDING_CLOSING_DELAY_MS = 10L
 
-private val serviceIntent = BinderHelper2.createBindIntent(
+private val serviceIntent = BinderHelper.createBindIntent(
     packageName = SERVICE_COMPONENT_PACKAGE,
     className = "$SERVICE_COMPONENT_PACKAGE.$SERVICE_COMPONENT_CLASS"
 )
@@ -60,7 +60,7 @@ internal class CvDetectionApiBinding(
 
     private val bindingId = bindingIdStorage.bindingId
 
-    private val binderHelper = BinderHelper2LifecycleEventsAdapter(context, serviceIntent) {
+    private val binderHelper = BinderHelperLifecycleEventsAdapter(context, serviceIntent) {
         ICvDetectionService.Stub.asInterface(it)
     }
     private val coroutineScope =

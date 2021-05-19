@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    implementation project(':public:common:binderhelper')
+    implementation project(':public:common:binderhelper:impl')
     implementation project(':public:common:logger')
 
     implementation "androidx.annotation:annotation:$versions.annotation"

@@ -1,4 +1,3 @@
-@file:Suppress("ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.pub.demoapp.ui.cv.view
 
 import android.content.Context

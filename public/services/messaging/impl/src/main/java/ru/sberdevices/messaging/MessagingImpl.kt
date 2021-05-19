@@ -11,7 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import ru.sberdevices.common.binderhelper.BinderHelper2Factory
+import ru.sberdevices.common.binderhelper.BinderHelperFactory
 // import ru.sberdevices.common.extensions.requireWorkerThread TODO uncomment
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.services.messaging.IMessagingListener
@@ -55,8 +55,9 @@ internal class MessagingImpl @AnyThread constructor(
         }
     }
 
-    private val helper = BinderHelper2Factory
-        .getBinderHelper2(context.applicationContext, BIND_INTENT) { IMessagingService.Stub.asInterface(it) }
+    private val helper = BinderHelperFactory(context.applicationContext, BIND_INTENT) {
+        IMessagingService.Stub.asInterface(it)
+    }.create()
 
     init {
         helper.connect()

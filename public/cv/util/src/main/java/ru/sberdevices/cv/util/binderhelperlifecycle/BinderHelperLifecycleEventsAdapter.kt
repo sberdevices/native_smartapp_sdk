@@ -3,6 +3,7 @@ package ru.sberdevices.cv.util.binderhelperlifecycle
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.os.IInterface
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -11,21 +12,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import ru.sberdevices.common.binderhelper.BinderHelper2
-import ru.sberdevices.common.binderhelper.BinderHelper2Factory
+import ru.sberdevices.common.binderhelper.BinderHelper
+import ru.sberdevices.common.binderhelper.BinderHelperFactory
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent
 
 /**
- * Gives [BinderHelper2] opportunity to observe ServiceConnection lifecycle events
+ * Gives [BinderHelper] opportunity to observe ServiceConnection lifecycle events
  */
 
-class BinderHelper2LifecycleEventsAdapter<BinderInterface : Any>(
+class BinderHelperLifecycleEventsAdapter<BinderInterface : IInterface>(
     context: Context,
     targetIntent: Intent,
-    binderHelperFactory: BinderHelper2Factory = BinderHelper2Factory,
     private val getBinding: (IBinder) -> BinderInterface,
-) : EventPublisher<BinderLifecycleEvent>, BinderHelper2<BinderInterface> {
+) : EventPublisher<BinderLifecycleEvent>, BinderHelper<BinderInterface> {
 
     private val logger by Logger.lazy(tag = javaClass.simpleName)
 
@@ -39,7 +39,7 @@ class BinderHelper2LifecycleEventsAdapter<BinderInterface : Any>(
 
     override val events: Flow<BinderLifecycleEvent> = _binderLifecycleEvents.asSharedFlow()
 
-    private val binderHelper = binderHelperFactory.getBinderHelper2(
+    private val binderHelper = BinderHelperFactory(
         context = context,
         intent = targetIntent,
         getBinding = { binder ->
@@ -49,7 +49,7 @@ class BinderHelper2LifecycleEventsAdapter<BinderInterface : Any>(
         onDisconnect = { coroutineScope.launch { _binderLifecycleEvents.emit(BinderLifecycleEvent.DISCONNECTED) } },
         onBindingDied = { coroutineScope.launch { _binderLifecycleEvents.emit(BinderLifecycleEvent.BINDING_DIED) } },
         onNullBinding = { coroutineScope.launch { _binderLifecycleEvents.emit(BinderLifecycleEvent.NULL_BINDING) } }
-    )
+    ).create()
 
     override fun connect(): Boolean {
         return binderHelper.connect()

@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    api project(':public:common:binderhelper_api')
+    api project(':public:common:binderhelper:api')
 
     implementation project(':public:common:asserts')
     implementation project(':public:common:logger')
@@ -13,6 +13,10 @@ dependencies {
     implementation "androidx.annotation:annotation:$versions.annotation"
     implementation "androidx.core:core-ktx:$versions.androidx.core"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
+
+    testImplementation "io.mockk:mockk:$versions.mockk"
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.kotlinxCoroutines"
 }
 
 task androidSourcesJar(type: Jar) {
