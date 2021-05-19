@@ -42,8 +42,8 @@ class SmartAppFragment : Fragment() {
             getString(R.string.asistant_description),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        
-        view.findViewById<ImageView>(R.id.androidImageView).setOnClickListener { viewModel.sendServerAction() }
+
+        binding.androidImageView.setOnClickListener { viewModel.sendServerAction() }
     }
 
     override fun onResume() {
@@ -60,7 +60,7 @@ class SmartAppFragment : Fragment() {
     private fun processPurchase(item: BuyItems) {
         when (item) {
             BuyItems.ELEPHANT -> {
-                binding.elephantImageView.isVisible = true
+                fadeIn(binding.elephantImageView)
             }
         }
     }
