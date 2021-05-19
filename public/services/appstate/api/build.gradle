@@ -13,6 +13,11 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier.set('javadoc')
+}
+
 afterEvaluate {
     publishing {
         repositories.add(rootProject.repositories.getByName('OSSRH'))
@@ -22,6 +27,7 @@ afterEvaluate {
                 from components.java
 
                 artifact sourceJar
+                artifact javadocJar
 
                 groupId publication.pomGroupID + '.appstate'
                 artifactId "api"

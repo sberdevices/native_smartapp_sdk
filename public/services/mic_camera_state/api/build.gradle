@@ -16,7 +16,7 @@ task sourceJar(type: Jar) {
 
 task javadocJar(type: Jar) {
     from javadoc
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
 }
 
 afterEvaluate {
