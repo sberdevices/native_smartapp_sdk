@@ -145,6 +145,7 @@ class ComputerVisionFragment : Fragment() {
             this@setControlListener.isChecked = isChecked
             logger.verbose { "Switch ${buttonView.text} is checked: $isChecked" }
             viewModel.humansAspectSwitched(isChecked, control)
+            binding.detectionView.clearCanvas()
         }
     }
 
