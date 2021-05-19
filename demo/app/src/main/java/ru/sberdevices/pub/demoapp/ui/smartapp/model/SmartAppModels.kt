@@ -41,7 +41,7 @@ internal class WearThisCommand(
  */
 @Serializable
 @SerialName("dont_wear_anything")
-internal class ClearClothesCommand(): BaseCommand()
+internal class ClearClothesCommand: BaseCommand()
 
 /**
  * Command for successful purchase
@@ -50,6 +50,14 @@ internal class ClearClothesCommand(): BaseCommand()
 @SerialName("buy_success")
 internal class BuySuccessCommand(
     val buyItems: List<BuyItems>? = null
+): BaseCommand()
+
+/**
+ * Command for failed purchase
+ */
+@Serializable
+@SerialName("buy_fail")
+internal class BuyFailCommand(
 ): BaseCommand()
 
 /**

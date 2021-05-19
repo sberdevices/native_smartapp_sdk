@@ -1,4 +1,4 @@
-@file:Suppress("ForbidDefaultCoroutineDispatchers") // TODO техдолг STAROS-7877
+@file:Suppress("ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.pub.demoapp.ui.cv
 
 import android.content.Context
@@ -19,9 +19,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.detection.entity.gesture.Gesture
 import ru.sberdevices.cv.detection.entity.humans.Humans
+import ru.sberdevices.pub.demoapp.ui.cv.entity.Control
 import ru.sberdevices.pub.demoapp.ui.cv.entity.DetectionEvent
 import ru.sberdevices.pub.demoapp.ui.cv.entity.GestureDetectionEvent
-import ru.sberdevices.pub.demoapp.ui.cv.entity.Control
 import ru.sberdevices.pub.demoapp.ui.cv.entity.HumansDetectionEvent
 import ru.sberdevices.services.pub.demoapp.databinding.FragmentComputerVisionBinding
 
@@ -84,8 +84,7 @@ class ComputerVisionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        makeFullscreen()
+    ): View {
         binding = FragmentComputerVisionBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -93,19 +92,6 @@ class ComputerVisionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
-    }
-
-    private fun makeFullscreen() {
-        val decorView: View = requireActivity().window.decorView
-        val uiOptions = (
-            View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            )
-        decorView.systemUiVisibility = uiOptions
     }
 
     override fun onResume() {

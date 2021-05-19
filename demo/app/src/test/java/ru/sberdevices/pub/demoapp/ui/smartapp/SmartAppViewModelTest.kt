@@ -4,21 +4,19 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
-import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
-
 import org.junit.Assert.*
 import org.junit.Rule
+import org.junit.Test
 import ru.sberdevices.messaging.MessageId
 import ru.sberdevices.messaging.Messaging
 import ru.sberdevices.messaging.Payload
+import ru.sberdevices.pub.demoapp.ui.smartapp.ui.SmartAppViewModel
 import ru.sberdevices.services.appstate.AppStateHolder
 
+// TODO fix test
 /**
  * Test for [SmartAppViewModel]
  */

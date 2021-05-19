@@ -15,8 +15,8 @@ import ru.sberdevices.cv.detection.CvApiFactory
 import ru.sberdevices.cv.detection.CvApiFactoryImpl
 import ru.sberdevices.messaging.MessagingFactory
 import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionViewModel
-import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppViewModel
-import ru.sberdevices.pub.demoapp.ui.tabscreen.TabsViewModel
+import ru.sberdevices.pub.demoapp.ui.smartapp.ui.SmartAppViewModel
+import ru.sberdevices.pub.demoapp.ui.tabscreen.ui.TabsViewModel
 import ru.sberdevices.services.appstate.AppStateManagerFactory
 import ru.sberdevices.services.pub.demoapp.BuildConfig
 

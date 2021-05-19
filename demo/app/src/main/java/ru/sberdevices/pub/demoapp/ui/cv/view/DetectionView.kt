@@ -1,4 +1,4 @@
-@file:Suppress("ForbidDefaultCoroutineDispatchers") // TODO техдолг STAROS-7877
+@file:Suppress("ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.pub.demoapp.ui.cv.view
 
 import android.content.Context

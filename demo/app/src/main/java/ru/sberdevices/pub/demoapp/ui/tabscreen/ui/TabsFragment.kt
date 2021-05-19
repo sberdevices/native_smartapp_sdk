@@ -1,4 +1,4 @@
-package ru.sberdevices.pub.demoapp.ui.tabscreen
+package ru.sberdevices.pub.demoapp.ui.tabscreen.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.pub.demoapp.ui.cv.ComputerVisionFragment
-import ru.sberdevices.pub.demoapp.ui.smartapp.SmartAppFragment
+import ru.sberdevices.pub.demoapp.ui.smartapp.ui.SmartAppFragment
+import ru.sberdevices.pub.demoapp.ui.tabscreen.util.enterImmersiveMode
+import ru.sberdevices.pub.demoapp.ui.tabscreen.util.exitImmersiveMode
 import ru.sberdevices.services.pub.demoapp.R
 import ru.sberdevices.services.pub.demoapp.databinding.FragmentTabsBinding
 
@@ -63,20 +65,17 @@ class TabsFragment : Fragment() {
 
     private fun renderTabFragment(tab: TabUi) {
         val fragment = when (tab) {
-            TabUi.SERVICES -> SmartAppFragment.newInstance()
-            TabUi.CV -> ComputerVisionFragment.newInstance()
+            TabUi.SERVICES -> {
+                requireActivity().window.exitImmersiveMode()
+                SmartAppFragment.newInstance()
+            }
+            TabUi.CV -> {
+                requireActivity().window.enterImmersiveMode()
+                ComputerVisionFragment.newInstance()
+            }
         }
         showChildFragment(fragment, R.id.fragmentContainerView)
     }
-
-    // TODO можно использовать когда открывается фрагмент CV, чтобы пользователя не отвлекал лавашар
-    // private fun enterImmersiveMode() {
-    //     requireActivity().window.enterImmersiveMode()
-    // }
-    //
-    // private fun exitImmersiveMode() {
-    //     requireActivity().window.exitImmersiveMode()
-    // }
 
     companion object {
         fun newInstance() = TabsFragment()

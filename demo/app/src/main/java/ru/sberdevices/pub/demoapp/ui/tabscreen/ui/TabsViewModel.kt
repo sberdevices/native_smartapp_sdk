@@ -1,4 +1,4 @@
-package ru.sberdevices.pub.demoapp.ui.tabscreen
+package ru.sberdevices.pub.demoapp.ui.tabscreen.ui
 
 import android.os.Build
 import androidx.lifecycle.ViewModel

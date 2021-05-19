@@ -1,4 +1,4 @@
-package ru.sberdevices.pub.demoapp.ui.smartapp
+package ru.sberdevices.pub.demoapp.ui.smartapp.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
+import ru.sberdevices.pub.demoapp.ui.smartapp.BuyItems
+import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BEANIE
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.BOOTS
 import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.GLOVES
@@ -61,21 +63,21 @@ class SmartAppFragment : Fragment() {
 
         when (clothes) {
             BEANIE -> {
-                binding.androidBeanieImageView.isVisible = true
+                fadeIn(binding.androidBeanieImageView)
             }
 
             GLOVES -> {
-                binding.rigthMittenImageView.isVisible = true
-                binding.leftMittenImageView.isVisible = true
+                fadeIn(binding.rigthMittenImageView)
+                fadeIn(binding.leftMittenImageView)
             }
 
             BOOTS -> {
-                binding.leftBootImageView.isVisible = true
-                binding.rightBootImageView.isVisible = true
+                fadeIn(binding.leftBootImageView)
+                fadeIn(binding.rightBootImageView)
             }
 
             JACKET -> {
-                binding.jacketImageView.isVisible = true
+                fadeIn(binding.jacketImageView)
             }
             null -> {
                 binding.androidBeanieImageView.isVisible = false
@@ -90,5 +92,11 @@ class SmartAppFragment : Fragment() {
 
     companion object {
         fun newInstance() = SmartAppFragment()
+
+        fun fadeIn(view: View) {
+            view.alpha = 0f
+            view.isVisible = true
+            view.animate().alpha(1f).start()
+        }
     }
 }

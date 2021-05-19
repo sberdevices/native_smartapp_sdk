@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/tabs_fragment"
-        android:name="ru.sberdevices.pub.demoapp.ui.tabscreen.TabsFragment"
+        android:name="ru.sberdevices.pub.demoapp.ui.tabscreen.ui.TabsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="FragmentTagUsage" />

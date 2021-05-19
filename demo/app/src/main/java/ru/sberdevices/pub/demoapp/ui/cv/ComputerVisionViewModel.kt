@@ -1,4 +1,4 @@
-@file:Suppress("ForbidDefaultCoroutineDispatchers") // TODO техдолг STAROS-7877
+@file:Suppress("ForbidDefaultCoroutineDispatchers")
 package ru.sberdevices.pub.demoapp.ui.cv
 
 import androidx.lifecycle.ViewModel
@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.detection.CvApi
 import ru.sberdevices.cv.detection.CvApiFactory
+import ru.sberdevices.pub.demoapp.ui.cv.entity.Control
 import ru.sberdevices.pub.demoapp.ui.cv.entity.DetectionEvent
 import ru.sberdevices.pub.demoapp.ui.cv.entity.GestureDetectionEvent
-import ru.sberdevices.pub.demoapp.ui.cv.entity.Control
 import ru.sberdevices.pub.demoapp.ui.cv.entity.HumansDetectionEvent
 import ru.sberdevices.pub.demoapp.ui.cv.mapper.toDomainHumansDetectionAspect
 import ru.sberdevices.pub.demoapp.ui.cv.util.delegate

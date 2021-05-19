@@ -1,4 +1,4 @@
-package ru.sberdevices.pub.demoapp.ui.smartapp
+package ru.sberdevices.pub.demoapp.ui.smartapp.ui
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +17,14 @@ import ru.sberdevices.messaging.MessageId
 import ru.sberdevices.messaging.MessageName
 import ru.sberdevices.messaging.Messaging
 import ru.sberdevices.messaging.Payload
+import ru.sberdevices.pub.demoapp.ui.smartapp.BaseCommand
+import ru.sberdevices.pub.demoapp.ui.smartapp.BuyItems
+import ru.sberdevices.pub.demoapp.ui.smartapp.BuySuccessCommand
+import ru.sberdevices.pub.demoapp.ui.smartapp.ClearClothesCommand
+import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes
+import ru.sberdevices.pub.demoapp.ui.smartapp.MyAppState
+import ru.sberdevices.pub.demoapp.ui.smartapp.ServerAction
+import ru.sberdevices.pub.demoapp.ui.smartapp.WearThisCommand
 import ru.sberdevices.services.appstate.AppStateHolder
 
 /**
