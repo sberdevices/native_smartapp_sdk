@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
 /**
- * Фактори для [MicCameraStateRepository].
+ * Factory for [MicCameraStateRepository].
  */
 object MicCameraStateRepositoryFactory {
     @RequiresPermission("ru.sberdevices.permission.BIND_MIC_CAMERA_STATE_SERVICE")

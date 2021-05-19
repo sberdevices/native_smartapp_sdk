@@ -5,58 +5,58 @@ import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Репозиторий состояний камеры и микрофона.
+ * Repository of current state of device's camera and microphone.
  */
 interface MicCameraStateRepository {
 
     /**
-     * Флоу текущего состояния микрофона.
+     * Current microphone state.
      */
     val micState: Flow<State>
 
     /**
-     * Флоу текущего состояния камеры.
+     * Current camera state.
      */
     val cameraState: Flow<State>
 
     /**
-     * Накрыта ли сейчас камера.
+     * Is camera covered now.
      */
     val isCameraCovered: Flow<Boolean>
 
     /**
-     * Выключить камеру программно.
+     * Set camera state programmatically.
      *
-     * Метод только для внутренного использования.
-     * Требует пермишен ru.sberdevices.permission.CHANGE_CAMERA_STATE
+     * Internal use only.
+     * Requires permission ru.sberdevices.permission.CHANGE_CAMERA_STATE
      */
     @AnyThread
     @RequiresPermission("ru.sberdevices.permission.CHANGE_CAMERA_STATE")
     fun setCameraEnabled(newState: Boolean)
 
     /**
-     * Отключиться от сервиса.
+     * Disconnect from the service and clear resources.
      */
     fun dispose()
 
     enum class State {
         /**
-         * Включено.
+         * Turned on.
          */
         ENABLED,
 
         /**
-         * Выключено.
+         * Turned off.
          */
         DISABLED,
 
         /**
-         * Неизвестно.
+         * Unknown.
          */
         UNKNOWN,
 
         /**
-         * Отсутствует устройство (напр. камера или микрофон).
+         * The device has no camera or microphone.
          */
         NO_DEVICE
     }

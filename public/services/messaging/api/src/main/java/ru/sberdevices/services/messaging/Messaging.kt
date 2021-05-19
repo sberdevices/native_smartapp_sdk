@@ -23,73 +23,73 @@ interface Messaging {
     fun sendAction(messageName: MessageName, payload: Payload): MessageId
 
     /**
-     * Послать текст [text], как если бы запрос произнес пользователь.
+     * Send text [text], as if this text was spoken by user.
      */
     fun sendText(text: String)
 
     /**
-     * Добавить [listener] слушателя сообщений.
+     * Add [listener] message listener.
      */
     @AnyThread
     fun addListener(listener: Listener)
 
     /**
-     * Удалить [listener] слушателя сообщений.
+     * Remove [listener] message listener.
      */
     @AnyThread
     fun removeListener(listener: Listener)
 
     /**
-     * Отключиться от сервиса и очистить ресурсы.
+     * Disconnect from service and clear resources.
      */
     @AnyThread
     fun dispose()
 
     /**
-     * Слушатель сообщений с бекенда.
+     * Smartapp backend's messages listener.
      */
     @AnyThread
     interface Listener {
         /**
-         * Новое сообщение с идентификатором [messageId] и данными [payload]
+         * New message with id [messageId] and [payload]
          */
         fun onMessage(messageId: MessageId, payload: Payload)
 
         /**
-         * Пришла ошибка с бекенда [throwable] для сообщения [messageId]
+         * Error from backend [throwable] for message with [messageId]
          */
         fun onError(messageId: MessageId, throwable: Throwable)
     }
 }
 
 /**
- * Полезная нагрузка [data]
+ * Some useful [data]
  */
 data class Payload(val data: String)
 
 /**
- * Идентификатор сообщения [value]
+ * Message id [value]
  */
 data class MessageId(val value: String)
 
 enum class MessageName {
     /**
-     * Для запроса внутри приложения.
+     * Request to your own backend.
      */
     SERVER_ACTION,
 
     /**
-     * Для запуска другого приложения.
+     * For opening up another app.
      */
     RUN_APP,
 
     /**
-     * Для отправки событий статистики.
+     * To send some statistics.
      */
     HEARTBEAT,
 
     /**
-     * Обновить IP
+     * Update IP
      */
     @RequiresPermission("ru.sberdevices.permission.IP_UPDATE")
     UPDATE_IP

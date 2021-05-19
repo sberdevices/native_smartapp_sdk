@@ -20,7 +20,7 @@ private val BIND_INTENT = BinderHelper2.createBindIntent(
 )
 
 /**
- * Имплементация [MicCameraStateRepository].
+ * Implementation [MicCameraStateRepository].
  */
 internal class MicCameraStateRepositoryImpl(
     private val context: Context,
