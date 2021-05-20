@@ -60,7 +60,7 @@ dependencies {
     implementation "ru.sberdevices.smartapp.sdk:mic_camera_state:1.0-alpha"
 
     implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc2"
-    implementation "ru.sberdevices.smartapp.sdk:cv:3.0.0"
+    implementation "ru.sberdevices.smartapp.sdk.cv:impl:3.0.0"
 
     // Android
     implementation "androidx.appcompat:appcompat:$versions.androidx.appcompat"
