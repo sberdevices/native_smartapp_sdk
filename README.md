@@ -14,27 +14,6 @@
 * **cv** и **camera** — чтобы распознавать позы и жесты с камер на встроенных устройствах. Библиотека работает на умных устройствах с камерой
 * Вспомогательные библиотеки: **asserts**, **camera**, **logger** и **binderhelper**
 
-# Использование
-
-Для подключения нужен репозиторий *mavenCentral()*. Эти библиотеки подключаются как:
-```Groovy
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        implementation "ru.sberdevices.smartapp.sdk:appstate:1.0-alpha"
-        implementation "ru.sberdevices.smartapp.sdk:messaging:1.0-alpha"
-        implementation "ru.sberdevices.smartapp.sdk:mic_camera_state:1.0-alpha"
-        implementation "ru.sberdevices.smartapp.sdk:asserts:1.0"
-        implementation "ru.sberdevices.smartapp.sdk:logger:1.0"
-        implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc2"
-        implementation "ru.sberdevices.smartapp.sdk:cv:3.0.0"
-    }
-}
-```
-
 # Документация
 С документацией по разработке Native App для умных устройств SberDevices вы можете на [портале разработчика](https://developer.sberdevices.ru/docs/ru/methodology/research/nativeapp). 
 
