@@ -24,7 +24,7 @@ jobs:
           MAVEN_GPG_PRIVATE_KEY: ${{ secrets.GPG_KEY_CONTENTS }}
           SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
         run: |
-          sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > '$SIGNING_SECRET_KEY_RING_FILE'"          
+          sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > ./secring.gpg"          
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -38,5 +38,5 @@ jobs:
           SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
         run: |
           echo running publish
-          ./gradlew publish --max-workers 1 -PossrhUsername=${{ secrets.OSSRH_USERNAME }} -PossrhPassword='${{ secrets.OSSRH_TOKEN }}' -Psigning.secretKeyRingFile=${{ secrets.SIGNING_SECRET_KEY_RING_FILE }} -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }} -Psigning.password=${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          ./gradlew publish --max-workers 1 -PossrhUsername=${{ secrets.OSSRH_USERNAME }} -PossrhPassword='${{ secrets.OSSRH_TOKEN }}' -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }} -Psigning.password=${{ secrets.MAVEN_GPG_PASSPHRASE }}
   
