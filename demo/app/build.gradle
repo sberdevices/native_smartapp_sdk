@@ -52,14 +52,14 @@ android {
 
 dependencies {
     // SberDevices
-    implementation "ru.sberdevices.smartapp.sdk:asserts:1.0"
-    implementation "ru.sberdevices.smartapp.sdk:logger:1.0"
+    implementation "ru.sberdevices.smartapp.sdk:asserts:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk:logger:1.0-rc1"
 
-    implementation "ru.sberdevices.smartapp.sdk:appstate:1.0-alpha"
-    implementation "ru.sberdevices.smartapp.sdk:messaging:1.0-alpha"
-    implementation "ru.sberdevices.smartapp.sdk:mic_camera_state:1.0-alpha"
+    implementation "ru.sberdevices.smartapp.sdk.appstate:impl:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk.messaging:impl:1.0-rc1"
+    implementation "ru.sberdevices.smartapp.sdk.mic_camera_state:impl:1.0-rc1"
 
-    implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc2"
+    implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc1"
     implementation "ru.sberdevices.smartapp.sdk.cv:impl:3.0.0"
 
     // Android
