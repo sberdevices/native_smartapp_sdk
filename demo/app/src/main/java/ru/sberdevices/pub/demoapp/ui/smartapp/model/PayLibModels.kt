@@ -73,7 +73,7 @@ data class CardInfo(
 )
 
 /**
- * Quantity [value] of item and sense of what items are measured in [measure]
+ * Quantity [value] of item and sense of what items are measured in [measure]. This measure is user-defined string
  */
 @Serializable
 data class Quantity(

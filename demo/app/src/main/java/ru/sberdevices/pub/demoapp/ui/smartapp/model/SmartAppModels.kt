@@ -81,7 +81,7 @@ internal data class MyAppState(
 
 /**
  * Send intent to do some action on smart app backend. It can be some event in game, or some input from user.
- * Event can be caught on server side by its [actionId] and carry some useful payload in it's [parameters]
+ * Event can be caught on server side by its [actionId] and carry some useful payload in its [parameters]
  */
 @Serializable
 internal data class ServerAction<T>(

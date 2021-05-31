@@ -150,7 +150,7 @@ class SmartAppViewModel(
             )
         )
 
-    companion object {
+    private companion object {
         const val PAYLIB_ITEM_CODE = "ru.some.elephant"
         const val PAYLIB_ORGANISATION = "OOO Elephant Seller"
         const val PAYLIB_SERVICE_ID = "27"

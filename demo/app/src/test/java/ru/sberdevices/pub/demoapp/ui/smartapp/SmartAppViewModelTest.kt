@@ -1,7 +1,6 @@
 package ru.sberdevices.pub.demoapp.ui.smartapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.common.truth.Truth
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -9,8 +8,8 @@ import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
@@ -43,7 +42,7 @@ class SmartAppViewModelTest {
     private val appStateHolder: AppStateHolder = mockk()
 
     @Test
-    fun getClothes() = testCoroutineDispatcher.runBlockingTest {
+    fun getClothes() = runBlocking {
         val addListener = slot<Messaging.Listener>()
         every { messaging.addListener(listener = capture(addListener)) } just Runs
         val myState = slot<String>()
@@ -57,7 +56,7 @@ class SmartAppViewModelTest {
     }
 
     @Test
-    fun getBuyItems() = testCoroutineDispatcher.runBlockingTest {
+    fun getBuyItems() = runBlocking {
         val addListener = slot<Messaging.Listener>()
         every { messaging.addListener(listener = capture(addListener)) } just Runs
         every { appStateHolder.setState(any()) } just Runs
@@ -83,20 +82,22 @@ class SmartAppViewModelTest {
 
         assertTrue(messageNameListener.captured == MessageName.SERVER_ACTION)
         val decoded = Json.decodeFromString<ServerAction<BuyParameters>>(payloadListener.captured.data)
-        Truth.assertThat(decoded.parameters.cardInfo).isEqualTo(testCardInfo)
-        Truth.assertThat(decoded.parameters.orderInfo).isEqualTo(OrderInfo(
-            order_id = decoded.parameters.orderInfo.order_id,
-            order_number = "1",
-            description = "Покупка слона",
-            tax_system = 0,
-            amount = testCardInfo.item_amount,
-            purpose = SmartAppViewModel.PAYLIB_ORGANISATION,
-            service_id = SmartAppViewModel.PAYLIB_SERVICE_ID
-        ))
+        assertEquals(testCardInfo, decoded.parameters.cardInfo)
+        assertEquals(
+                OrderInfo(
+                order_id = decoded.parameters.orderInfo.order_id,
+                order_number = "1",
+                description = "Покупка слона",
+                tax_system = 0,
+                amount = testCardInfo.item_amount,
+                purpose = "OOO Elephant Seller",
+                service_id = "27"
+            ),
+            decoded.parameters.orderInfo, )
     }
 
     companion object {
-        const val payloadWithBeanie = "{ command: \"wear_this\", clothes: \"шапку\" }"
+        const val payloadWithBeanie = "{ \"command\": \"wear_this\", \"clothes\": \"шапку\" }"
         const val payloadBuyElephant = "{\"buyItems\":[\"elephant\"],\"command\":\"buy_success\",\"invoiceId\":\"635832\",\"orderBundle\":[{\"currency\":\"RUB\",\"item_amount\":100,\"item_code\":\"ru.some.elephant\",\"item_params\":[],\"item_price\":100,\"name\":\"New Elephant\",\"position_id\":1,\"quantity\":{\"measure\":\"thing\",\"value\":1},\"tax_type\":6}]}"
         const val stateWithBeanie = "{\"myState\":\"На андроиде шапка\"}"
 
@@ -105,7 +106,7 @@ class SmartAppViewModelTest {
             name = "New Elephant",
             item_price = 100,
             item_amount = 100,
-            item_code = SmartAppViewModel.PAYLIB_ITEM_CODE,
+            item_code = "ru.some.elephant",
             tax_type = 6,
             quantity = Quantity(
                 1,
