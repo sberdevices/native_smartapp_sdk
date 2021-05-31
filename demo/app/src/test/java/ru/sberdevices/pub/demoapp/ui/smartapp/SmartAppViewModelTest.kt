@@ -6,7 +6,6 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -30,7 +29,6 @@ import ru.sberdevices.services.appstate.AppStateHolder
 /**
  * Test for [SmartAppViewModel]
  */
-@ExperimentalCoroutinesApi
 class SmartAppViewModelTest {
 
     @get:Rule
@@ -93,7 +91,7 @@ class SmartAppViewModelTest {
                 purpose = "OOO Elephant Seller",
                 service_id = "27"
             ),
-            decoded.parameters.orderInfo, )
+            decoded.parameters.orderInfo)
     }
 
     companion object {

@@ -9,7 +9,6 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
@@ -22,7 +21,6 @@ import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.JACKET
 import ru.sberdevices.services.pub.demoapp.R
 import ru.sberdevices.services.pub.demoapp.databinding.FragmentSmartappBinding
 
-@ExperimentalCoroutinesApi
 class SmartAppFragment : Fragment() {
 
     private val logger by Logger.lazy("SmartAppFragment")

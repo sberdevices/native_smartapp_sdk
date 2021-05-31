@@ -3,7 +3,6 @@ package ru.sberdevices.pub.demoapp.ui.smartapp.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,7 +34,6 @@ import java.util.UUID.randomUUID
  * In this example view model gets messages from smartapp backend by [Messaging].
  * Also it shares its state with smartapp backend via [AppStateHolder].
  */
-@ExperimentalCoroutinesApi
 class SmartAppViewModel(
     private val messaging: Messaging,
     private val appStateHolder: AppStateHolder,
@@ -61,7 +59,6 @@ class SmartAppViewModel(
     val buyItems: SharedFlow<BuyItems> = _buyItems.asSharedFlow()
     val clothes = _clothes.asSharedFlow()
 
-    @ExperimentalCoroutinesApi
     private val listener = object : Messaging.Listener {
         override fun onMessage(messageId: MessageId, payload: Payload) {
             logger.debug { "Message ${messageId.value} received: ${payload.data}" }
