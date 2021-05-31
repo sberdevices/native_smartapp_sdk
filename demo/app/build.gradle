@@ -81,8 +81,10 @@ dependencies {
     implementation "io.insert-koin:koin-android:$versions.koin"
     implementation "io.insert-koin:koin-androidx-viewmodel:$versions.koin"
 
-
     testImplementation "androidx.arch.core:core-testing:$versions.androidx_core_testing"
     testImplementation "io.mockk:mockk:$versions.mockk"
     testImplementation "junit:junit:$versions.junit"
+
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.kotlinxCoroutines"
+    testImplementation "com.google.truth:truth:$versions.truth_version"
 }

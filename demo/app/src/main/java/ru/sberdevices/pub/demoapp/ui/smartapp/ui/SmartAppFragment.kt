@@ -5,11 +5,11 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sberdevices.common.logger.Logger
@@ -22,6 +22,7 @@ import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes.JACKET
 import ru.sberdevices.services.pub.demoapp.R
 import ru.sberdevices.services.pub.demoapp.databinding.FragmentSmartappBinding
 
+@ExperimentalCoroutinesApi
 class SmartAppFragment : Fragment() {
 
     private val logger by Logger.lazy("SmartAppFragment")
@@ -43,7 +44,7 @@ class SmartAppFragment : Fragment() {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
-        binding.androidImageView.setOnClickListener { viewModel.sendServerAction() }
+        binding.buyElephantButton.setOnClickListener { viewModel.addItemsToCartAndPay() }
     }
 
     override fun onResume() {
@@ -61,6 +62,7 @@ class SmartAppFragment : Fragment() {
         when (item) {
             BuyItems.ELEPHANT -> {
                 fadeIn(binding.elephantImageView)
+                binding.buyElephantButton.isVisible = false
             }
         }
     }

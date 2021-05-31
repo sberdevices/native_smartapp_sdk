@@ -2,6 +2,7 @@ package ru.sberdevices.pub.demoapp.ui.smartapp
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.sberdevices.pub.demoapp.ui.smartapp.model.CardInfo
 
 /**
  * Items variants
@@ -44,12 +45,13 @@ internal class WearThisCommand(
 internal class ClearClothesCommand: BaseCommand()
 
 /**
- * Command for successful purchase
+ * Command for successful purchase of [orderBundle] with [invoiceId]
  */
 @Serializable
 @SerialName("buy_success")
 internal class BuySuccessCommand(
-    val buyItems: List<BuyItems>? = null
+    val invoiceId: String,
+    val orderBundle: List<CardInfo>
 ): BaseCommand()
 
 /**
@@ -82,10 +84,10 @@ internal data class MyAppState(
  * Event can be caught on server side by its [actionId] and carry some useful payload in it's [parameters]
  */
 @Serializable
-internal data class ServerAction(
+internal data class ServerAction<T>(
     @SerialName("action_id")
     val actionId: String,
 
     @SerialName("parameters")
-    val parameters: Map<String, String>
+    val parameters: T
 )
