@@ -4,38 +4,9 @@ apply plugin: 'signing'
 apply from: 'versions.gradle'
 apply from: 'publication.gradle'
 
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty("android")) {
-            android {
-                compileSdkVersion versions.compileSdk
-                buildToolsVersion versions.buildTools
-
-                buildTypes {
-                    debug {
-                        minifyEnabled false
-                    }
-                }
-
-                compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_1_8
-                    targetCompatibility JavaVersion.VERSION_1_8
-                }
-            }
-        }
-    }
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -45,19 +16,34 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = ossrhUsername
-                password = ossrhPassword
-            }
+repositories {
+    maven {
+        name = "OSSRH"
+        url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+        credentials {
+            username = ossrhUsername
+            password = ossrhPassword
         }
-
-        mavenCentral()
-        google()
     }
 }
 
+static boolean isAndroidPlugin(Plugin plugin) {
+    plugin.getClass().canonicalName in ["com.android.build.gradle.LibraryPlugin",
+                                        "com.android.build.gradle.AppPlugin"]
+}
+
+static boolean isJavaLibraryPlugin(Plugin plugin) {
+    plugin.getClass().canonicalName in ["org.gradle.api.plugins.JavaPlugin",
+                                        "org.gradle.api.plugins.JavaLibraryPlugin"]
+}
+
+subprojects {
+    project.plugins.whenPluginAdded { plugin ->
+        if (isAndroidPlugin(plugin)) {
+            project.apply from: "$rootProject.projectDir/android_subproject.gradle"
+        }
+        if (isJavaLibraryPlugin(plugin)) {
+            project.apply from: "$rootProject.projectDir/java_subproject.gradle"
+        }
+    }
+}
