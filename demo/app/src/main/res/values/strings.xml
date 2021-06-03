@@ -28,5 +28,6 @@
     <string name="track_body_landmarks_sental_net">Track body landmarks SentalNet </string>
     <string name="track_body_segmentation">Track body segmentation </string>
     <string name="track_gestures">Track gestures </string>
+    <string name="buy_elephant">Купить слона</string>
 
 </resources>

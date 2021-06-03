@@ -1,10 +1,8 @@
 package ru.sberdevices.pub.demoapp.ui.smartapp.ui
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.SupervisorJob
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,7 +23,12 @@ import ru.sberdevices.pub.demoapp.ui.smartapp.Clothes
 import ru.sberdevices.pub.demoapp.ui.smartapp.MyAppState
 import ru.sberdevices.pub.demoapp.ui.smartapp.ServerAction
 import ru.sberdevices.pub.demoapp.ui.smartapp.WearThisCommand
+import ru.sberdevices.pub.demoapp.ui.smartapp.model.BuyParameters
+import ru.sberdevices.pub.demoapp.ui.smartapp.model.CardInfo
+import ru.sberdevices.pub.demoapp.ui.smartapp.model.OrderInfo
+import ru.sberdevices.pub.demoapp.ui.smartapp.model.Quantity
 import ru.sberdevices.services.appstate.AppStateHolder
+import java.util.UUID.randomUUID
 
 /**
  * In this example view model gets messages from smartapp backend by [Messaging].
@@ -34,13 +37,14 @@ import ru.sberdevices.services.appstate.AppStateHolder
 class SmartAppViewModel(
     private val messaging: Messaging,
     private val appStateHolder: AppStateHolder,
+    private val ioCoroutineDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
+    private val json = Json { encodeDefaults = true }
     private val commandParser = Json {
         classDiscriminator = "command"
         ignoreUnknownKeys = true
+        isLenient = true
     }
     private val logger by Logger.lazy("SmartAppViewModel")
     private val currentClothes: MutableSet<Clothes> = HashSet()
@@ -55,7 +59,6 @@ class SmartAppViewModel(
     val buyItems: SharedFlow<BuyItems> = _buyItems.asSharedFlow()
     val clothes = _clothes.asSharedFlow()
 
-    @ExperimentalCoroutinesApi
     private val listener = object : Messaging.Listener {
         override fun onMessage(messageId: MessageId, payload: Payload) {
             logger.debug { "Message ${messageId.value} received: ${payload.data}" }
@@ -75,8 +78,8 @@ class SmartAppViewModel(
                     _clothes.tryEmit(null)
                 }
                 is BuySuccessCommand -> {
-                    if (true == model.buyItems?.contains(BuyItems.ELEPHANT)) {
-                        _buyItems.tryEmit(model.buyItems.last())
+                    if (model.orderBundle.firstOrNull { it.item_code == PAYLIB_ITEM_CODE} != null ) {
+                        _buyItems.tryEmit(BuyItems.ELEPHANT)
                     }
                 }
             }
@@ -98,24 +101,57 @@ class SmartAppViewModel(
         messaging.addListener(listener)
     }
 
-    fun sendServerAction() {
-        scope.launch {
+    fun addItemsToCartAndPay() {
+        val cardInfo = CardInfo(
+            1,
+            name = "New Elephant",
+            item_price = 100,
+            item_amount = 100, // must be item_price*quantity.value,
+            item_code = PAYLIB_ITEM_CODE,
+            tax_type = 6,
+            quantity = Quantity(
+                1,
+                "thing")
+        )
+        val orderInfo = OrderInfo(
+            order_id = randomUUID().toString(),
+            order_number = "1",
+            description = "Покупка слона",
+            tax_system = 0,
+            amount = cardInfo.item_amount,
+            purpose = PAYLIB_ORGANISATION,
+            service_id = PAYLIB_SERVICE_ID
+        )
+
+        viewModelScope.launch(ioCoroutineDispatcher) {
             messaging.sendAction(
                 MessageName.SERVER_ACTION,
-                Payload(
-                    Json.encodeToString(
-                        ServerAction(
-                            actionId = "ACTION_FROM_NATIVE_APP",
-                            parameters = mapOf(
-                                "myParameter" to "Андроид"
-                            )
-                        )
-                    )
+                formBuyServerActionPayload(
+                    cardInfo = cardInfo,
+                    orderInfo = orderInfo
                 )
             )
         }
     }
-}
 
+    private fun formBuyServerActionPayload(cardInfo: CardInfo, orderInfo: OrderInfo): Payload =
+        Payload(
+            json.encodeToString(
+                ServerAction(
+                    actionId = "ACTION_FROM_NATIVE_APP",
+                    parameters = BuyParameters(
+                        cardInfo = cardInfo,
+                        orderInfo = orderInfo
+                    )
+                )
+            )
+        )
+
+    private companion object {
+        const val PAYLIB_ITEM_CODE = "ru.some.elephant"
+        const val PAYLIB_ORGANISATION = "OOO Elephant Seller"
+        const val PAYLIB_SERVICE_ID = "27"
+    }
+}
 
 

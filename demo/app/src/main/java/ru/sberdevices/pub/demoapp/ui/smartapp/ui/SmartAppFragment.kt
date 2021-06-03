@@ -5,7 +5,6 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -43,7 +42,7 @@ class SmartAppFragment : Fragment() {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
-        binding.androidImageView.setOnClickListener { viewModel.sendServerAction() }
+        binding.buyElephantButton.setOnClickListener { viewModel.addItemsToCartAndPay() }
     }
 
     override fun onResume() {
@@ -61,6 +60,7 @@ class SmartAppFragment : Fragment() {
         when (item) {
             BuyItems.ELEPHANT -> {
                 fadeIn(binding.elephantImageView)
+                binding.buyElephantButton.isVisible = false
             }
         }
     }

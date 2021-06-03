@@ -34,8 +34,14 @@ class DemoApplication : Application() {
     }
 
     private val viewModelModule = module {
-        single { SmartAppViewModel(messaging = get(), appStateHolder = get()) }
-        viewModel { ComputerVisionViewModel(cvApiFactory = get(), ioCoroutineDispatcher = Dispatchers.IO) }
+        single { SmartAppViewModel(
+            messaging = get(),
+            appStateHolder = get(),
+            ioCoroutineDispatcher = Dispatchers.IO)
+        }
+        viewModel { ComputerVisionViewModel(
+            cvApiFactory = get(),
+            ioCoroutineDispatcher = Dispatchers.IO) }
         viewModel { TabsViewModel() }
     }
 
