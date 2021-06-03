@@ -10,10 +10,10 @@ You can use Computer Vision libraries as well to get gestures and visual informa
 * **Messaging** is a library that serves as messaging interface between native app and smartapp back-end. The library enables sending events (eg user’s actions) to smartapp back-end. It also allows native app receive messages from back-end (eg user’s voice requests).
 * **mic-camera-state** is a library that provides current state of device camera and microphone (microphone can be disabled and camera can be covered).
 * **cv** и **camera** libraries helps recognize user’s gestures and pose using devices camera. Works only on devices with built-in cameras.
-* Additional libraries: **asserts**, **camera**, **logger** and **binderhelper**
+* Additional libraries: **asserts**, **camera**, **logger** and **binderhelper**.
 
 # Documentation
 Documentation regarding development of Native Apps is available at [developer’s portal](https://developer.sberdevices.ru/docs/ru/methodology/research/nativeapp) (in Russian).
 
 # Support
-Please send your feedback and feature requests to our [issues board](https://github.com/sberdevices/native_smartapp_sdk/issues)
+Please send your feedback and feature requests to our [issues board](https://github.com/sberdevices/native_smartapp_sdk/issues).
