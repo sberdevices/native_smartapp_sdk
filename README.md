@@ -1,21 +1,19 @@
-# NativeApp SDK для умных устройств SberDevices
+# SberDevices Native-App SDK of smart devices
 
-**SmartApp** — это приложение для умных устройств SberDevices со своим фронтендом и бэкендом. 
-Роль фронтенда выполняет Native App — это Android-приложение в формате apk.
-Бэкенд можно разработать в [SmartMarket Studio](https://developers.sber.ru/studio/).
+**SmartApp** — is an app that can be launched on smart devices manufactured by SberDevices. SmartApp consists of front-end and back-end part. Front-end part is represented by Android App running on a device, using native libraries we provide.
+Back-end part can be developed using the [SmartMarket Studio](https://developers.sber.ru/studio/) tools.
+This repository contains SDK that enables use of Salut virtual assistants in your app, enriching UX for your users.
+You can use Computer Vision libraries as well to get gestures and visual information recognition for you app.
 
-В данном репозитории содержатся библиотеки SDK для умных устройств SberDevices.
-Эти библиотеки позволяют использовать возможности умных устройств, например, использование ассистента Салют или возможности визуального распознавания на устройствах.
- 
-# Библиотеки
-* **AppState** — чтобы сценарий смартапа понимал, что происходит в клиентской части у пользователя, ему необходимо получать текущее состояние android-приложения. Это состояние можно передать через данную библиотеку. Состояние передается в формате JSON вместе с каждым голосовым запросом пользователя
-* **Messaging** — обмен сообщениями между ассистентом и сценарием смартапа возможен через эту библиотеку. Они позволяет смартапу передавать в сценарий информацию о действиях пользователя, а сценарию — оповещать смартап о голосовых запросах
-* **mic-camera-state** — служит для получения текущего состояния микрофона и камеры устройства
-* **cv** и **camera** — чтобы распознавать позы и жесты с камер на встроенных устройствах. Библиотека работает на умных устройствах с камерой
-* Вспомогательные библиотеки: **asserts**, **camera**, **logger** и **binderhelper**
+# Libraries
+* **AppState** is a small library that transmits current state of the app from back-end part of smartapp to the front-end. Data is transmitted via JSON message. The app state is *pulled* from native APK and transmitted to back-end with every user’s voice request.
+* **Messaging** is a library that serves as messaging interface between native app and smartapp back-end. The library enables sending events (eg user’s actions) to smartapp back-end. It also allows native app receive messages from back-end (eg user’s voice requests).
+* **mic-camera-state** is a library that provides current state of device camera and microphone (microphone can be disabled and camera can be covered).
+* **cv** и **camera** libraries helps recognize user’s gestures and pose using devices camera. Works only on devices with built-in cameras.
+* Additional libraries: **asserts**, **camera**, **logger** and **binderhelper**
 
-# Документация
-С документацией по разработке Native App для умных устройств SberDevices вы можете ознакомиться на [портале разработчика](https://developer.sberdevices.ru/docs/ru/methodology/research/nativeapp). 
+# Documentation
+Documentation regarding development of Native Apps is available at [developer’s portal](https://developer.sberdevices.ru/docs/ru/methodology/research/nativeapp) (in Russian).
 
-# Поддержка
-О проблемах и предложениях по развитию библиотек вы можете сообщить через [задачи на GitHub](https://github.com/sberdevices/native_smartapp_sdk/issues).
+# Support
+Please send your feedback and feature requests to our [issues board](https://github.com/sberdevices/native_smartapp_sdk/issues)
