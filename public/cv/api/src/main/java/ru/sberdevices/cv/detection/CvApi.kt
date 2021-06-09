@@ -28,4 +28,11 @@ interface CvApi : AutoCloseable {
 
     suspend fun getVersion(): String?
     suspend fun getServiceInfo(): ServiceInfo?
+
+    /**
+     * Method provides information whether service fulfilling cv api is present and enabled on
+     * device. Client is responsible for gracefully adapting its ui so that it can handle
+     * unavailability of cv api
+     */
+    fun isAvailableOnDevice(): Boolean
 }
