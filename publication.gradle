@@ -10,7 +10,7 @@ publication.deployUrl = "https://s01.oss.sonatype.org/service/local/staging/depl
 
 publication.pomGroupID = "ru.sberdevices.smartapp.sdk"
 
-publication.pomCvLibVersion = "3.0.0"
+publication.pomCvLibVersion = "3.1.0"
 publication.pomBinderHelperVersion = "0.1-alpha"
 publication.pomAppStateVersion = "1.0-alpha"
 publication.pomMessagingVersion = "1.0-alpha"

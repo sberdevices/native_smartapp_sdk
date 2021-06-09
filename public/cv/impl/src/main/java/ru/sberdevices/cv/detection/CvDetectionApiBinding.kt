@@ -2,6 +2,7 @@
 package ru.sberdevices.cv.detection
 
 import android.content.Context
+import android.content.pm.PackageManager
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +54,7 @@ private val serviceIntent = BinderHelper.createBindIntent(
 )
 
 internal class CvDetectionApiBinding(
-    context: Context,
+    private val context: Context,
     private val bindingIdStorage: BindingIdStorage
 ) : CvApi {
     private val logger = Logger.get(javaClass.simpleName)
@@ -179,6 +180,14 @@ internal class CvDetectionApiBinding(
         generateBindingId()
         setupDeathListener()
         subscribeToHumansAspects()
+    }
+
+    override fun isAvailableOnDevice(): Boolean {
+        val isAvailable = context.packageManager
+            .queryIntentServices(serviceIntent, PackageManager.MATCH_ALL)
+            .isNotEmpty()
+        logger.debug { "available on device: $isAvailable" }
+        return isAvailable
     }
 
     private fun generateBindingId() {
