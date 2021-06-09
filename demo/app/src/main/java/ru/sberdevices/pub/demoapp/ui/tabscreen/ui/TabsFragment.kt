@@ -36,7 +36,7 @@ class TabsFragment : Fragment() {
         renderTabSelection(TabUi.SERVICES)
 
         lifecycleScope.launchWhenCreated {
-            viewModel.isCameraAvailable.collect { hasCamera ->
+            viewModel.isCvAvailableOnDevice.collect { hasCamera ->
                 binding.cvTabButton.isEnabled = hasCamera
             }
         }

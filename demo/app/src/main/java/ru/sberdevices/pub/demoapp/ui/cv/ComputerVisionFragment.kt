@@ -10,7 +10,7 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.plus
@@ -30,12 +30,6 @@ private const val PERMISSION_REQUEST_CODE = 1
 class ComputerVisionFragment : Fragment() {
     private lateinit var binding: FragmentComputerVisionBinding
     private val logger by Logger.lazy(javaClass.simpleName)
-
-    @Volatile
-    private var mirrorStateJob: Job? = null
-
-    @Volatile
-    private var detectionsJob: Job? = null
 
     private val viewModel: ComputerVisionViewModel by viewModel()
 
@@ -95,10 +89,10 @@ class ComputerVisionFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mirrorStateJob = viewModel.mirrorState
+        viewModel.mirrorState
             .onEach(::renderMirrorState)
             .launchIn(lifecycleScope)
-        detectionsJob = viewModel.detections
+        viewModel.detections
             .onEach(::onEvent)
             .launchIn(lifecycleScope + Dispatchers.IO)
         viewModel.resumed()
@@ -131,8 +125,8 @@ class ComputerVisionFragment : Fragment() {
         binding.switchFaceBoundingBox.setControlListener(Control.FACE_BOUNDING_BOX)
         binding.switchFaceLandmarks.setControlListener(Control.FACE_LANDMARKS)
         binding.switchBodyBoundingBox.setControlListener(Control.BODY_BOUNDING_BOX)
-        binding.switchBodyLandmarksSberdevices.setControlListener(Control.BODY_LANDMARKS_HOMA_NET)
-        binding.switchBodyLandmarksVisionlabs.setControlListener(Control.BODY_LANDMARKS_SENTAL_NET)
+        binding.switchBodyLandmarksHomanet.setControlListener(Control.BODY_LANDMARKS_HOMA_NET)
+        binding.switchBodyLandmarksSentalnet.setControlListener(Control.BODY_LANDMARKS_SENTAL_NET)
         binding.switchSegmentation.setControlListener(Control.BODY_SEGMENTATION)
         binding.switchGestures.setOnCheckedChangeListener { _, isChecked ->
             viewModel.gesturesSwitched(isChecked)
@@ -150,8 +144,7 @@ class ComputerVisionFragment : Fragment() {
 
     override fun onPause() {
         viewModel.paused()
-        mirrorStateJob?.cancel()
-        detectionsJob?.cancel()
+        lifecycleScope.coroutineContext.cancelChildren()
         super.onPause()
     }
 

@@ -54,14 +54,14 @@
             android:textSize="20sp" />
 
         <Switch
-            android:id="@+id/switch_body_landmarks_sberdevices"
+            android:id="@+id/switch_body_landmarks_homanet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/track_body_landmarks_homa_net"
             android:textSize="20sp" />
 
         <Switch
-            android:id="@+id/switch_body_landmarks_visionlabs"
+            android:id="@+id/switch_body_landmarks_sentalnet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/track_body_landmarks_sental_net"

@@ -1,25 +1,21 @@
 package ru.sberdevices.pub.demoapp.ui.tabscreen.ui
 
-import android.os.Build
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.sberdevices.cv.detection.CvApiFactory
 
 /**
  * View model for main tabs fragment
  */
-class TabsViewModel : ViewModel() {
+class TabsViewModel(cvApiFactory: CvApiFactory) : ViewModel() {
     
-    private val _isCameraAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isCameraAvailable = _isCameraAvailable.asStateFlow()
+    private val _isCvAvailableOnDevice: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isCvAvailableOnDevice = _isCvAvailableOnDevice.asStateFlow()
     
     init {
-        _isCameraAvailable.tryEmit(
-            Build.MODEL in DEVICES_WITH_CAMERA
-        )
-    }
-
-    companion object {
-        val DEVICES_WITH_CAMERA = listOf("SberPortal")
+        val cvApi = cvApiFactory.get()
+        _isCvAvailableOnDevice.tryEmit(cvApi.isAvailableOnDevice())
+        cvApi.close()
     }
 }
