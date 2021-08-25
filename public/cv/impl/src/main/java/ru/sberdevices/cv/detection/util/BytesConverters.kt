@@ -30,7 +30,7 @@ private fun DetectionEntity.toHumans(aspects: Set<HumansDetectionAspect>, lastHu
                 ?: lastHumans.bodyBoundingBoxes.takeIf { HumansDetectionAspect.Body.BoundingBox in aspects },
             faceBoundingBoxes = (if (withFaceBoundingBoxes(aspects)) faceBoundingBoxes.convertFromProto() else null)
                 ?: lastHumans.faceBoundingBoxes.takeIf { HumansDetectionAspect.Face.BoundingBox in aspects },
-            faceTrackIds = bodyTrackIdsList,
+            faceTrackIds = faceTrackIdsList,
             bodyLandmarks = (if (withBodyLandmarks(aspects)) bodyLandmarks.convertFromProto() else null)
                 ?: lastHumans.bodyLandmarks.takeIf {
                     HumansDetectionAspect.Body.Landmarks.SentalNet in aspects ||
@@ -38,7 +38,7 @@ private fun DetectionEntity.toHumans(aspects: Set<HumansDetectionAspect>, lastHu
                 },
             faceLandmarks = (if (withFaceLandmarks(aspects)) faceLandmarks.convertFromProto() else null)
                 ?: lastHumans.faceLandmarks.takeIf { HumansDetectionAspect.Face.Landmarks in aspects },
-            bodyTrackIds = faceTrackIdsList,
+            bodyTrackIds = bodyTrackIdsList,
             bodyMask = (if (withBodyMask(aspects)) bodyMasks.convertFromProto() else null)
                 ?: lastHumans.bodyMask.takeIf { HumansDetectionAspect.Body.Segmentation in aspects }
         )

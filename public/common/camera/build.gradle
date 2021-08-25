@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation project(':public:common:logger')
+    implementation project(':public:services:mic_camera_state:api')
 
     implementation "androidx.annotation:annotation:$versions.annotation"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"

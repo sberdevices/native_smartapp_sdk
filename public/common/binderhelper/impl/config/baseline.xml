@@ -1,8 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>MaxLineLength:BinderHelper.kt$BinderHelper$logger.warn { "The object we are calling has died, because its hosting process no longer exists. Retrying..." }</ID>
-    <ID>TooGenericExceptionThrown:BinderHelper.kt$BinderHelper$throw RuntimeException("Thread interrupted, execution can not be continued", exception)</ID>
-  </CurrentIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>

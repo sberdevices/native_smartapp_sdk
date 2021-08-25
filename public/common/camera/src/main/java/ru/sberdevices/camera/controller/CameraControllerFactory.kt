@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.WindowManager
 import androidx.annotation.AnyThread
+import kotlinx.coroutines.flow.flowOf
 import ru.sberdevices.camera.factories.ImageReaderFactoryImpl
 import ru.sberdevices.camera.factories.camera.CameraFactory
 import ru.sberdevices.camera.factories.camera.CameraOpenerImpl
@@ -22,15 +23,26 @@ import ru.sberdevices.camera.utils.CameraCoveredReceiverImpl
 import ru.sberdevices.camera.utils.CameraExceptionHandler
 import ru.sberdevices.camera.utils.CameraExceptionHandlerImpl
 import ru.sberdevices.common.logger.Logger
+import ru.sberdevices.services.mic.camera.state.MicCameraStateRepository
 
-object CameraStarterFactory {
-    private val logger = Logger.get("CameraStarterFactory")
+/**
+ * Фабрика [CameraController].
+ */
+object CameraControllerFactory {
+    private val logger = Logger.get("CameraControllerFactory")
 
+    /**
+     * Метод создания [CameraController].
+     * @param cameraStateRepository Требуется для корректной работы камеры на девайсах с крышкой. Для консистентности
+     * работы на всех девайсах рекомендуется поставлять рабочий [MicCameraStateRepository], вне зависимости от девайса.
+     * @param exceptionHandler Получает ошибки при работе камеры.
+     */
     @JvmStatic
     @AnyThread
     fun create(
         context: Context,
-        exceptionHandler: CameraExceptionHandler? = null
+        cameraStateRepository: MicCameraStateRepository? = null,
+        exceptionHandler: CameraExceptionHandler? = null,
     ): CameraController {
         logger.debug { "create" }
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -79,11 +91,8 @@ object CameraStarterFactory {
             cameraExceptionHandler,
         )
         val coveredReceiver = CameraCoveredReceiverImpl(
-            context,
-            CameraCoveredListenerImpl(
-                actionDispatcher,
-                cameraHandler
-            )
+            cameraStateRepository?.isCameraCovered ?: flowOf(false),
+            CameraCoveredListenerImpl(actionDispatcher, cameraHandler),
         )
         stateHolder.init(stateMachine)
         return CameraControllerImpl(

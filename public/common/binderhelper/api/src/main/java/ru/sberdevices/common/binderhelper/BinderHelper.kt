@@ -6,12 +6,20 @@ import android.content.ServiceConnection
 import android.os.DeadObjectException
 import android.os.IInterface
 import androidx.annotation.BinderThread
+import kotlinx.coroutines.flow.StateFlow
+import ru.sberdevices.common.binderhelper.entities.BinderState
 
 /**
- * Интерфейс для подключения к aidl сервисам. Имплементацию нужно получать в [BinderHelperFactory].
- * На корутинах, без блокирования потоков и лишних переключений контекста.
+ * Интерфейс для подключения к aidl сервисам. Имплементацию нужно получать в BinderHelperFactory.
+ * На корутинах, без блокирования потоков и лишних переключений контекста. Заменяет deprecated BinderHelper.
+ * Для примера использования - см. UserSettingsManagerImpl.
  */
 interface BinderHelper<BinderInterface : IInterface> {
+
+    /**
+     * Флоу текущего состояния соединения с сервисом. По умолчанию [BinderState.DISCONNECTED]
+     */
+    val binderStateFlow: StateFlow<BinderState>
 
     /**
      * Асинхронно подключаемся к сервису. Если сразу подключиться не удалось, но сервис есть на

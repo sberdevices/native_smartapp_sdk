@@ -1,7 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>MaxLineLength:MicCameraStateRepositoryImpl.kt$MicCameraStateRepositoryImpl.&lt;no name provided&gt;$if (isCameraDisabled) MicCameraStateRepository.State.DISABLED else MicCameraStateRepository.State.ENABLED</ID>
-  </CurrentIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>

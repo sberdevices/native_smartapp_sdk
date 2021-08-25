@@ -8,12 +8,9 @@ import androidx.annotation.WorkerThread
 interface Messaging {
 
     /**
-     * ServerActions from https://sbtatlas.sigma.sbrf.ru/wiki/pages/viewpage.action?pageId=2019165520
-     * payload will be in server_action field
-     *
      * simple ServerAction example
      * messageName: SERVER_ACTION
-     * payload: {"actionId": "GET_STREAM", "parameters": {"content_id": "111111"}}
+     * payload: {"action_id": "GET_STREAM", "parameters": {"content_id": "111111"}}
      *
      * runApp example
      * messageName: RUN_APP
@@ -23,18 +20,27 @@ interface Messaging {
     fun sendAction(messageName: MessageName, payload: Payload): MessageId
 
     /**
+     * Send server_action with source app androidApplicationID
+     *
+     * For inner use only
+     * Requires permission: "ru.sberdevices.permission.CROSS_APP_ACTION"
+     */
+    @RequiresPermission("ru.sberdevices.permission.CROSS_APP_ACTION")
+    fun sendAction(messageName: MessageName, payload: Payload, androidApplicationID: String): MessageId
+
+    /**
      * Send text [text], as if this text was spoken by user.
      */
     fun sendText(text: String)
 
     /**
-     * Add [listener] message listener.
+     * Add message [listener].
      */
     @AnyThread
     fun addListener(listener: Listener)
 
     /**
-     * Remove [listener] message listener.
+     * Remove message [listener].
      */
     @AnyThread
     fun removeListener(listener: Listener)
@@ -51,24 +57,24 @@ interface Messaging {
     @AnyThread
     interface Listener {
         /**
-         * New message with id [messageId] and [payload]
+         * New message with id [messageId] and [payload].
          */
         fun onMessage(messageId: MessageId, payload: Payload)
 
         /**
-         * Error from backend [throwable] for message with [messageId]
+         * Error from backend [throwable] for message with [messageId].
          */
         fun onError(messageId: MessageId, throwable: Throwable)
     }
 }
 
 /**
- * Some useful [data]
+ * Some useful [data].
  */
 data class Payload(val data: String)
 
 /**
- * Message id [value]
+ * Message id [value].
  */
 data class MessageId(val value: String)
 
@@ -89,8 +95,13 @@ enum class MessageName {
     HEARTBEAT,
 
     /**
-     * Update IP
+     * Update IP.
      */
     @RequiresPermission("ru.sberdevices.permission.IP_UPDATE")
-    UPDATE_IP
+    UPDATE_IP,
+
+    /**
+     * Close app.
+     */
+    CLOSE_APP
 }

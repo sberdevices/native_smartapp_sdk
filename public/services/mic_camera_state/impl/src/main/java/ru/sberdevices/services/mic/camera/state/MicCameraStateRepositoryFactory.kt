@@ -2,17 +2,31 @@ package ru.sberdevices.services.mic.camera.state
 
 import android.content.Context
 import androidx.annotation.RequiresPermission
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import ru.sberdevices.common.binderhelper.BinderHelper
+import ru.sberdevices.common.binderhelper.BinderHelperFactory
+import ru.sberdevices.common.logger.Logger
+import ru.sberdevices.services.mic.camera.state.aidl.IMicCameraStateService
+import ru.sberdevices.services.mic.camera.state.aidl.wrappers.OnMicCameraStateChangedListenerWrapperImpl
 
 /**
- * Factory for [MicCameraStateRepository].
+ * Фактори для [MicCameraStateRepository].
  */
-object MicCameraStateRepositoryFactory {
+class MicCameraStateRepositoryFactory constructor(
+        private val context: Context,
+) {
     @RequiresPermission("ru.sberdevices.permission.BIND_MIC_CAMERA_STATE_SERVICE")
-    fun create(appContext: Context): MicCameraStateRepository = MicCameraStateRepositoryImpl(
-        context = appContext.applicationContext,
-        coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    fun create(): MicCameraStateRepository = MicCameraStateRepositoryImpl(
+        helperFactory = getHelperFactory(context),
+        onMicCameraStateChangedListenerWrapper = OnMicCameraStateChangedListenerWrapperImpl()
     )
+
+    private fun getHelperFactory(context: Context): BinderHelperFactory<IMicCameraStateService> {
+        val bindIntent = BinderHelper.createBindIntent(
+            packageName = "ru.sberdevices.services",
+            className = "ru.sberdevices.services.mic.camera.state.MicCameraStateService"
+        )
+        return BinderHelperFactory(context, bindIntent, Logger.get<MicCameraStateRepositoryImpl>()) {
+            IMicCameraStateService.Stub.asInterface(it)
+        }
+    }
 }

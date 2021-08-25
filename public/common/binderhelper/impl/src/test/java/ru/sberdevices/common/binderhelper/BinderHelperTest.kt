@@ -13,17 +13,22 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertNull
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineScope
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
+import ru.sberdevices.common.binderhelper.entities.BinderState
 
 /**
- * Тест для [BinderHelper].
+ * Тест для [BinderHelper]
+ *
+ * @author Илья Богданович on 12.02.2021
  */
 class BinderHelperTest {
     private val intent = mockk<Intent>()
@@ -37,15 +42,10 @@ class BinderHelperTest {
         every { packageManager } returns pm
     }
     private val binding = mockk<IInterface>()
-    private val onDisconnect = mockk<() -> Unit>(relaxed = true)
-    private val onBindingDied = mockk<() -> Unit>(relaxed = true)
-    private val onNullBinding = mockk<() -> Unit>(relaxed = true)
+
     private val helper = BinderHelperFactory(
         context = context,
         intent = intent,
-        onDisconnect = onDisconnect,
-        onBindingDied = onBindingDied,
-        onNullBinding = onNullBinding,
         getBinding = { binding },
     ).create()
     private val scope = TestCoroutineScope()
@@ -176,7 +176,7 @@ class BinderHelperTest {
         verify(exactly = 2) {
             appContext.bindService(intent, any(), Context.BIND_AUTO_CREATE)
         }
-        coVerify { onBindingDied() }
+        assertThat(helper.binderStateFlow.value, equalTo(BinderState.BINDING_DIED))
     }
 
     @Test
@@ -193,8 +193,8 @@ class BinderHelperTest {
         // Check
         coVerify(exactly = 1) {
             appContext.bindService(intent, any(), Context.BIND_AUTO_CREATE)
-            onNullBinding()
         }
+        assertThat(helper.binderStateFlow.value, equalTo(BinderState.NULL_BINDING))
     }
 
     @Test
@@ -211,7 +211,8 @@ class BinderHelperTest {
         // Check
         coVerify(exactly = 1) {
             appContext.bindService(intent, any(), Context.BIND_AUTO_CREATE)
-            onDisconnect()
         }
+        assertThat(helper.binderStateFlow.value, equalTo(BinderState.DISCONNECTED))
     }
+
 }

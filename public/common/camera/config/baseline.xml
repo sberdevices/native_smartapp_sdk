@@ -2,9 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>EmptyFunctionBlock:CameraView.kt$CameraView.&lt;no name provided&gt;${}</ID>
     <ID>Filename:ru.sberdevices.camera.factories.camera.CameraInfoProvider.kt:1</ID>
-    <ID>LongMethod:CameraStarterFactory.kt$CameraStarterFactory$@JvmStatic @AnyThread fun create( context: Context, exceptionHandler: CameraExceptionHandler? = null ): CameraController</ID>
     <ID>MatchingDeclarationName:CameraInfoProvider.kt$CameraInfoProviderImpl : CameraInfoProvider</ID>
     <ID>MaxLineLength:CameraInfoProvider.kt$CameraInfoProviderImpl$val params = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) as StreamConfigurationMap</ID>
     <ID>MaxLineLength:StateHolder.kt$StateHolderImpl$logger.debug { "Changing state [${oldState.javaClass.simpleName}] -&gt; [${newState.javaClass.simpleName}]" }</ID>

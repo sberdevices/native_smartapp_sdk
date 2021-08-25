@@ -35,7 +35,17 @@ interface MicCameraStateRepository {
     fun setCameraEnabled(newState: Boolean)
 
     /**
-     * Disconnect from the service and clear resources.
+     * Включить или выключить микрофон программно.
+     *
+     * Метод только для внутренного использования.
+     * Требует пермишен ru.sberdevices.permission.CHANGE_MIC_STATE
+     */
+    @AnyThread
+    @RequiresPermission("ru.sberdevices.permission.CHANGE_MIC_STATE")
+    fun setMicEnabled(newState: Boolean)
+
+    /**
+     * Отключиться от сервиса.
      */
     fun dispose()
 
@@ -58,6 +68,13 @@ interface MicCameraStateRepository {
         /**
          * The device has no camera or microphone.
          */
-        NO_DEVICE
+        NO_DEVICE;
+
+        override fun toString(): String = when (this) {
+            ENABLED -> "enabled"
+            DISABLED -> "disabled"
+            UNKNOWN -> "unknown"
+            NO_DEVICE -> "no_device"
+        }
     }
 }

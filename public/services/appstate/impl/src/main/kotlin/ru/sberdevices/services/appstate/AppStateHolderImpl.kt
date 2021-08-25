@@ -2,8 +2,6 @@ package ru.sberdevices.services.appstate
 
 import android.content.Context
 import androidx.annotation.AnyThread
-import ru.sberdevices.services.appstate.AppStateHolder
-import ru.sberdevices.services.appstate.AppStateProvider
 
 @AnyThread
 internal class AppStateHolderImpl(appContext: Context) : AppStateHolder {

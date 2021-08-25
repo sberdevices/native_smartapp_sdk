@@ -8,6 +8,8 @@ interface IMessagingService {
     const int VERSION = 1;
 
     String sendAction(in MessageName messageName, String payload) = 10;
+    String sendActionWithAppID(in MessageName messageName, String payload, String androidApplicationID) = 13;
+
     void sendText(String text) = 20;
 
     void addListener(in IMessagingListener listener) = 110;
