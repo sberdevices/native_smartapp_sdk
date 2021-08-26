@@ -32,7 +32,7 @@ dependencies {
     api project(':public:cv:util')
 
     implementation "androidx.annotation:annotation:$versions.annotation"
-    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf_lite"
+    implementation "com.google.protobuf:protobuf-java:3.11.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
