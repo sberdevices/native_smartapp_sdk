@@ -5,9 +5,11 @@ import ru.sberdevices.services.mic.camera.state.aidl.IOnMicCameraStateChangedLis
 interface IMicCameraStateService {
     const int VERSION = 1;
 
-    oneway void setCameraEnabled(boolean isEnabled) = 1;
+    void setCameraEnabled(boolean isEnabled) = 1;
 
-    oneway void registerMicCameraStateListener(IOnMicCameraStateChangedListener listener) = 10;
+    void setMicEnabled(boolean isEnabled) = 2;
 
-    oneway void unregisterMicCameraStateListener(IOnMicCameraStateChangedListener listener) = 11;
+    void registerMicCameraStateListener(IOnMicCameraStateChangedListener listener) = 10;
+
+    void unregisterMicCameraStateListener(IOnMicCameraStateChangedListener listener) = 11;
 }

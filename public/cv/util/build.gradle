@@ -26,7 +26,6 @@ dependencies {
     implementation project(':public:common:binderhelper:impl')
     implementation project(':public:common:logger')
 
-    implementation "androidx.annotation:annotation:$versions.annotation"
     implementation "com.google.protobuf:protobuf-lite:$versions.protobuf_lite"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
@@ -77,3 +76,4 @@ afterEvaluate {
         sign publishing.publications.mavenCvUtil
     }
 }
+

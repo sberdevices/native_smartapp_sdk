@@ -9,6 +9,12 @@ versions.buildTools = "29.0.2"
 versions.kotlin = "1.4.32"
 versions.kotlinxCoroutines = "1.4.3"
 
+// protobuf
+versions.protobuf_plugin = "0.8.10"
+versions.protobuf_lite = "3.0.1"
+versions.protoc = "3.9.0"
+versions.protoc_javalite = "3.0.0"
+
 // AndroidX
 versions.androidx = [:]
 versions.annotation = "1.2.0"

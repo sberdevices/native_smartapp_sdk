@@ -13,13 +13,15 @@ import androidx.annotation.MainThread
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
+import ru.sberdevices.common.binderhelper.entities.BinderState
 import ru.sberdevices.common.logger.Logger
 
 /**
- * Хелпер для подключения к сервисам, полностью на корутинах,
+ * Новый хелпер для подключения к сервисам, полностью на корутинах,
  * без блокирования потоков и лишних переключений контекста.
  *
  * Принимаемые на вход колбеки срабатывают, если активен скоуп, в котором подключаемся к сервису.
@@ -27,43 +29,47 @@ import ru.sberdevices.common.logger.Logger
 internal class BinderHelperImpl<BinderInterface : IInterface>(
     private val context: Context,
     private val intent: Intent,
-    private val onDisconnect: () -> Unit = {},
-    private val onBindingDied: () -> Unit = {},
-    private val onNullBinding: () -> Unit = {},
+    private val logger: Logger,
     private val getBinding: (IBinder) -> BinderInterface,
 ) : BinderHelper<BinderInterface> {
-    private val logger by Logger.lazy(tag = "BinderHelperImpl")
+
     private val binderState = MutableStateFlow<BinderInterface?>(null)
     private val connectionState = MutableStateFlow<ServiceConnection?>(null)
 
-    private fun getConnection(): ServiceConnection =
-        object : ServiceConnection {
-            @MainThread
-            override fun onServiceConnected(className: ComponentName, iBinder: IBinder) {
-                logger.debug { "onServiceConnected(className=$className" }
-                binderState.value = getBinding(iBinder)
-            }
+    private val mutableBinderStateFlow = MutableStateFlow(BinderState.DISCONNECTED)
 
-            @MainThread
-            override fun onServiceDisconnected(componentName: ComponentName) {
-                logger.debug { "onServiceDisconnected(className=$componentName)" }
-                clearBinder()
-                onDisconnect()
-            }
+    override val binderStateFlow: StateFlow<BinderState>
+        get() = mutableBinderStateFlow
 
-            @MainThread
-            override fun onBindingDied(name: ComponentName?) {
-                logger.debug { "onBindingDied()" }
-                onBindingDied()
-                connect()
-            }
+    private fun getConnection(): ServiceConnection = object : ServiceConnection {
+        @MainThread
+        override fun onServiceConnected(className: ComponentName, iBinder: IBinder) {
+            logger.debug { "onServiceConnected(className=$className" }
+            binderState.value = getBinding(iBinder)
 
-            @MainThread
-            override fun onNullBinding(name: ComponentName?) {
-                logger.debug { "onNullBinding()" }
-                onNullBinding()
-            }
+            mutableBinderStateFlow.value = BinderState.CONNECTED
         }
+
+        @MainThread
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            logger.debug { "onServiceDisconnected(className=$componentName)" }
+            clearBinder()
+            mutableBinderStateFlow.value = BinderState.DISCONNECTED
+        }
+
+        @MainThread
+        override fun onBindingDied(name: ComponentName?) {
+            logger.debug { "onBindingDied()" }
+            mutableBinderStateFlow.value = BinderState.BINDING_DIED
+            connect()
+        }
+
+        @MainThread
+        override fun onNullBinding(name: ComponentName?) {
+            logger.debug { "onNullBinding()" }
+            mutableBinderStateFlow.value = BinderState.NULL_BINDING
+        }
+    }
 
     /**
      * В некоторых случаях нельзя просто обнулить биндер - мы уже теоретически можем получить новый биндер
@@ -88,11 +94,10 @@ internal class BinderHelperImpl<BinderInterface : IInterface>(
 
         val success = context.applicationContext.bindService(intent, newConnection, Context.BIND_AUTO_CREATE)
         if (success) {
-            logger.debug { "connected intent=${intent.component?.className}" }
+            logger.debug { "got permission to connect with intent=${intent.component?.className}" }
         } else {
             logger.warn { "Failed to connect to ${intent.component?.className}" }
         }
-
         return success
     }
 

@@ -1,4 +1,3 @@
-@file:Suppress("unused", "WeakerAccess")
 package ru.sberdevices.cv.detection
 
 import android.content.Context
@@ -24,6 +23,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
 import ru.sberdevices.common.binderhelper.BinderHelper
+import ru.sberdevices.common.binderhelper.BinderHelperFactory
+import ru.sberdevices.common.binderhelper.entities.BinderState
 import ru.sberdevices.common.logger.Logger
 import ru.sberdevices.cv.ICvDetectionService
 import ru.sberdevices.cv.IDeathListener
@@ -38,11 +39,7 @@ import ru.sberdevices.cv.detection.entity.humans.HumansDetectionAspect
 import ru.sberdevices.cv.detection.util.toGesture
 import ru.sberdevices.cv.detection.util.toHumans
 import ru.sberdevices.cv.util.BindingIdStorage
-import ru.sberdevices.cv.util.binderhelperlifecycle.BinderHelperLifecycleEventsAdapter
-import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.BINDING_DIED
-import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.CONNECTED
-import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.DISCONNECTED
-import ru.sberdevices.cv.util.binderhelperlifecycle.entity.BinderLifecycleEvent.NULL_BINDING
+import java.util.concurrent.atomic.AtomicInteger
 
 private const val SERVICE_COMPONENT_PACKAGE = "ru.sberdevices.cv"
 private const val SERVICE_COMPONENT_CLASS = "CvDetectionService"
@@ -61,9 +58,9 @@ internal class CvDetectionApiBinding(
 
     private val bindingId = bindingIdStorage.bindingId
 
-    private val binderHelper = BinderHelperLifecycleEventsAdapter(context, serviceIntent) {
+    private val binderHelper = BinderHelperFactory(context, serviceIntent) {
         ICvDetectionService.Stub.asInterface(it)
-    }
+    }.create()
     private val coroutineScope =
         CoroutineScope(
             SupervisorJob() + Dispatchers.IO + CoroutineExceptionHandler { coroutineContext, throwable ->
@@ -72,16 +69,7 @@ internal class CvDetectionApiBinding(
         )
     private val humanRecognitionsAspects = MutableStateFlow<Set<HumansDetectionAspect>>(emptySet())
 
-    @Volatile
-    private var callbacksCounter: Int = 0
-        get() {
-            logger.verbose { "get callbacks counter $field" }
-            return field
-        }
-        set(value) {
-            logger.verbose { "set callbacks counter $value" }
-            field = value
-        }
+    private val callbacksCounter = AtomicInteger(0)
 
     @Volatile
     private var humansListener: IHumansDetectionListener.Stub? = null
@@ -92,7 +80,7 @@ internal class CvDetectionApiBinding(
     private val humansCallbackFlow = callbackFlow<Humans> {
         withBindingId { id, service ->
             logger.debug { "subscribe for humans detection" }
-            ++callbacksCounter
+            callbacksCounter.getAndIncrement()
             humansListener = object : IHumansDetectionListener.Stub() {
                 override fun onUpdate(detectionEntity: ByteArray) {
                     val detection = detectionEntity.toHumans(humanRecognitionsAspects.value, lastHumans)
@@ -126,7 +114,7 @@ internal class CvDetectionApiBinding(
     private var gesturesListener: IGestureDetectionListener.Stub? = null
     private val gestureCallbackFlow = callbackFlow<Gesture> {
         withBindingId { id, service ->
-            ++callbacksCounter
+            callbacksCounter.getAndIncrement()
             gesturesListener = object : IGestureDetectionListener.Stub() {
                 override fun onUpdate(detectionEntity: ByteArray) {
                     val detection = detectionEntity.toGesture()
@@ -153,7 +141,7 @@ internal class CvDetectionApiBinding(
     private var isMirrorDetectedListener: IMirrorDetectedListener.Stub? = null
     private val isMirrorDetectedCallbackFlow = callbackFlow<Boolean> {
         withBindingId { id, service ->
-            ++callbacksCounter
+            callbacksCounter.getAndIncrement()
             isMirrorDetectedListener = object : IMirrorDetectedListener.Stub() {
                 override fun onUpdate(detected: Boolean) {
                     offer(detected)
@@ -232,7 +220,7 @@ internal class CvDetectionApiBinding(
                         .onEach { coroutineScope.launch { humansSharedFlow.emit(it) } }
                         .launchIn(coroutineScope)
                     humansJob?.invokeOnCompletion {
-                        --callbacksCounter
+                        callbacksCounter.getAndDecrement()
                         logger.debug { "humans callback flow completed" }
                     }
                 }
@@ -243,12 +231,12 @@ internal class CvDetectionApiBinding(
     }
 
     private fun subscribeToServiceConnectionLifecycleEvents() {
-        binderHelper.events.onEach { event ->
+        binderHelper.binderStateFlow.onEach { event ->
             when (event) {
-                CONNECTED -> restoreDetection()
-                DISCONNECTED,
-                BINDING_DIED,
-                NULL_BINDING -> {
+                BinderState.CONNECTED -> restoreDetection()
+                BinderState.DISCONNECTED,
+                BinderState.BINDING_DIED,
+                BinderState.NULL_BINDING -> {
                     isMirrorDetectedSharedFlow.emit(false)
                     humansSharedFlow.emit(Humans.EMPTY)
                 }
@@ -310,7 +298,7 @@ internal class CvDetectionApiBinding(
         isMirrorDetectedSharedFlow.resetReplayCache()
 
         coroutineScope.launch {
-            while (callbacksCounter != 0) {
+            while (callbacksCounter.get() != 0) {
                 logger.debug { "trying close binding, but some active callbacks yet present" }
                 delay(BINDING_CLOSING_DELAY_MS)
             }
@@ -339,7 +327,7 @@ internal class CvDetectionApiBinding(
                     .onEach { isMirrorDetectedSharedFlow.emit(it) }
                     .launchIn(coroutineScope)
                 job.invokeOnCompletion {
-                    --callbacksCounter
+                    callbacksCounter.getAndDecrement()
                     logger.debug { "mirror callback flow completed" }
                 }
                 isMirrorDetectedJob = job
@@ -370,7 +358,7 @@ internal class CvDetectionApiBinding(
                     .onEach { gestureSharedFlow.emit(it) }
                     .launchIn(coroutineScope)
                 job.invokeOnCompletion {
-                    --callbacksCounter
+                    callbacksCounter.getAndDecrement()
                     logger.debug { "gestures callback flow completed" }
                 }
                 gestureJob = job

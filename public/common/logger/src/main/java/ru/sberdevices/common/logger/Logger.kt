@@ -2,6 +2,7 @@ package ru.sberdevices.common.logger
 
 import android.webkit.ConsoleMessage
 import androidx.annotation.AnyThread
+import androidx.annotation.MainThread
 import ru.sberdevices.common.assert.Asserts
 
 @AnyThread
@@ -51,7 +52,7 @@ class Logger private constructor(
     }
 
     fun sensitive(message: () -> String) {
-        delegates.forEach { it.warn(tag, message) }
+        delegates.forEach { it.sensitive(tag, message) }
     }
 
     /**
@@ -66,8 +67,6 @@ class Logger private constructor(
         }
     }
 
-    // TODO add sensitive(throwable: Throwable, message: () -> String) {
-
     companion object {
 
         @Volatile
@@ -80,16 +79,11 @@ class Logger private constructor(
 
         fun lazy(tag: String) = lazy { get(tag) }
 
-        @Deprecated("please to use another variant. @See setDelegates(vararg delegates: LoggerDelegate)")
-        fun setDelegates(delegates: List<LoggerDelegate>) {
-            if (delegates.isEmpty()) {
-                Asserts.fail("")
-            }
+        inline fun <reified T> get() = get(T::class.java.simpleName)
 
-            Companion.delegates = delegates.toList()
-        }
+        inline fun <reified T> lazy() = lazy { get(T::class.java.simpleName) }
 
-        @AnyThread
+        @MainThread
         @JvmStatic
         fun setDelegates(vararg delegates: LoggerDelegate) {
             if (delegates.isEmpty()) {

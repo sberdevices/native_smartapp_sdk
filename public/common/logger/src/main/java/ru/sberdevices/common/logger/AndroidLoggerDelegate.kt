@@ -1,49 +1,53 @@
 package ru.sberdevices.common.logger
 
 import android.util.Log
+import ru.sberdevices.common.logger.mode.LogLevel
 
 class AndroidLoggerDelegate(
-    private val allowLogSensitive: Boolean = false
+    private val allowLogSensitive: Boolean = false,
+    private val isDebugBuild: Boolean = BuildConfig.DEBUG,
+    private inline val logLevel: () -> LogLevel = { LogLevel.VERBOSE },
+    private val prefix: String = "",
 ) : LoggerDelegate {
 
     override fun verbose(tag: String, message: () -> String) {
-        Log.v(tag, message.invoke())
+        callLoggerFn(minLogLevel = LogLevel.VERBOSE) { Log.v("$prefix$tag", message.invoke()) }
     }
 
     override fun verbose(tag: String, message: () -> String, throwable: Throwable) {
-        Log.v(tag, message.invoke(), throwable)
+        callLoggerFn(minLogLevel = LogLevel.VERBOSE) { Log.v("$prefix$tag", message.invoke(), throwable) }
     }
 
     override fun debug(tag: String, message: () -> String) {
-        Log.d(tag, message.invoke())
+        callLoggerFn(minLogLevel = LogLevel.DEBUG) { Log.d("$prefix$tag", message.invoke()) }
     }
 
     override fun debug(tag: String, message: () -> String, throwable: Throwable) {
-        Log.d(tag, message.invoke(), throwable)
+        callLoggerFn(minLogLevel = LogLevel.DEBUG) { Log.d("$prefix$tag", message.invoke(), throwable) }
     }
 
     override fun info(tag: String, message: () -> String) {
-        Log.i(tag, message.invoke())
+        callLoggerFn(minLogLevel = LogLevel.INFO) { Log.i("$prefix$tag", message.invoke()) }
     }
 
     override fun info(tag: String, message: () -> String, throwable: Throwable) {
-        Log.i(tag, message.invoke(), throwable)
+        callLoggerFn(minLogLevel = LogLevel.INFO) { Log.i("$prefix$tag", message.invoke(), throwable) }
     }
 
     override fun warn(tag: String, message: () -> String) {
-        Log.w(tag, message.invoke())
+        callLoggerFn(minLogLevel = LogLevel.WARN) { Log.w("$prefix$tag", message.invoke()) }
     }
 
     override fun warn(tag: String, message: () -> String, throwable: Throwable) {
-        Log.w(tag, message.invoke(), throwable)
+        callLoggerFn(minLogLevel = LogLevel.WARN) { Log.w("$prefix$tag", message.invoke(), throwable) }
     }
 
     override fun error(tag: String, message: () -> String) {
-        Log.e(tag, message.invoke())
+        callLoggerFn(minLogLevel = LogLevel.ERROR) { Log.e("$prefix$tag", message.invoke()) }
     }
 
     override fun error(tag: String, message: () -> String, throwable: Throwable) {
-        Log.e(tag, message.invoke(), throwable)
+        callLoggerFn(minLogLevel = LogLevel.ERROR) { Log.e("$prefix$tag", message.invoke(), throwable) }
     }
 
     /**
@@ -51,9 +55,18 @@ class AndroidLoggerDelegate(
      */
     override fun sensitive(tag: String, message: () -> String) {
         if (allowLogSensitive) {
-            Log.w(tag, message.invoke())
+            callLoggerFn(minLogLevel = LogLevel.WARN) { Log.w("$prefix$tag", message.invoke()) }
         }
     }
 
-    // TODO add sensitive(tag: String, message: String, throwable: Throwable)
+    private inline fun callLoggerFn(minLogLevel: LogLevel, loggerFn: () -> Unit) {
+        if (isDebugBuild) {
+            loggerFn.invoke()
+            return
+        }
+
+        if (minLogLevel.weight >= logLevel.invoke().weight) {
+            loggerFn.invoke()
+        }
+    }
 }

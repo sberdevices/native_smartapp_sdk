@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.AnyThread
+import androidx.annotation.RequiresPermission
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,7 @@ private val BIND_INTENT = Intent().apply {
 
 @WorkerThread
 internal class MessagingImpl @AnyThread constructor(
-    context: Context
+    private val context: Context
 ) : Messaging {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -73,13 +74,23 @@ internal class MessagingImpl @AnyThread constructor(
         val id: String = runBlocking {
             helper.execute { service ->
                 service.sendAction(
-                    when (messageName) {
-                        MessageName.SERVER_ACTION -> MessageNameModel(MessageNameModel.MessageNameType.SERVER_ACTION)
-                        MessageName.RUN_APP -> MessageNameModel(MessageNameModel.MessageNameType.RUN_APP)
-                        MessageName.UPDATE_IP -> MessageNameModel(MessageNameModel.MessageNameType.UPDATE_IP)
-                        MessageName.HEARTBEAT -> MessageNameModel(MessageNameModel.MessageNameType.HEARTBEAT)
-                    },
+                    MessageNameModel(messageName.convertToType()),
                     payload.data
+                )
+            }
+        }!!
+        return MessageId(id)
+    }
+
+    @RequiresPermission("ru.sberdevices.permission.CROSS_APP_ACTION")
+    override fun sendAction(messageName: MessageName, payload: Payload, androidApplicationID: String): MessageId {
+        logger.debug { "sendAction() with messageName and androidApplicationID" }
+        val id: String = runBlocking {
+            helper.execute { service ->
+                service.sendActionWithAppID(
+                    MessageNameModel(messageName.convertToType()),
+                    payload.data,
+                    androidApplicationID
                 )
             }
         }!!
@@ -109,5 +120,15 @@ internal class MessagingImpl @AnyThread constructor(
         listeners.clear()
         helper.disconnect()
         scope.cancel()
+    }
+
+    private fun MessageName.convertToType(): MessageNameModel.MessageNameType {
+        return when (this) {
+            MessageName.SERVER_ACTION -> MessageNameModel.MessageNameType.SERVER_ACTION
+            MessageName.RUN_APP -> MessageNameModel.MessageNameType.RUN_APP
+            MessageName.UPDATE_IP -> MessageNameModel.MessageNameType.UPDATE_IP
+            MessageName.HEARTBEAT -> MessageNameModel.MessageNameType.HEARTBEAT
+            MessageName.CLOSE_APP -> MessageNameModel.MessageNameType.CLOSE_APP
+        }
     }
 }

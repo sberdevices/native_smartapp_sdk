@@ -1,11 +1,13 @@
 package ru.sberdevices.camera.utils
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import androidx.annotation.AnyThread
-import androidx.annotation.MainThread
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.plus
 import ru.sberdevices.common.logger.Logger
 
 @AnyThread
@@ -16,32 +18,30 @@ interface CameraCoveredReceiver {
 
 @AnyThread
 class CameraCoveredReceiverImpl(
-    private val context: Context,
-    private val listener: CameraCoveredListener
-) : BroadcastReceiver(), CameraCoveredReceiver {
+    private val cameraCoveredFlow: Flow<Boolean>,
+    private val listener: CameraCoveredListener,
+) : CameraCoveredReceiver {
 
     private val logger = Logger.get("CameraCoveredReceiver")
-    private val coverIntentFilter = IntentFilter("android.intent.action.CAMERA_COVER")
     private var isRegistered = false
 
-    @MainThread
-    override fun onReceive(context: Context, intent: Intent) {
-        if (isRegistered) {
-            val isCameraCovered = intent.getBooleanExtra(COVER_STATE, false)
-            if (isCameraCovered) {
-                listener.onCameraCovered()
-            } else {
-                listener.onCameraUncovered()
-            }
-        }
+    private val scope = MainScope() + CoroutineExceptionHandler { _, e ->
+        logger.error(e) { "coroutine exception" }
     }
 
     @Synchronized
     override fun register() {
         logger.debug { "register isRegistered=$isRegistered" }
         if (!isRegistered) {
-            context.registerReceiver(this, coverIntentFilter)
             isRegistered = true
+            cameraCoveredFlow.onEach { isCovered ->
+                logger.debug { "cameraCovered $isCovered" }
+                if (isCovered) {
+                    listener.onCameraCovered()
+                } else {
+                    listener.onCameraUncovered()
+                }
+            }.launchIn(scope)
         }
     }
 
@@ -49,12 +49,8 @@ class CameraCoveredReceiverImpl(
     override fun unregister() {
         logger.debug { "unregister isRegistered=$isRegistered" }
         if (isRegistered) {
-            context.unregisterReceiver(this)
             isRegistered = false
+            scope.coroutineContext.cancelChildren()
         }
-    }
-
-    private companion object {
-        private const val COVER_STATE = "state"
     }
 }

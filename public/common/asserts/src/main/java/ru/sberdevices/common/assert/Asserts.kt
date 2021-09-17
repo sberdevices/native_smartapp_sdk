@@ -30,7 +30,7 @@ object Asserts {
 
     fun assertMainThread(message: String? = null) {
         if (enabled) {
-            if (Looper.myLooper() != Looper.getMainLooper()) {
+            if (!Looper.getMainLooper().isCurrentThread) {
                 throw AssertionError(message)
             }
         }
@@ -38,7 +38,7 @@ object Asserts {
 
     fun assertWorkerThread(message: String? = null) {
         if (enabled) {
-            if (Looper.myLooper() == Looper.getMainLooper()) {
+            if (Looper.getMainLooper().isCurrentThread) {
                 throw AssertionError(message)
             }
         }

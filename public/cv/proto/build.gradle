@@ -32,11 +32,11 @@ android {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.0.0"
+        artifact = "com.google.protobuf:protoc:$versions.protoc"
     }
     plugins {
         javalite {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+            artifact = "com.google.protobuf:protoc-gen-javalite:$versions.protoc_javalite"
         }
     }
     generateProtoTasks {
@@ -53,8 +53,7 @@ protobuf {
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:$versions.annotation"
-    api "com.google.protobuf:protobuf-lite:3.0.1"
+    api "com.google.protobuf:protobuf-lite:$versions.protobuf_lite"
 }
 
 afterEvaluate {

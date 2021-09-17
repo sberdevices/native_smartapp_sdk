@@ -4,6 +4,12 @@ plugins {
     id 'maven-publish'
 }
 
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
 dependencies {
     implementation "androidx.core:core-ktx:$versions.androidx.core"
 }
