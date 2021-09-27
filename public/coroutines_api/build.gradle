@@ -1,0 +1,8 @@
+plugins {
+    id("kotlin")
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:$versions.androidx.core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlinxCoroutines")
+}

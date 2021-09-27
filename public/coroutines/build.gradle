@@ -1,0 +1,12 @@
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+}
+
+group = "ru.sberdevices.core"
+
+dependencies {
+    api project(':public:coroutines_api')
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlinxCoroutines"
+}

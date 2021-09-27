@@ -11,6 +11,7 @@ dependencies {
 
     implementation project(':public:common:binderhelper:impl')
     implementation project(':public:common:logger')
+    implementation project(':public:coroutines')
 
     implementation "androidx.core:core-ktx:$versions.androidx.core"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"

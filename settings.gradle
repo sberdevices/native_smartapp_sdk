@@ -1,5 +1,4 @@
 rootProject.name = 'native_smartapp_sdk'
-
 include ':public:common:asserts',
         ':public:common:binderhelper:api',
         ':public:common:binderhelper:impl',
@@ -19,4 +18,6 @@ include ':public:common:asserts',
         ':public:services:messaging:impl',
         ':public:services:mic_camera_state:aidl',
         ':public:services:mic_camera_state:api',
-        ':public:services:mic_camera_state:impl'
+        ':public:services:mic_camera_state:impl',
+        ':public:coroutines_api',
+        ':public:coroutines'

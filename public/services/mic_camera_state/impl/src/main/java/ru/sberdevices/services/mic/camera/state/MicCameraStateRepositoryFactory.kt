@@ -2,6 +2,7 @@ package ru.sberdevices.services.mic.camera.state
 
 import android.content.Context
 import androidx.annotation.RequiresPermission
+import ru.sberbank.sdakit.base.core.threading.coroutines.CoroutineDispatchers
 import ru.sberdevices.common.binderhelper.BinderHelper
 import ru.sberdevices.common.binderhelper.BinderHelperFactory
 import ru.sberdevices.common.logger.Logger
@@ -12,11 +13,13 @@ import ru.sberdevices.services.mic.camera.state.aidl.wrappers.OnMicCameraStateCh
  * Фактори для [MicCameraStateRepository].
  */
 class MicCameraStateRepositoryFactory constructor(
-        private val context: Context,
+    private val context: Context,
+    private val coroutineDispatchers: CoroutineDispatchers
 ) {
     @RequiresPermission("ru.sberdevices.permission.BIND_MIC_CAMERA_STATE_SERVICE")
     fun create(): MicCameraStateRepository = MicCameraStateRepositoryImpl(
         helperFactory = getHelperFactory(context),
+        coroutineDispatchers = coroutineDispatchers,
         onMicCameraStateChangedListenerWrapper = OnMicCameraStateChangedListenerWrapperImpl()
     )
 
