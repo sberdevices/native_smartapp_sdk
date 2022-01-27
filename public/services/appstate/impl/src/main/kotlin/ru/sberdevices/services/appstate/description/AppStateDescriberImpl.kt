@@ -4,6 +4,18 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import ru.sberdevices.common.logger.Logger
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_DEEP_LINK
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_ID
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_IGNORED_WORDS
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_ITEMS
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_ITEM_SELECTOR
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_LOCAL_ACTION
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_NUMBER
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_SERVER_ACTION
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_TITLE
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_TYPE
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.KEY_VISIBLE
+import ru.sberdevices.services.appstate.description.AppStateDescriber.Companion.VALUE_TYPE_DEEP_LINK
 import ru.sberdevices.services.appstate.description.entity.Action
 import ru.sberdevices.services.appstate.description.entity.AppState
 import ru.sberdevices.services.appstate.description.entity.DeepLinkAction
@@ -31,7 +43,7 @@ internal class AppStateDescriberImpl(private val state: AppState) : AppStateDesc
                     val itemsJson = JSONArray()
                     items.forEach { item ->
                         val itemJson = JSONObject().apply {
-                            put(KEY_NUMBER, item.index)
+                            put(KEY_NUMBER, item.number)
                             put(KEY_ID, item.id)
                             put(KEY_TITLE, item.title)
                             put(KEY_VISIBLE, item.visible)
@@ -75,22 +87,5 @@ internal class AppStateDescriberImpl(private val state: AppState) : AppStateDesc
     private fun describeServerAction(@Suppress("UNUSED_PARAMETER") action: ServerAction): JSONObject {
         // For now only local action has known format, feel free to add required parsing for your server action
         return JSONObject()
-    }
-
-    private companion object {
-
-        private const val KEY_ITEM_SELECTOR = "item_selector"
-        private const val KEY_IGNORED_WORDS = "ignored_words"
-        private const val KEY_ITEMS = "items"
-        private const val KEY_NUMBER = "number"
-        private const val KEY_ID = "id"
-        private const val KEY_VISIBLE = "visible"
-        private const val KEY_TITLE = "title"
-        private const val KEY_LOCAL_ACTION = "action"
-        private const val KEY_SERVER_ACTION = "server_action"
-        private const val KEY_TYPE = "type"
-        private const val KEY_DEEP_LINK = "deep_link"
-
-        private const val VALUE_TYPE_DEEP_LINK = "deep_link"
     }
 }

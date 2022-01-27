@@ -1,21 +1,17 @@
 plugins {
-    id 'java-library'
-    id 'kotlin'
+    id 'com.android.library'
     id 'maven-publish'
 }
 
 dependencies {
     implementation "androidx.core:core-ktx:$versions.androidx.core"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
 }
 
-task sourceJar(type: Jar) {
+task androidSourcesJar(type: Jar) {
     archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar) {
-    from javadoc
-    archiveClassifier.set('javadoc')
+    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.kotlin.srcDirs
 }
 
 afterEvaluate {
@@ -24,10 +20,9 @@ afterEvaluate {
 
         publications {
             mavenAppstateApi(MavenPublication) {
-                from components.java
+                from components.release
 
-                artifact sourceJar
-                artifact javadocJar
+                artifact androidSourcesJar
 
                 groupId publication.pomGroupID + '.appstate'
                 artifactId "api"

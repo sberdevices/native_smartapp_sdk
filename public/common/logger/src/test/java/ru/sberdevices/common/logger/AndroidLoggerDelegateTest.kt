@@ -16,7 +16,6 @@ import ru.sberdevices.common.logger.mode.LogLevel
 
 /**
  * Тесты для [AndroidLoggerDelegate]
- * @author Николай Пахомов on 04.08.2021
  */
 @RunWith(Parameterized::class)
 class AndroidLoggerDelegateTest(

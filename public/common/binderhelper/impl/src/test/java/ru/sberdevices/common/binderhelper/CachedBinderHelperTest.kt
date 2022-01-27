@@ -22,8 +22,6 @@ import ru.sberdevices.common.logger.Logger
 
 /**
  * Тест для [CachedBinderHelper]
- *
- * @author Сидоров Максим
  */
 class CachedBinderHelperTest {
     private val intent = mockk<Intent>()

@@ -9,9 +9,12 @@ dependencies {
     implementation project(':public:services:appstate:aidl')
 
     implementation project(':public:common:asserts')
+    implementation project(':public:common:binderhelper:impl')
+    implementation project(':public:common:coroutines')
     implementation project(':public:common:logger')
 
-    implementation "androidx.core:core-ktx:$versions.androidx.core"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
+
     implementation "androidx.annotation:annotation:$versions.annotation"
 }
 

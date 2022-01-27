@@ -25,8 +25,6 @@ import java.util.concurrent.atomic.AtomicReference
  *
  * Реальный [disconnect] происходит с задержкой.
  * Это позволяет последовательно вызывать несколько [execute] в рамках одного физического соединения
- *
- * @author Максим Сидоров on 11.05.2021.
  */
 internal class CachedBinderHelper<BinderInterface : IInterface>(
     private val helper: BinderHelper<BinderInterface>,

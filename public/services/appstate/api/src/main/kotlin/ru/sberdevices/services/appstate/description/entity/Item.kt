@@ -2,7 +2,7 @@ package ru.sberdevices.services.appstate.description.entity
 
 interface Item {
 
-    val index: Int
+    val number: Int
 
     val id: String
 

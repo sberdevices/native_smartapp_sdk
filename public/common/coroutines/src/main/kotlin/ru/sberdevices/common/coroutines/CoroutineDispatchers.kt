@@ -7,8 +7,6 @@ import java.util.concurrent.Executors
 
 /**
  * Диспатчеры для корутин, используемые в наших проектах.
- *
- * @author Илья Богданович on 03/09/2020
  */
 interface CoroutineDispatchers {
     /**

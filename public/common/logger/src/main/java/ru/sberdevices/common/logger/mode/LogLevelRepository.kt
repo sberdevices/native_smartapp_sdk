@@ -2,7 +2,6 @@ package ru.sberdevices.common.logger.mode
 
 /**
  * Репозиторий актуального [LogLevel] для вашего приложения.
- * @author Николай Пахомов on 03.08.2021
  */
 interface LogLevelRepository {
     /**

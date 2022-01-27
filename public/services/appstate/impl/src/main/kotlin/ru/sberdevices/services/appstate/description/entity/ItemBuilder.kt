@@ -2,7 +2,7 @@ package ru.sberdevices.services.appstate.description.entity
 
 class ItemBuilder {
 
-    var index: Int? = null
+    var number: Int? = null
     var id: String? = null
     var visible: Boolean = true
     var title: String? = null
@@ -10,7 +10,7 @@ class ItemBuilder {
 
     internal fun build(): Item {
         return object : Item {
-            override val index: Int = requireNotNull(this@ItemBuilder.index)
+            override val number: Int = requireNotNull(this@ItemBuilder.number)
             override val id: String = requireNotNull(this@ItemBuilder.id)
             override val visible: Boolean = this@ItemBuilder.visible
             override val title: String = requireNotNull(this@ItemBuilder.title)
