@@ -47,3 +47,9 @@ subprojects {
         }
     }
 }
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        moduleName project.path.removePrefix(":").replace(':', '-')
+    }
+}
