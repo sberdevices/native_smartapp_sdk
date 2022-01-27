@@ -1,17 +1,11 @@
 plugins {
     id 'com.android.library'
+    id 'kotlin-android'
     id 'maven-publish'
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:$versions.androidx.core"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
-}
-
-task androidSourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from android.sourceSets.main.java.srcDirs
-    from android.sourceSets.main.kotlin.srcDirs
 }
 
 afterEvaluate {
@@ -19,18 +13,16 @@ afterEvaluate {
         repositories.add(rootProject.repositories.getByName('OSSRH'))
 
         publications {
-            mavenAppstateApi(MavenPublication) {
+            mavenJavaCoroutines(MavenPublication) {
                 from components.release
 
-                artifact androidSourcesJar
-
-                groupId publication.pomGroupID + '.appstate'
-                artifactId "api"
-                version publication.pomAppStateVersion
+                groupId publication.pomGroupID
+                artifactId project.name
+                version publication.pomCommonLibsVersion
 
                 pom {
-                    name = "appstate:api"
-                    description = 'appstate is a library used to transmit native app state to smartapp backend'
+                    name = 'coroutines_dispatchers'
+                    description = 'default coroutines dispatchers'
                     url = publication.githubUrl
                     licenses {
                         license {
@@ -50,7 +42,7 @@ afterEvaluate {
                     }
                     scm {
                         connection = publication.connectionUrl
-                        developerConnection = publication.connectionUrl
+                        developerConnection = publication.developerConnection
                         url = publication.githubUrl
                     }
                 }
@@ -59,6 +51,6 @@ afterEvaluate {
     }
 
     signing {
-        sign publishing.publications.mavenAppstateApi
+        sign publishing.publications.mavenJavaCoroutines
     }
 }

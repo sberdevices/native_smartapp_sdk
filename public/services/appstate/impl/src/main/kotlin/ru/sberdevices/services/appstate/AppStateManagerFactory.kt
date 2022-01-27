@@ -2,8 +2,9 @@ package ru.sberdevices.services.appstate
 
 import android.content.Context
 import androidx.annotation.AnyThread
-import ru.sberdevices.services.appstate.AppStateHolder
-import ru.sberdevices.services.appstate.AppStateRequestManager
+import ru.sberdevices.common.binderhelper.BinderHelper
+import ru.sberdevices.common.binderhelper.BinderHelperFactory
+import ru.sberdevices.common.coroutines.CoroutineDispatchers
 import ru.sberdevices.services.appstate.exceptions.AppStateManagerAlreadyExistsException
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -19,19 +20,32 @@ object AppStateManagerFactory {
     @JvmStatic
     @Synchronized
     @Throws(AppStateManagerAlreadyExistsException::class)
-    fun createHolder(context: Context): AppStateHolder {
+    fun createHolder(context: Context, coroutineDispatchers: CoroutineDispatchers = CoroutineDispatchers.Default): AppStateHolder {
         // counter will be incremented during creation of AppStateRequestManager inside AppStateHolder
 
-        return AppStateHolderImpl(context.applicationContext)
+        return AppStateHolderImpl(context.applicationContext, coroutineDispatchers)
     }
 
     @JvmStatic
     @Synchronized
     @Throws(AppStateManagerAlreadyExistsException::class)
-    fun createRequestManager(context: Context): AppStateRequestManager {
+    fun createRequestManager(
+        context: Context,
+        coroutineDispatchers: CoroutineDispatchers = CoroutineDispatchers.Default
+    ): AppStateRequestManager {
         incrementAndCheckCounter()
 
-        return AppStateManagerImpl(context.applicationContext)
+        return AppStateManagerImpl(
+            binderHelperFactory = BinderHelperFactory(
+                context = context,
+                BinderHelper.createBindIntent(
+                    "ru.sberdevices.services",
+                    "ru.sberdevices.services.appstate.AppStateService"
+                ),
+                getBinding = { IAppStateService.Stub.asInterface(it) }
+            ),
+            coroutineDispatchers = coroutineDispatchers
+        )
     }
 
     @Synchronized

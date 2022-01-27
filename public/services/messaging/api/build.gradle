@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
-    implementation "androidx.core:core-ktx:$versions.androidx.core"
+    implementation "androidx.annotation:annotation:$versions.annotation"
 }
 
 task sourceJar(type: Jar) {

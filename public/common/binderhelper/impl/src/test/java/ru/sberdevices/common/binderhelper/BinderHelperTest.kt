@@ -27,8 +27,6 @@ import ru.sberdevices.common.binderhelper.entities.BinderState
 
 /**
  * Тест для [BinderHelper]
- *
- * @author Илья Богданович on 12.02.2021
  */
 class BinderHelperTest {
     private val intent = mockk<Intent>()

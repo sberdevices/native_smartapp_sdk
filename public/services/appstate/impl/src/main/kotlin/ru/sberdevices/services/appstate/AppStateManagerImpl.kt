@@ -1,142 +1,154 @@
 package ru.sberdevices.services.appstate
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
-import android.os.DeadObjectException
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.IBinder
-import androidx.annotation.AnyThread
-import androidx.annotation.GuardedBy
-import androidx.annotation.MainThread
-import androidx.annotation.WorkerThread
-import ru.sberdevices.common.assert.Asserts
+import androidx.annotation.BinderThread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.sberdevices.common.binderhelper.BinderHelperFactory
 import ru.sberdevices.common.logger.Logger
-import ru.sberdevices.services.appstate.AppStateProvider
-import ru.sberdevices.services.appstate.AppStateRequestManager
+import ru.sberdevices.common.coroutines.CoroutineDispatchers
+import ru.sberdevices.services.appstate.entities.AppStateServiceStatus
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
-private const val SERVICE_APP_ID = "ru.sberdevices.services"
-private const val SERVICE_NAME = "ru.sberdevices.services.appstate.AppStateService"
-
-@AnyThread
-internal class AppStateManagerImpl(private val appContext: Context) : AppStateRequestManager {
+internal class AppStateManagerImpl(
+    binderHelperFactory: BinderHelperFactory<IAppStateService>,
+    coroutineDispatchers: CoroutineDispatchers
+) : AppStateRequestManager {
 
     private val logger = Logger.get("AppStateManagerImpl")
 
-    private val handlerThread = HandlerThread("app_state_manager_thread").apply { start() }
-    private val handler = Handler(handlerThread.looper)
+    private val scope = CoroutineScope(SupervisorJob() + coroutineDispatchers.default)
 
-    private val monitor = Object()
+    private val providerReference = AtomicReference<AppStateProvider>(null)
 
-    @GuardedBy("monitor")
-    private var service: IAppStateService? = null
+    private val rwLock = ReentrantReadWriteLock()
 
-    @GuardedBy("monitor")
-    private var provider: AppStateProvider? = null
-
-    private val connection: ServiceConnection = object : ServiceConnection {
-        @MainThread
-        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
-            logger.debug { "onServiceConnected(className=$className" }
-
-            synchronized(monitor) {
-                service = IAppStateService.Stub.asInterface(binder)
-                handler.post { execute { service -> service.setProvider(providerInternal) } }
-                monitor.notifyAll()
-            }
-        }
-
-        @MainThread
-        override fun onServiceDisconnected(componentName: ComponentName) {
-            logger.debug { "onServiceDisconnected()" }
-            synchronized(monitor) { service = null }
-        }
-
-        @MainThread
-        override fun onBindingDied(name: ComponentName?) {
-            logger.debug { "onBindingDied()" }
-            connect()
-        }
-    }
+    private val backgroundAppProviders = mutableMapOf<String, IAppStateProvider.Stub?>()
 
     private val providerInternal = object : IAppStateProvider.Stub() {
+        @BinderThread
         override fun getAppState(): String? {
             logger.debug { "getAppState()" }
-            val provider = synchronized(monitor) { this@AppStateManagerImpl.provider }
+            val provider = providerReference.get()
             return provider?.getState()
         }
     }
 
-    override fun setProvider(provider: AppStateProvider?) = synchronized(monitor) {
-        this.provider = provider
+    private val helper = binderHelperFactory.create()
+
+    override val appStateServiceStatusFlow: StateFlow<AppStateServiceStatus> = callbackFlow {
+
+        val appStateStatusListener = object : IAppStateStatusListener.Stub() {
+            override fun onAppStateConnected() {
+                logger.debug { "onAppStateConnected()" }
+                if (!isClosedForSend) {
+                    trySend(AppStateServiceStatus.READY)
+                }
+            }
+        }
+
+        logger.debug { "registering AppStateStatusListener" }
+        helper.execute { it.addAppStateStatusListener(appStateStatusListener) }
+
+        awaitClose {
+            logger.debug { "awaitClose, removing AppStateStatusListener" }
+            helper.tryExecute { it.removeAppStateStatusListener(appStateStatusListener) }
+        }
     }
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = AppStateServiceStatus.UNREADY
+        )
 
     init {
-        logger.info { "init()" }
-        connect()
+        logger.info { "init" }
+
+        helper.connect()
+        scope.launch {
+            helper.execute { service -> service.setProvider(providerInternal) }
+        }
     }
 
-    private fun connect() {
-        logger.info { "connect()" }
+    override fun setProvider(provider: AppStateProvider?) {
+        logger.debug { "setProvider: $provider" }
+        providerReference.set(provider)
+    }
 
-        val intent = Intent()
-        intent.component = ComponentName(SERVICE_APP_ID, SERVICE_NAME)
-        val result = appContext.bindService(intent, connection, Context.BIND_AUTO_CREATE)
-        logger.info { "bindService: $result" }
+    override fun setProvider(androidApplicationID: String, provider: AppStateProvider?) {
+        if (provider != null) {
+            logger.debug { "registering provider for: $androidApplicationID" }
+            rwLock.write {
+                backgroundAppProviders[androidApplicationID] = object : IAppStateProvider.Stub() {
+                    @BinderThread
+                    override fun getAppState(): String? {
+                        logger.debug { "getAppState()" }
+                        return provider.getState()
+                    }
+                }
+            }
+        } else {
+            logger.debug { "removing provider for: $androidApplicationID" }
+            rwLock.write {
+                backgroundAppProviders.remove(androidApplicationID)
+            }
+        }
+
+        scope.launch {
+            helper.execute { service ->
+                logger.debug { "setting provider for: $androidApplicationID" }
+                rwLock.read {
+                    service.setProviderForApp(
+                        backgroundAppProviders.getOrDefault(androidApplicationID, null),
+                        androidApplicationID
+                    )
+                }
+            }
+        }
+    }
+
+    override fun registerBackgroundApp(packageName: String) {
+        logger.debug { "registerBackgroundApp: $packageName" }
+
+        scope.launch {
+            helper.execute { it.registerBackgroundApp(packageName) }
+        }
+    }
+
+    override fun unregisterBackgroundApp(packageName: String) {
+        logger.debug { "unregisterBackgroundApp: $packageName" }
+
+        scope.launch {
+            helper.execute { it.unregisterBackgroundApp(packageName) }
+        }
     }
 
     override fun dispose() {
         logger.info { "dispose()" }
 
-        appContext.unbindService(connection)
-
-        synchronized(monitor) { service = null }
-        handlerThread.quitSafely()
+        scope.launch {
+            rwLock.read {
+                logger.debug { "clearing previously set providers, size: ${backgroundAppProviders.size}" }
+                backgroundAppProviders.forEach { (packageName, _) ->
+                    helper.execute { it.setProviderForApp(null, packageName) }
+                }
+            }
+            rwLock.write {
+                backgroundAppProviders.clear()
+            }
+            helper.disconnect()
+            scope.cancel()
+        }
 
         AppStateManagerFactory.onAppStateManagerDispose()
-    }
-
-    @WorkerThread
-    private fun <T> execute(callable: (service: IAppStateService) -> T): T {
-        Asserts.assertWorkerThread()
-
-        var result: T
-
-        while (true) {
-            val service = waitForService()
-            try {
-                result = callable.invoke(service)
-                break
-            } catch (exception: DeadObjectException) {
-                synchronized(monitor) { this@AppStateManagerImpl.service = null }
-                logger.warn { "The object we are calling has died, because its hosting process no longer exists. Retrying..." }
-                // We just want to wait for ServiceConnection#onServiceConnected(...)
-            }
-        }
-
-        return result
-    }
-
-    @WorkerThread
-    private fun waitForService(): IAppStateService {
-        logger.debug { "waitForService()" }
-        Asserts.assertWorkerThread()
-
-        return synchronized(monitor) {
-            var service = this@AppStateManagerImpl.service
-            while (service == null) {
-                try {
-                    monitor.wait()
-                } catch (exception: InterruptedException) {
-                    Thread.currentThread().interrupt()
-                    throw RuntimeException("Thread interrupted, execution can not be continued", exception)
-                }
-                service = this@AppStateManagerImpl.service
-            }
-            logger.debug { "waitForService() completed" }
-            service
-        }
     }
 }

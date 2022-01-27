@@ -5,7 +5,6 @@ import android.content.ServiceConnection
 
 /**
  * Состояния соединения, соответствующие колбэкам класса [ServiceConnection].
- * @author Николай Пахомов on 08.07.2021
  */
 enum class BinderState {
     /**

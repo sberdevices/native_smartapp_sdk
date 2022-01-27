@@ -85,7 +85,7 @@ internal class CvDetectionApiBinding(
                 override fun onUpdate(detectionEntity: ByteArray) {
                     val detection = detectionEntity.toHumans(humanRecognitionsAspects.value, lastHumans)
                     if (detection != null) lastHumans = detection
-                    offer(detection ?: lastHumans)
+                    trySend(detection ?: lastHumans)
                 }
             }
             service.subscribeForHumansDetection(
@@ -118,7 +118,7 @@ internal class CvDetectionApiBinding(
             gesturesListener = object : IGestureDetectionListener.Stub() {
                 override fun onUpdate(detectionEntity: ByteArray) {
                     val detection = detectionEntity.toGesture()
-                    if (detection != null) offer(detection)
+                    if (detection != null) trySend(detection)
                 }
             }
             logger.debug { "subscribe for gestures detection" }
@@ -144,7 +144,7 @@ internal class CvDetectionApiBinding(
             callbacksCounter.getAndIncrement()
             isMirrorDetectedListener = object : IMirrorDetectedListener.Stub() {
                 override fun onUpdate(detected: Boolean) {
-                    offer(detected)
+                    trySend(detected)
                 }
             }
             logger.debug { "subscribe for mirror detection" }
