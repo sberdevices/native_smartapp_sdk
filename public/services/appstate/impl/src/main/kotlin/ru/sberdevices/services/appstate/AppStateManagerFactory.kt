@@ -30,7 +30,8 @@ object AppStateManagerFactory {
     @Synchronized
     @Throws(AppStateManagerAlreadyExistsException::class)
     fun createRequestManager(
-        context: Context,
+        context: Context
+    ,
         coroutineDispatchers: CoroutineDispatchers = CoroutineDispatchers.Default
     ): AppStateRequestManager {
         incrementAndCheckCounter()
@@ -44,7 +45,7 @@ object AppStateManagerFactory {
                 ),
                 getBinding = { IAppStateService.Stub.asInterface(it) }
             ),
-            coroutineDispatchers = coroutineDispatchers
+            coroutineDispatchers = CoroutineDispatchers.Default
         )
     }
 
