@@ -63,7 +63,8 @@ class Logger private constructor(
         when (consoleMessage.messageLevel()) {
             ConsoleMessage.MessageLevel.ERROR -> error { message }
             ConsoleMessage.MessageLevel.WARNING -> warn { message }
-            else -> debug { message }
+            ConsoleMessage.MessageLevel.DEBUG -> debug { message }
+            else -> info { message }
         }
     }
 
@@ -79,18 +80,26 @@ class Logger private constructor(
 
         fun lazy(tag: String) = lazy { get(tag) }
 
+        @Deprecated("Тэг класса нужно указывать через String", replaceWith = ReplaceWith("Logger.get(T)"))
         inline fun <reified T> get() = get(T::class.java.simpleName)
 
+        @Deprecated("Тэг класса нужно указывать через String", replaceWith = ReplaceWith("Logger.lazy(T)"))
         inline fun <reified T> lazy() = lazy { get(T::class.java.simpleName) }
 
         @MainThread
         @JvmStatic
         fun setDelegates(vararg delegates: LoggerDelegate) {
+            setDelegates(delegates.toList())
+        }
+
+        @MainThread
+        @JvmStatic
+        fun setDelegates(delegates: List<LoggerDelegate>) {
             if (delegates.isEmpty()) {
                 Asserts.fail("delegates is empty!")
             }
 
-            Companion.delegates = delegates.toList()
+            Companion.delegates = delegates
         }
     }
 }

@@ -1,6 +1,6 @@
 package ru.sberdevices.common.logger
 
-import java.time.LocalDateTime
+import java.util.Calendar
 
 /**
  * Print to console. For using in tests
@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class ConsoleLoggerDelegate(
     private val allowLogSensitive: Boolean = false
 ) : LoggerDelegate {
-    private fun getTime() = LocalDateTime.now().toLocalTime()
+    private fun getTime() = Calendar.getInstance().getTime()
 
     override fun verbose(tag: String, message: () -> String) = println("${getTime()} $tag ${message.invoke()}")
 

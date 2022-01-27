@@ -2,6 +2,7 @@ package ru.sberdevices.common.logger.mode
 
 /**
  * Минимальный активный уровень логгирования приложения.
+ * @author Николай Пахомов on 03.08.2021
  */
 enum class LogLevel(val weight: Int) {
     /**

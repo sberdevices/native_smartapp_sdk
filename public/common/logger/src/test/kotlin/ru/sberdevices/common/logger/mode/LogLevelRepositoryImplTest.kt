@@ -18,6 +18,7 @@ import org.junit.Test
 
 /**
  * Тесты для [LogLevelRepositoryImpl]
+ * @author Николай Пахомов on 04.08.2021
  */
 class LogLevelRepositoryImplTest {
 

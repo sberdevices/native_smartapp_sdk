@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 
+/**
+ * @author Николай Пахомов on 03.08.2021
+ */
 internal class LogLevelRepositoryImpl(
     private val context: Context,
     private val isDebugBuild: Boolean
