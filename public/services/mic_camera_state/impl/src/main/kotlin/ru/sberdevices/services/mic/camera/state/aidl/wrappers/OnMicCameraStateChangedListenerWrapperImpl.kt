@@ -10,7 +10,7 @@ import ru.sberdevices.services.mic.camera.state.MicCameraStateRepository
  * Реализация обертки [OnMicCameraStateChangedListenerWrapper].
  */
 internal class OnMicCameraStateChangedListenerWrapperImpl : OnMicCameraStateChangedListenerWrapper() {
-    private val logger by Logger.lazy<OnMicCameraStateChangedListenerWrapperImpl>()
+    private val logger = Logger.get("OnMicCameraStateChangedListenerWrapperImpl")
 
     override val micStateFlow: StateFlow<MicCameraStateRepository.State>
         get() = mutableMicStateFlow.asStateFlow()

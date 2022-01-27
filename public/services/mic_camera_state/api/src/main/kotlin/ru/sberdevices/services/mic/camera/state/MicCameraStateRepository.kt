@@ -35,17 +35,17 @@ interface MicCameraStateRepository {
     fun setCameraEnabled(newState: Boolean)
 
     /**
-     * Включить или выключить микрофон программно.
+     * Set mic state programmatically.
      *
-     * Метод только для внутренного использования.
-     * Требует пермишен ru.sberdevices.permission.CHANGE_MIC_STATE
+     * Internal use only.
+     * Requires permission ru.sberdevices.permission.CHANGE_CAMERA_STATE
      */
     @AnyThread
     @RequiresPermission("ru.sberdevices.permission.CHANGE_MIC_STATE")
     fun setMicEnabled(newState: Boolean)
 
     /**
-     * Отключиться от сервиса.
+     * Disconnect and clear resources.
      */
     fun dispose()
 
