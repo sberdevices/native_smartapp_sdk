@@ -3,6 +3,7 @@ package ru.sberdevices.messaging
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import androidx.annotation.AnyThread
 import androidx.annotation.RequiresPermission
 import androidx.annotation.WorkerThread
@@ -29,7 +30,7 @@ private val BIND_INTENT = Intent().apply {
 
 @WorkerThread
 internal class MessagingImpl @AnyThread constructor(
-    private val context: Context
+    context: Context
 ) : Messaging {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -39,6 +40,7 @@ internal class MessagingImpl @AnyThread constructor(
 
     private val messageListener = object : IMessagingListener.Stub() {
         override fun onMessage(messageId: String?, payload: String?) {
+            logger.debug { "onMessage: $messageId" }
             if (messageId != null && payload != null) {
                 listeners.forEach { it.onMessage(MessageId(messageId), Payload(payload)) }
             } else {
@@ -47,11 +49,17 @@ internal class MessagingImpl @AnyThread constructor(
         }
 
         override fun onError(messageId: String?, error: String?) {
+            logger.debug { "onError: $messageId" }
             if (messageId != null && error != null) {
                 listeners.forEach { it.onError(MessageId(messageId), IOException(error)) }
             } else {
                 logger.error { "null value onError messageId=$messageId error=$error" }
             }
+        }
+
+        override fun onNavigationCommand(payload: String) {
+            logger.debug { "onNavigationCommand" }
+            listeners.forEach { it.onNavigationCommand(Payload(payload)) }
         }
     }
 
@@ -71,6 +79,7 @@ internal class MessagingImpl @AnyThread constructor(
 
     override fun sendAction(messageName: MessageName, payload: Payload): MessageId {
         logger.debug { "sendAction() with messageName" }
+        require(Looper.myLooper() != Looper.getMainLooper())
         val id: String = runBlocking {
             helper.execute { service ->
                 service.sendAction(
@@ -85,6 +94,7 @@ internal class MessagingImpl @AnyThread constructor(
     @RequiresPermission("ru.sberdevices.permission.CROSS_APP_ACTION")
     override fun sendAction(messageName: MessageName, payload: Payload, androidApplicationID: String): MessageId {
         logger.debug { "sendAction() with messageName and androidApplicationID" }
+        require(Looper.myLooper() != Looper.getMainLooper())
         val id: String = runBlocking {
             helper.execute { service ->
                 service.sendActionWithAppID(
@@ -98,7 +108,7 @@ internal class MessagingImpl @AnyThread constructor(
     }
 
     override fun sendText(text: String) {
-        logger.sensitive { "sending text $text" }
+        logger.debug { "sending text $text" }
         scope.launch { helper.execute { service -> service.sendText(text) } }
     }
 
@@ -129,6 +139,8 @@ internal class MessagingImpl @AnyThread constructor(
             MessageName.UPDATE_IP -> MessageNameModel.MessageNameType.UPDATE_IP
             MessageName.HEARTBEAT -> MessageNameModel.MessageNameType.HEARTBEAT
             MessageName.CLOSE_APP -> MessageNameModel.MessageNameType.CLOSE_APP
+            MessageName.GET_IHUB_TOKEN -> MessageNameModel.MessageNameType.GET_IHUB_TOKEN
+            MessageName.RUN_APP_DEEPLINK -> MessageNameModel.MessageNameType.RUN_APP_DEEPLINK
         }
     }
 }

@@ -65,11 +65,16 @@ interface Messaging {
          * Error from backend [throwable] for message with [messageId].
          */
         fun onError(messageId: MessageId, throwable: Throwable)
+
+        /**
+         * Navigation command with [payload] that contains JSON like { "command": "RIGHT" }
+         */
+        fun onNavigationCommand(payload: Payload) = Unit
     }
 }
 
 /**
- * Some useful [data].
+ * [data] contains some useful JSON in free non-restricted format.
  */
 data class Payload(val data: String)
 
@@ -90,9 +95,20 @@ enum class MessageName {
     RUN_APP,
 
     /**
+     * For opening up another app with specific deeplink format.
+     */
+    RUN_APP_DEEPLINK,
+
+    /**
      * To send some statistics.
      */
     HEARTBEAT,
+
+    /**
+     * Getting token for ihub api.
+     */
+    @RequiresPermission("ru.sberdevices.permission.GET_IHUB_TOKEN")
+    GET_IHUB_TOKEN,
 
     /**
      * Update IP.
