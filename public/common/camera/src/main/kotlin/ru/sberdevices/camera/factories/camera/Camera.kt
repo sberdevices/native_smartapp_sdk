@@ -9,7 +9,6 @@ import android.view.Surface
 import androidx.annotation.CheckResult
 import androidx.annotation.WorkerThread
 import ru.sberdevices.camera.utils.CameraExceptionHandler
-import java.lang.Exception
 
 interface CameraInfoProvider {
     fun getSensorOrientation(): Int

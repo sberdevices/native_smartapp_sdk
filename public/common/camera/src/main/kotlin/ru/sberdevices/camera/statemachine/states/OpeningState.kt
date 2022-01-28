@@ -4,7 +4,6 @@ import ru.sberdevices.camera.statemachine.CameraAction
 import ru.sberdevices.camera.statemachine.CameraState
 import ru.sberdevices.camera.statemachine.CameraStateMachine
 import ru.sberdevices.camera.utils.exhaustive
-import java.lang.Exception
 
 internal class OpeningState(
     private val machine: CameraStateMachine

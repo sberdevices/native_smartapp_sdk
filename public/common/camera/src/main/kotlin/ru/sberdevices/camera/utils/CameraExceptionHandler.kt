@@ -2,7 +2,6 @@ package ru.sberdevices.camera.utils
 
 import androidx.annotation.AnyThread
 import ru.sberdevices.common.logger.Logger
-import java.lang.Exception
 
 @AnyThread
 interface CameraExceptionHandler {

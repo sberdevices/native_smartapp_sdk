@@ -8,7 +8,6 @@ import androidx.annotation.CheckResult
 import ru.sberdevices.camera.factories.preview.PreviewCallback
 import ru.sberdevices.camera.factories.snapshot.SnapshotCallback
 import ru.sberdevices.camera.utils.CameraExceptionHandler
-import java.lang.Exception
 
 internal interface CameraSession {
     val surfaces: List<Surface>
