@@ -27,6 +27,14 @@ repositories {
     }
 }
 
+signing {
+    useInMemoryPgpKeys(
+            rootProject.ext["signing.keyId"],
+            rootProject.ext["signing.key"],
+            rootProject.ext["signing.password"],
+    )
+}
+
 static boolean isAndroidPlugin(Plugin plugin) {
     plugin.getClass().canonicalName in ["com.android.build.gradle.LibraryPlugin",
                                         "com.android.build.gradle.AppPlugin"]

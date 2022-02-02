@@ -1,9 +1,8 @@
 name: CI
 
-
 on:
-#  push:
-#   branches: [ master ]
+  release:
+    types: [created]
   workflow_dispatch:
 
 jobs:
@@ -17,26 +16,19 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          
-      # Base64 decodes and pipes the GPG key content into the secret file
-      - name: Prepare environment
-        env:
-          MAVEN_GPG_PRIVATE_KEY: ${{ secrets.GPG_KEY_CONTENTS }}
-          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
-        run: |
-          sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > ./secring.gpg"          
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
         
-      - name: Run a multi-line script
+      - name: Run gradle publish ALL LIBS
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
-        run: |
-          echo running publish
-          ./gradlew publish --max-workers 1 -PossrhUsername=${{ secrets.OSSRH_USERNAME }} -PossrhPassword='${{ secrets.OSSRH_TOKEN }}' -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }} -Psigning.password=${{ secrets.MAVEN_GPG_PASSPHRASE }}
-  
+          SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
+          SIGNING_KEY_BASE64: ${{ secrets.SIGNING_KEY_BASE64 }}
+        run: >
+          ./gradlew publish 
+          --max-workers 1 
+          -PossrhUsername="$OSSRH_USERNAME" 
+          -PossrhPassword="$OSSRH_TOKEN" 
+          -Psigning.key="$SIGNING_KEY_BASE64" 
+          -Psigning.keyId="$SIGNING_KEY_ID" 
+          -Psigning.password="$SIGNING_KEY_PASSPHRASE"
