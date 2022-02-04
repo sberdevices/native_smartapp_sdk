@@ -4,6 +4,22 @@ on:
   release:
     types: [created]
   workflow_dispatch:
+    inputs:
+      publish-lib:
+        description: 'What lib to publish?'
+        required: true
+        type: choice
+        options:
+          - All
+          - asserts
+          - binderhelper
+          - coroutines
+          - logger
+          - mic_camera_state
+          - Messaging
+          - AppState
+          - CV
+          - Camera
 
 jobs:
   build:
@@ -17,15 +33,16 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
         
-      - name: Run gradle publish ALL LIBS
+      - name: Run gradle publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
           SIGNING_KEY_BASE64: ${{ secrets.SIGNING_KEY_BASE64 }}
+          PUBLISH_LIB: ${{ github.event.inputs.publish-lib }}
         run: >
-          ./gradlew publish 
+          eval "$(./.github/workflows/publish.main.kts $PUBLISH_LIB)"
           --max-workers 1 
           -PossrhUsername="$OSSRH_USERNAME" 
           -PossrhPassword="$OSSRH_TOKEN" 
