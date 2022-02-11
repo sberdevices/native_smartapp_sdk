@@ -6,6 +6,8 @@ plugins {
     id "org.jetbrains.dokka" version "1.4.32"
 }
 
+apply from: "$rootProject.projectDir/android_subproject.gradle"
+
 dependencies {
     api project(':public:services:messaging:api')
     implementation project(':public:services:messaging:aidl')

@@ -1,0 +1,34 @@
+plugins {
+    id 'com.android.library'
+    id 'com.kezong.fat-aar'
+}
+
+apply from: "$rootProject.projectDir/android_subproject.gradle"
+
+fataar {
+    /**
+     * If transitive is true, we embed not only our libs, but also their dependencies. It may be needed for unity build
+     */
+    transitive = false
+}
+
+dependencies {
+    embed project(path: ':public:common:asserts', configuration: 'default')
+    embed project(path: ':public:common:binderhelper:api', configuration: 'default')
+    embed project(path: ':public:common:binderhelper:impl', configuration: 'default')
+    embed project(path: ':public:common:camera', configuration: 'default')
+    embed project(path: ':public:common:coroutines', configuration: 'default')
+    embed project(path: ':public:common:logger', configuration: 'default')
+
+    embed project(path: ':public:services:mic_camera_state:api', configuration: 'default')
+    embed project(path: ':public:services:mic_camera_state:aidl', configuration: 'default')
+    embed project(path: ':public:services:mic_camera_state:impl', configuration: 'default')
+
+    embed project(path: ':public:services:appstate:aidl', configuration: 'default')
+    embed project(path: ':public:services:appstate:api', configuration: 'default')
+    embed project(path: ':public:services:appstate:impl', configuration: 'default')
+
+    embed project(path: ':public:services:messaging:aidl', configuration: 'default')
+    embed project(path: ':public:services:messaging:api', configuration: 'default')
+    embed project(path: ':public:services:messaging:impl', configuration: 'default')
+}

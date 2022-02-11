@@ -4,6 +4,8 @@ plugins {
     id 'maven-publish'
 }
 
+apply from: "$rootProject.projectDir/android_subproject.gradle"
+
 dependencies {
     implementation project(':public:common:asserts')
     implementation "androidx.core:core-ktx:$versions.androidx.core"

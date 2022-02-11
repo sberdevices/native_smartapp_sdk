@@ -62,6 +62,9 @@ dependencies {
     implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc2"
     implementation "ru.sberdevices.smartapp.sdk:cv:3.0.1"
 
+    // Uncomment to test local fat aar
+    //implementation files('fat-aar-all-libs.aar')
+
     // Android
     implementation "androidx.appcompat:appcompat:$versions.androidx.appcompat"
     implementation "androidx.core:core-ktx:$versions.androidx.core"

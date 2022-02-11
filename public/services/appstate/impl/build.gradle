@@ -4,6 +4,8 @@ plugins {
     id 'maven-publish'
 }
 
+apply from: "$rootProject.projectDir/android_subproject.gradle"
+
 dependencies {
     api project(':public:services:appstate:api')
     implementation project(':public:services:appstate:aidl')
