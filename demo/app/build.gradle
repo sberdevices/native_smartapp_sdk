@@ -55,12 +55,12 @@ dependencies {
     implementation "ru.sberdevices.smartapp.sdk:asserts:1.0"
     implementation "ru.sberdevices.smartapp.sdk:logger:1.0"
 
-    implementation "ru.sberdevices.smartapp.sdk:appstate:1.0-alpha"
-    implementation "ru.sberdevices.smartapp.sdk:messaging:1.0-alpha"
-    implementation "ru.sberdevices.smartapp.sdk:mic_camera_state:1.0-alpha"
+    implementation "ru.sberdevices.smartapp.sdk:appstate:1.1-alpha"
+    implementation "ru.sberdevices.smartapp.sdk:messaging:1.1-alpha"
+    implementation "ru.sberdevices.smartapp.sdk:mic_camera_state:1.1-alpha"
 
-    implementation "ru.sberdevices.smartapp.sdk:camera:1.0-rc2"
-    implementation "ru.sberdevices.smartapp.sdk:cv:3.0.1"
+    implementation "ru.sberdevices.smartapp.sdk:camera:1.1-alpha"
+    implementation "ru.sberdevices.smartapp.sdk:cv:3.1.1"
 
     // Android
     implementation "androidx.appcompat:appcompat:$versions.androidx.appcompat"

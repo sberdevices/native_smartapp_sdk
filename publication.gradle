@@ -10,10 +10,10 @@ publication.deployUrl = "https://s01.oss.sonatype.org/service/local/staging/depl
 
 publication.pomGroupID = "ru.sberdevices.smartapp.sdk"
 
-publication.pomCvLibVersion = "3.1.0"
-publication.pomBinderHelperVersion = "0.1-alpha"
-publication.pomAppStateVersion = "1.0-alpha"
-publication.pomMessagingVersion = "1.0-alpha"
-publication.pomMicCameraStateVersion = "1.0-alpha"
-publication.pomCameraUtilLibVersion = "1.0-rc2"
-publication.pomCommonLibsVersion = "1.0"
+publication.pomCvLibVersion = "3.1.1"
+publication.pomBinderHelperVersion = "0.2-alpha"
+publication.pomAppStateVersion = "1.1-alpha"
+publication.pomMessagingVersion = "1.1-alpha"
+publication.pomMicCameraStateVersion = "1.1-alpha"
+publication.pomCameraUtilLibVersion = "1.1-alpha"
+publication.pomCommonLibsVersion = "1.1-alpha"

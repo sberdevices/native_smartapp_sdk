@@ -23,7 +23,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.sberdevices.camera.controller.CameraController
-import ru.sberdevices.camera.controller.CameraStarterFactory
+import ru.sberdevices.camera.controller.CameraControllerFactory
 import ru.sberdevices.cv.detection.entity.gesture.Gesture
 import ru.sberdevices.cv.detection.entity.humans.BodyMask
 import ru.sberdevices.cv.detection.entity.humans.Humans
@@ -86,7 +86,7 @@ internal class DetectionView @JvmOverloads constructor(
     }
 
     private fun createCameraController(): CameraController {
-        val controller: CameraController = CameraStarterFactory.create(context)
+        val controller: CameraController = CameraControllerFactory.create(context)
         binding.drawView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
                 surfaceTexture: SurfaceTexture,
