@@ -2,9 +2,6 @@ package ru.sberdevices.common.logger.mode
 
 import android.content.Context
 
-/**
- * @author Николай Пахомов on 04.08.2021
- */
 object LogModeRepositoryFactory {
 
     /**
