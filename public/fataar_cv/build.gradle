@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.library'
+    id 'com.kezong.fat-aar'
+}
+
+apply from: "$rootProject.projectDir/android_subproject.gradle"
+
+fataar {
+    /**
+     * If transitive is true, we embed not only our libs, but also their dependencies. It may be needed for unity build
+     */
+    transitive = false
+}
+
+dependencies {
+    embed project(path: ':public:cv:aidl', configuration: 'default')
+    embed project(path: ':public:cv:api', configuration: 'default')
+    embed project(path: ':public:cv:entity', configuration: 'default')
+    embed project(path: ':public:cv:impl', configuration: 'default')
+    embed project(path: ':public:cv:proto', configuration: 'default')
+    embed project(path: ':public:cv:util', configuration: 'default')
+}

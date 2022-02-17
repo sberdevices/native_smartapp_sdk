@@ -21,5 +21,5 @@ include ':public:common:asserts',
         ':public:services:mic_camera_state:aidl',
         ':public:services:mic_camera_state:api',
         ':public:services:mic_camera_state:impl',
-        ':public:all_libs',
-        ':public:all_libs_no_cv'
+        ':public:fataar_all_libs',
+        ':public:fataar_cv'

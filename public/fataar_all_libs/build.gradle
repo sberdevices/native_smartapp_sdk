@@ -9,7 +9,23 @@ fataar {
     /**
      * If transitive is true, we embed not only our libs, but also their dependencies. It may be needed for unity build
      */
-    transitive = false
+    transitive = true
+}
+
+afterEvaluate {
+    // for app test, copy the final aar to demo app
+    android.libraryVariants.all { variant ->
+        File outputFile = variant.outputs.first().outputFile
+        tasks.named("assemble${variant.name.capitalize()}").configure {
+            doLast {
+                copy {
+                    from outputFile
+                    into "$rootProject.projectDir/demo"
+                    rename outputFile.name, "fat-aar-all-libs.aar"
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -20,9 +36,12 @@ dependencies {
     embed project(path: ':public:common:coroutines', configuration: 'default')
     embed project(path: ':public:common:logger', configuration: 'default')
 
-    embed project(path: ':public:services:mic_camera_state:api', configuration: 'default')
-    embed project(path: ':public:services:mic_camera_state:aidl', configuration: 'default')
-    embed project(path: ':public:services:mic_camera_state:impl', configuration: 'default')
+    embed project(path: ':public:cv:aidl', configuration: 'default')
+    embed project(path: ':public:cv:api', configuration: 'default')
+    embed project(path: ':public:cv:entity', configuration: 'default')
+    embed project(path: ':public:cv:impl', configuration: 'default')
+    embed project(path: ':public:cv:proto', configuration: 'default')
+    embed project(path: ':public:cv:util', configuration: 'default')
 
     embed project(path: ':public:services:appstate:aidl', configuration: 'default')
     embed project(path: ':public:services:appstate:api', configuration: 'default')
@@ -31,4 +50,8 @@ dependencies {
     embed project(path: ':public:services:messaging:aidl', configuration: 'default')
     embed project(path: ':public:services:messaging:api', configuration: 'default')
     embed project(path: ':public:services:messaging:impl', configuration: 'default')
+
+    embed project(path: ':public:services:mic_camera_state:api', configuration: 'default')
+    embed project(path: ':public:services:mic_camera_state:aidl', configuration: 'default')
+    embed project(path: ':public:services:mic_camera_state:impl', configuration: 'default')
 }
