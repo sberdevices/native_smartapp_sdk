@@ -1,4 +1,10 @@
-generate-dependency-graph:
+name: Graph
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-dependency-graph:
     name: Generate Dependency Graph
     runs-on: ubuntu-latest
     steps:
@@ -15,8 +21,6 @@ generate-dependency-graph:
         run: |
           git config --local user.email 'action@github.com'
           git config --local user.name 'GitHub Action'
-          git diff --quiet && git diff --staged --quiet || git commit -am 'Update dependency graph'
-      - name: Push
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git add .
+          git commit -m "Update dependency graph"
+          git push
