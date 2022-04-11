@@ -1,8 +1,6 @@
 plugins {
-    id 'java-library'
-    id 'kotlin'
+    id 'com.android.library'
     id 'maven-publish'
-    id "org.jetbrains.dokka" version "1.4.32"
 }
 
 dependencies {
@@ -10,15 +8,10 @@ dependencies {
     implementation "androidx.annotation:annotation:$versions.annotation"
 }
 
-task sourceJar(type: Jar) {
+task androidSourcesJar(type: Jar) {
     archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-task packageJavadoc(type: Jar) {
-    dependsOn(dokkaHtml)
-    archiveClassifier.set('javadoc')
-    from(dokkaHtml.outputDirectory)
+    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.kotlin.srcDirs
 }
 
 afterEvaluate {
@@ -27,10 +20,9 @@ afterEvaluate {
 
         publications {
             mavenMesagingApi(MavenPublication) {
-                from components.java
+                from components.release
 
-                artifact sourceJar
-                artifact packageJavadoc
+                artifact androidSourcesJar
 
                 groupId publication.pomGroupID + '.messaging'
                 artifactId "api"

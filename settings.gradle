@@ -12,6 +12,11 @@ include ':public:common:asserts',
         ':public:cv:impl',
         ':public:cv:proto',
         ':public:cv:util',
+
+        ':public:fataar_all_libs',
+        ':public:fataar_cv',
+        ':public:fataar_libs',
+
         ':public:services:appstate:aidl',
         ':public:services:appstate:api',
         ':public:services:appstate:impl',

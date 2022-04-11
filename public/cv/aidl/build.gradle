@@ -4,13 +4,7 @@ plugins {
     id 'maven-publish'
 }
 android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
-
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion versions.targetSdk
-
         buildConfigField 'String', 'CV_API_VERSION', "\"3.1.0\""
     }
 

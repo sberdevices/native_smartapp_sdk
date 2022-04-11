@@ -4,30 +4,6 @@ plugins {
     id 'maven-publish'
 }
 
-android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
-    testOptions.unitTests.includeAndroidResources = true
-
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion versions.targetSdk
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles "${project.rootDir}/../../common-proguard-rules.pro"
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
 dependencies {
     implementation project(':public:common:logger')
     implementation project(':public:services:mic_camera_state:api')
@@ -49,7 +25,6 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$versions.androidxtest"
     androidTestImplementation "androidx.test:runner:$versions.androidxtest"
     androidTestImplementation "junit:junit:$versions.junit"
-
 }
 
 task androidSourcesJar(type: Jar) {
