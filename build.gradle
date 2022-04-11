@@ -4,6 +4,8 @@ apply plugin: 'signing'
 apply from: 'versions.gradle'
 apply from: 'publication.gradle'
 
+apply from: 'projectDependencyGraph.gradle'
+
 buildscript {
     repositories {
         google()
