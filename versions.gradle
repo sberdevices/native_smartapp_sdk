@@ -6,7 +6,7 @@ versions.compileSdk = 30
 versions.buildTools = "30.0.2"
 
 // Kotlin
-versions.kotlin = "1.6.10"
+versions.kotlin = "1.6.20"
 versions.kotlinxCoroutines = "1.6.0"
 
 // protobuf
