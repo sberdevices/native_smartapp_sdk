@@ -25,4 +25,7 @@ include ':public:common:asserts',
         ':public:services:messaging:impl',
         ':public:services:mic_camera_state:aidl',
         ':public:services:mic_camera_state:api',
-        ':public:services:mic_camera_state:impl'
+        ':public:services:mic_camera_state:impl',
+        ':public:services:paylib:aidl',
+        ':public:services:paylib:api',
+        ':public:services:paylib:impl'
