@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
+
+apply from: "$rootProject.projectDir/android_subproject.gradle"
+
+dependencies {
+    api project(':public:services:paylib:api')
+    implementation project(':public:services:paylib:aidl')
+
+    implementation project(':public:common:asserts')
+    implementation project(':public:common:binderhelper:impl')
+    implementation project(':public:common:coroutines')
+    implementation project(':public:common:logger')
+
+    implementation "androidx.annotation:annotation:$versions.annotation"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlinxCoroutines"
+}
+
+//task androidSourcesJar(type: Jar) {
+//    archiveClassifier.set('sources')
+//    from android.sourceSets.main.java.srcDirs
+//    from android.sourceSets.main.kotlin.srcDirs
+//}
+//
+//afterEvaluate {
+//    publishing {
+//        repositories.add(rootProject.repositories.getByName('OSSRH'))
+//
+//        publications {
+//            mavenAppstateImpl(MavenPublication) {
+//                from components.release
+//
+//                artifact androidSourcesJar
+//
+//                groupId publication.pomGroupID
+//                artifactId "appstate"
+//                version publication.pomAppStateVersion
+//
+//                pom {
+//                    name = "appstate"
+//                    description = 'appstate is a library used to transmit native app state to smartapp backend'
+//                    url = publication.githubUrl
+//                    licenses {
+//                        license {
+//                            name = publication.licenseName
+//                            url = publication.licenseUrl
+//                        }
+//                    }
+//                    developers {
+//                        developer {
+//                            name = 'Igor Perminov'
+//                            email = 'Perminov.I.Yurye@sberbank.ru'
+//                        }
+//                        developer {
+//                            name = 'Nikolay Pahomov'
+//                            email = 'NMPakhomov@sberbank.ru'
+//                        }
+//                    }
+//                    scm {
+//                        connection = publication.connectionUrl
+//                        developerConnection = publication.connectionUrl
+//                        url = publication.githubUrl
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    signing {
+//        sign publishing.publications.mavenAppstateImpl
+//    }
+//}
