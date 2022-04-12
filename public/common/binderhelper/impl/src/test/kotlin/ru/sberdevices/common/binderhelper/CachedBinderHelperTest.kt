@@ -11,17 +11,19 @@ import android.os.IInterface
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import ru.sberdevices.common.logger.Logger
 
 /**
- * Тест для [CachedBinderHelper]
+ * Тест для [CachedBinderHelperImpl]
+ *
+ * @author Сидоров Максим
  */
 class CachedBinderHelperTest {
     private val intent = mockk<Intent>()
@@ -46,7 +48,7 @@ class CachedBinderHelperTest {
         getBinding = { binding },
     ).create()
 
-    private val helper = CachedBinderHelper(internalHelper, logger, DISCONNECT_DELAY)
+    private val helper = CachedBinderHelperImpl(internalHelper, logger, DISCONNECT_DELAY)
 
     @Before
     fun prepare() {

@@ -8,14 +8,17 @@ import ru.sberdevices.common.logger.Logger
 
 /**
  * Фабрика, изолирующая имплементацию от потребителей [BinderHelper]
- * [context] application context
- * [intent] Intent с компонентом сервиса, к которому будем подключаться
- * [logger] внешний [Logger], если не передать, то будет создан логгер по умолчанию
- * [onDisconnect] вызывается в коллбеке onServiceDisconnected() [android.content.ServiceConnection]
- * [onBindingDied] вызывается в коллбеке onBindingDied() [android.content.ServiceConnection]
- * [onNullBinding] вызывается в коллбеке onNullBinding() [android.content.ServiceConnection]
- * [getBinding] вызывается в коллбеке onServiceConnected() [android.content.ServiceConnection]. Дает биндеру интерфейс сервиса
+ * @param context application context
+ * @param intent Intent с компонентом сервиса, к которому будем подключаться
+ * @param logger внешний [Logger], если не передать, то будет создан логгер по умолчанию
+ * @param getBinding вызывается в коллбеке onServiceConnected() [android.content.ServiceConnection].
+ * Дает биндеру интерфейс сервиса
 */
+@Deprecated(
+    message = "Используйте BinderHelperFactory2 для создания инстанса BinderHelper. Он не требует impl модуля.",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("BinderHelperFactory2")
+)
 class BinderHelperFactory<BinderInterface : IInterface>(
     private val context: Context,
     private val intent: Intent,
@@ -44,8 +47,8 @@ class BinderHelperFactory<BinderInterface : IInterface>(
      * Реальный disconnect происходит с задержкой [disconnectDelay].
      * Это позволяет последовательно вызывать несколько [BinderHelper.execute] в рамках одного физического соединения
      */
-    fun createCached(disconnectDelay: Long = DISCONNECT_DELAY): BinderHelper<BinderInterface> =
-        CachedBinderHelper(create(), logger, disconnectDelay)
+    fun createCached(disconnectDelay: Long = DISCONNECT_DELAY): CachedBinderHelper<BinderInterface> =
+        CachedBinderHelperImpl(create(), logger, disconnectDelay)
 }
 
 private const val DISCONNECT_DELAY = 3000L

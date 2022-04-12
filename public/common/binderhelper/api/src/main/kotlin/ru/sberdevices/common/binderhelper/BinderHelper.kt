@@ -5,9 +5,10 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.DeadObjectException
 import android.os.IInterface
-import androidx.annotation.BinderThread
+import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.StateFlow
 import ru.sberdevices.common.binderhelper.entities.BinderState
+import ru.sberdevices.common.binderhelper.entities.BinderException
 
 /**
  * Интерфейс для подключения к aidl сервисам. Имплементацию нужно получать в BinderHelperFactory.
@@ -22,8 +23,14 @@ interface BinderHelper<BinderInterface : IInterface> {
     val binderStateFlow: StateFlow<BinderState>
 
     /**
+     * Проверяем наличие сервиса
+     */
+    fun hasService(): Boolean
+
+    /**
      * Асинхронно подключаемся к сервису. Если сразу подключиться не удалось, но сервис есть на
      * девайсе, пытаемся сделать это бесконечно раз в секунду, пока корутину не отменят.
+     * @return true - если процесс старта сервиса был начат и были пройдены все проверки на пермишены
      */
     fun connect(): Boolean
 
@@ -40,8 +47,16 @@ interface BinderHelper<BinderInterface : IInterface> {
      *
      * В случае если контекст, в котором выполняемся отменили - вернет null.
      */
-    @BinderThread
-    suspend fun <Result> execute(method: (binder: BinderInterface) -> Result): Result?
+    suspend fun <T> execute(method: (binder: BinderInterface) -> T?): T?
+
+    /**
+     * Использовать аналогично [execute] методу, но только тогда, когда ожидаемый IPC ответ != null.
+     *
+     * @return [T], обернутый в [Result], где:
+     * - [Result.success] имеет non-null значение
+     * - [Result.failure] содержит одно из [BinderException] исключений, в том числе - получение null значение через IPC
+     */
+    suspend fun <T> executeWithResult(method: (binder: BinderInterface) -> T): Result<T>
 
     /**
      * Пытаемся выполнить aidl-метод, если есть активное соединение.
@@ -49,8 +64,32 @@ interface BinderHelper<BinderInterface : IInterface> {
      * Удобно использовать для очистки там, где нет suspend-контекста,
      * например в awaitClose {} в callbackFlow.
      */
-    @BinderThread
-    fun <Result> tryExecute(method: (binder: BinderInterface) -> Result): Result?
+    @WorkerThread
+    fun <T> tryExecute(method: (binder: BinderInterface) -> T?): T?
+
+    /**
+     * Использовать аналогично [tryExecute] методу, но только тогда, когда ожидаемый IPC ответ != null.
+     *
+     * @return [T], обернутый в [Result], где:
+     * - [Result.success] имеет non-null значение
+     * - [Result.failure] содержит одно из [BinderException] исключений, в том числе - получение null значение через IPC
+     */
+    @WorkerThread
+    fun <T> tryExecuteWithResult(method: (binder: BinderInterface) -> T?): Result<T>
+
+    /**
+     * Аналогично [execute] методу, но здесь [method] передается в виде suspend лямбды.
+     */
+    suspend fun <T> suspendExecute(method: suspend (binder: BinderInterface) -> T?): T?
+
+    /**
+     * Использовать аналогично [suspendExecute] методу, но только тогда, когда ожидаемый IPC ответ != null.
+     *
+     * @return [T], обернутый в [Result], где:
+     * - [Result.success] имеет non-null значение
+     * - [Result.failure] содержит одно из [BinderException] исключений, в том числе - получение null значение через IPC
+     */
+    suspend fun <T> suspendExecuteWithResult(method: suspend (binder: BinderInterface) -> T?): Result<T>
 
     companion object {
         /**

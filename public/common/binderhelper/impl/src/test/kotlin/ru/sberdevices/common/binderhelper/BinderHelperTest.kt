@@ -11,22 +11,31 @@ import android.os.IInterface
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.slot
+import io.mockk.unmockkObject
 import io.mockk.verify
 import io.mockk.verifySequence
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertNull
-import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import ru.sberdevices.common.binderhelper.entities.BinderState
 
 /**
  * Тест для [BinderHelper]
+ *
+ * @author Илья Богданович on 12.02.2021
  */
 class BinderHelperTest {
     private val intent = mockk<Intent>()
@@ -41,11 +50,10 @@ class BinderHelperTest {
     }
     private val binding = mockk<IInterface>()
 
-    private val helper = BinderHelperFactory(
+    private val helper = BinderHelperFactory2Impl().create(
         context = context,
-        intent = intent,
-        getBinding = { binding },
-    ).create()
+        intent = intent
+    ) { binding }
     private val scope = TestCoroutineScope()
 
     @Test
@@ -62,9 +70,22 @@ class BinderHelperTest {
     }
 
     @Test
-    fun `Неуспешный connect если сервис отсутствует`() = runBlocking {
+    fun `Сервис отсутствует`() = runBlocking {
         // Prepare
         every { pm.queryIntentServices(intent, PackageManager.MATCH_ALL) } returns mutableListOf()
+
+        // Do
+        val result = helper.hasService()
+
+        // Check
+        assertFalse(result)
+    }
+
+    @Test
+    fun `Неуспешный connect если сервис отсутствует`() = runBlocking {
+        // Prepare
+        mockkObject(helper)
+        every { helper.hasService() } returns false
 
         // Do
         val result = helper.connect()
@@ -72,6 +93,9 @@ class BinderHelperTest {
         // Check
         verify(inverse = true) { appContext.bindService(any(), any(), any()) }
         assertFalse(result)
+
+        // Unmock
+        unmockkObject(helper)
     }
 
     @Test
@@ -165,7 +189,7 @@ class BinderHelperTest {
         every { appContext.bindService(any(), any(), any()) } answers {
             arg<ServiceConnection>(1).onBindingDied(mockk())
             true
-        } andThen(true)
+        } andThen (true)
 
         // Do
         helper.connect()
@@ -183,7 +207,7 @@ class BinderHelperTest {
         every { appContext.bindService(any(), any(), any()) } answers {
             arg<ServiceConnection>(1).onNullBinding(mockk())
             true
-        } andThen(true)
+        } andThen (true)
 
         // Do
         helper.connect()
@@ -201,7 +225,7 @@ class BinderHelperTest {
         every { appContext.bindService(any(), any(), any()) } answers {
             arg<ServiceConnection>(1).onServiceDisconnected(mockk())
             true
-        } andThen(true)
+        } andThen (true)
 
         // Do
         helper.connect()
@@ -213,4 +237,49 @@ class BinderHelperTest {
         assertThat(helper.binderStateFlow.value, equalTo(BinderState.DISCONNECTED))
     }
 
+    @Test
+    fun `Все ивенты ServiceConnection отразятся в BinderStateFlow`() {
+        // Prepare
+        val serviceConnectionSlot = slot<ServiceConnection>()
+        every { appContext.bindService(any(), capture(serviceConnectionSlot), any()) } returns true
+
+        val testScope = TestCoroutineScope()
+        val captor = helper.binderStateFlow.collectToList(testScope)
+
+        // Do
+        helper.connect()
+
+        with(serviceConnectionSlot.captured) {
+            onServiceConnected(mockk(relaxed = true), mockk(relaxed = true))
+            onBindingDied(mockk(relaxed = true))
+            onNullBinding(mockk(relaxed = true))
+            onServiceDisconnected(mockk(relaxed = true))
+        }
+
+        // Check
+        assertThat(
+            captor,
+            equalTo(
+                listOf(
+                    BinderState.DISCONNECTED, // initial
+                    BinderState.CONNECTED,
+                    BinderState.BINDING_DIED,
+                    BinderState.NULL_BINDING,
+                    BinderState.DISCONNECTED
+                )
+            )
+        )
+    }
+
+    private companion object {
+
+        /**
+         * Асинхронно собирает флоу в список.
+         */
+        private fun <T> Flow<T>.collectToList(scope: CoroutineScope): List<T> {
+            val collector = mutableListOf<T>()
+            onEach { collector += it }.launchIn(scope)
+            return collector
+        }
+    }
 }

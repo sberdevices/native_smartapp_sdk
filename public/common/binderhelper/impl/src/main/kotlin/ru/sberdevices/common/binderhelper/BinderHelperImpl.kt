@@ -8,8 +8,8 @@ import android.content.pm.PackageManager
 import android.os.DeadObjectException
 import android.os.IBinder
 import android.os.IInterface
-import androidx.annotation.BinderThread
 import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
+import ru.sberdevices.common.binderhelper.entities.BinderException
 import ru.sberdevices.common.binderhelper.entities.BinderState
 import ru.sberdevices.common.logger.Logger
 
@@ -80,12 +81,20 @@ internal class BinderHelperImpl<BinderInterface : IInterface>(
     }
 
     /**
+     * Проверяем наличие сервиса
+     */
+    @Suppress("WrongConstant", "QueryPermissionsNeeded")
+    override fun hasService(): Boolean {
+        return context.packageManager.queryIntentServices(intent, PackageManager.MATCH_ALL).isNotEmpty()
+    }
+
+    /**
      * Асинхронно подключаемся к сервису и получаем aidl-интерфейс через [getBinding].
      * Если сразу подключиться не удалось - пытаемся сделать это бесконечно раз в секунду, пока корутину не отменят.
      */
     override fun connect(): Boolean {
         logger.verbose { "try to connect() intent=${intent.component?.className}" }
-        if (context.packageManager.queryIntentServices(intent, PackageManager.MATCH_ALL).isEmpty()) {
+        if (!hasService()) {
             logger.warn { "service (${intent.component}) is not present in the system, will not connect" }
             return false
         }
@@ -107,6 +116,7 @@ internal class BinderHelperImpl<BinderInterface : IInterface>(
         clearBinder()
         connectionState.value?.let { context.applicationContext.unbindService(it) }
         connectionState.value = null
+        mutableBinderStateFlow.value = BinderState.DISCONNECTED
     }
 
     /**
@@ -117,25 +127,10 @@ internal class BinderHelperImpl<BinderInterface : IInterface>(
      *
      * В случае если контекст, в котором выполняемся отменили - вернет null.
      */
-    @BinderThread
-    override suspend fun <Result> execute(method: (binder: BinderInterface) -> Result): Result? {
-        while (currentCoroutineContext().isActive) {
-            val binder = binderState
-                .filterNotNull()
-                .first()
-            try {
-                return method(binder)
-            } catch (e: DeadObjectException) {
-                clearBinder(binder)
-                logger.warn {
-                    "The object we are calling has died, because its hosting process no longer exists. Retrying..."
-                }
-                // We just want to wait for ServiceConnection#onServiceConnected(...)
-            }
-        }
+    override suspend fun <T> execute(method: (binder: BinderInterface) -> T?): T? = suspendExecute { method(it) }
 
-        throw CancellationException("Connection is cancelled")
-    }
+    override suspend fun <T> executeWithResult(method: (binder: BinderInterface) -> T): Result<T> =
+        suspendExecuteWithResult { method(it) }
 
     /**
      * Пытаемся выполнить aidl-метод, если есть активное соединение.
@@ -143,24 +138,65 @@ internal class BinderHelperImpl<BinderInterface : IInterface>(
      * Удобно использовать для очистки там, где нет suspend-контекста,
      * например в awaitClose {} в callbackFlow.
      */
-    @BinderThread
-    override fun <Result> tryExecute(method: (binder: BinderInterface) -> Result): Result? {
+    @WorkerThread
+    override fun <T> tryExecute(method: (binder: BinderInterface) -> T?): T? = tryExecuteWithResult(method).fold(
+        onSuccess = { it },
+        onFailure = { null }
+    )
+
+    @WorkerThread
+    override fun <T> tryExecuteWithResult(method: (binder: BinderInterface) -> T?): Result<T> {
         val binder = binderState.value
-        return if (binder != null) {
-            try {
-                method(binder)
-            } catch (e: DeadObjectException) {
+
+        return runCatching {
+            if (binder != null) {
+                return@runCatching method(binder) ?: throw BinderException.ReceivedNullValue()
+            } else {
+                throw BinderException.ConnectionNotEstablished()
+            }
+        }.onFailure {
+            if (it is DeadObjectException) {
                 logger.warn {
                     "The object we are calling has died, because its hosting process no longer exists. Retrying..."
                 }
                 clearBinder(binder)
+                // We just want to wait for ServiceConnection#onServiceConnected(...)
+            }
+        }
+    }
+
+    override suspend fun <T> suspendExecute(method: suspend (binder: BinderInterface) -> T?): T? =
+        suspendExecuteWithResult(method).fold(
+            onSuccess = { it },
+            onFailure = {
+                if (it is BinderException.CoroutineContextCancelled) {
+                    throw CancellationException("Connection is cancelled")
+                }
                 null
             }
-        } else {
-            logger.info {
-                "The object we are calling has died, because its hosting process no longer exists..."
+        )
+
+    override suspend fun <T> suspendExecuteWithResult(method: suspend (binder: BinderInterface) -> T?): Result<T> {
+        var binder: BinderInterface? = null
+
+        return runCatching {
+            while (currentCoroutineContext().isActive) {
+                binder = binderState
+                    .filterNotNull()
+                    .first()
+
+                return@runCatching method(binder!!) ?: throw BinderException.ReceivedNullValue()
             }
-            null
+
+            throw BinderException.CoroutineContextCancelled()
+        }.onFailure {
+            if (it is DeadObjectException) {
+                clearBinder(binder)
+                logger.warn {
+                    "The object we are calling has died, because its hosting process no longer exists. Retrying..."
+                }
+                // We just want to wait for ServiceConnection#onServiceConnected(...)
+            }
         }
     }
 }

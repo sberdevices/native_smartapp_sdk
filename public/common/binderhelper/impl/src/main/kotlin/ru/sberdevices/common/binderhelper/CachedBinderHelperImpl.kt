@@ -1,7 +1,6 @@
 package ru.sberdevices.common.binderhelper
 
 import android.os.IInterface
-import androidx.annotation.BinderThread
 import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -9,7 +8,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import ru.sberdevices.common.binderhelper.entities.BinderException
 import ru.sberdevices.common.logger.Logger
+import java.lang.IllegalStateException
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
@@ -18,19 +19,20 @@ import java.util.concurrent.atomic.AtomicReference
  * Позволяет делать независимые connect/disconnect для разных процессов,
  * которые в реальности работают через одно, закешированное соединение
  *
- * Внутри хранит счетчик соединений, [connect] инкрементирует счетчик, [disconnect] декрементирует
- * Реальное соединения и рассоединения происходит, когда счетчик = 0
+ * Для выполнения aidl метода достаточно просто вызывать метод [execute] без вызова [connect].
+ * Внутри автоматически выполнится [connect], если соединения с сервисом еще не было.
+ * Если нет других процессов, использующих соединение с сервисом, то по завершению метода [execute] автоматически
+ * выполнится [disconnect] с заданной задержкой
  *
- * Метод [execute] внутри делает свой connect, выполняет тело метода и затем делает disconnect
- *
- * Реальный [disconnect] происходит с задержкой.
- * Это позволяет последовательно вызывать несколько [execute] в рамках одного физического соединения
+ * В случае явного вызова [connect], соединение с сервисом будет поддерживаться до явного вызова [disconnect]
+ * Так как внутри используется счетчик соединений, то каждый явный вызов [connect] должен сопровождаться
+ * явным вызовом [disconnect]
  */
-internal class CachedBinderHelper<BinderInterface : IInterface>(
+internal class CachedBinderHelperImpl<BinderInterface : IInterface>(
     private val helper: BinderHelper<BinderInterface>,
     private val logger: Logger,
     private val disconnectDelay: Long
-) : BinderHelper<BinderInterface> by helper {
+) : CachedBinderHelper<BinderInterface>, BinderHelper<BinderInterface> by helper {
 
     private val scope = CoroutineScope(SupervisorJob())
     private val connectCounter = AtomicInteger(0)
@@ -40,27 +42,32 @@ internal class CachedBinderHelper<BinderInterface : IInterface>(
      * Признак, что есть активное соединение
      */
     @Volatile
-    var hasConnection: Boolean = false
+    override var hasConnection: Boolean = false
         private set
 
+    override val connectionCount: Int
+        get() = connectCounter.get()
+
     @VisibleForTesting
-    val connectionCount: Int get() = connectCounter.get()
-    @VisibleForTesting
-    val hasScheduleDisconnectTask: Boolean get() = disconnectJobRef.get()?.isActive ?: false
+    val hasScheduleDisconnectTask: Boolean
+        get() = disconnectJobRef.get()?.isActive ?: false
 
     override fun connect(): Boolean {
+        val connectionCount = connectCounter.incrementAndGet()
+        logger.debug { "cachedConnect(), connectionCount == $connectionCount" }
+
         cancelDisconnectTask()
         if (!hasConnection) {
             binderConnect()
         }
 
-        val connectionCount = connectCounter.incrementAndGet()
-        logger.debug { "cachedConnect(), connectionCount == $connectionCount" }
         return hasConnection
     }
 
     override fun disconnect() {
         val connectionCount = connectCounter.decrementAndGet()
+        logger.debug { "cachedDisconnect(), connectionCount == $connectionCount" }
+
         if (connectionCount < 0) {
             throw IllegalStateException("service already disconnected, connection counter value < 0")
         }
@@ -68,14 +75,19 @@ internal class CachedBinderHelper<BinderInterface : IInterface>(
             // Если соединений больше нет, то создаем задание на отложенный disconnect
             scheduleDisconnectTask()
         }
-        logger.debug { "cachedDisconnect(), connectionCount == $connectionCount" }
     }
 
-    @BinderThread
-    override suspend fun <Result> execute(method: (binder: BinderInterface) -> Result): Result? {
+    override suspend fun <Result> execute(method: (binder: BinderInterface) -> Result?): Result? = suspendExecute {
+        method(it)
+    }
+
+    override suspend fun <T> executeWithResult(method: (binder: BinderInterface) -> T): Result<T> =
+        suspendExecuteWithResult { method(it) }
+
+    override suspend fun <Result> suspendExecute(method: suspend (binder: BinderInterface) -> Result?): Result? {
         return if (connect()) {
             try {
-                helper.execute(method)
+                helper.suspendExecute(method)
             } finally {
                 disconnect()
             }
@@ -83,6 +95,19 @@ internal class CachedBinderHelper<BinderInterface : IInterface>(
             null
         }
     }
+
+    override suspend fun <T> suspendExecuteWithResult(method: suspend (binder: BinderInterface) -> T?): Result<T> =
+        runCatching {
+            if (connect()) {
+                try {
+                    helper.suspendExecuteWithResult(method).getOrThrow()
+                } finally {
+                    disconnect()
+                }
+            } else {
+                throw BinderException.ConnectionNotEstablished()
+            }
+        }
 
     @Synchronized
     private fun binderConnect() {
